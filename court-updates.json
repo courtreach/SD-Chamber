@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-08T20:09:33.184704Z",
+  "generated_at": "2026-09-09T07:40:13.203276Z",
   "parser_version": 8,
   "window": [
     "2026-09-09",
@@ -4050,7 +4050,22 @@
               "132": "C.A. No. 1446/2017 SAGAR APARTMENTS RESIDENTS ASSOCIATION VERSUS M/S. SEQUOIA CONSTRUCTIONS PVT. LTD. . AND",
               "133": "C.A. No. 5014/2022 ABDUL HAFEEZ AND ORS. VERSUS JAGADAMBAI",
               "136": "C.A. No. 7993/2023 M.C. SINGLA (DEAD) THR. LR. AND ORS. VERSUS UNION OF INDIA AND ORS.",
-              "137": "C.A. No. CEMENT MANUFACTURERS ASSOCIATION (CMA) VERSUS THE COMPETITION COMMISSION OF INDIA AND ORS.",
+              "136.1": "C.A. No. 7994/2023 WELFARE ASSOCIATION THE PUNJAB AND SIND BANK RETIRE VERSUS UNION OF INDIA AND ORS.",
+              "136.2": "C.A. No. 7995/2023 (REGD.) ORIENTAL BANK RETIRED OFFICERS ASSOCIATION VERSUS UNION OF INDIA AND ORS.",
+              "136.3": "T.P.(C) No. 2974/2022 ORS. ALL KERALA BANK RETIREES FORUM (AKBRF) AND VERSUS UNION OF INDIA AND ORS.",
+              "137": "C.A. No. CEMENT MANUFACTURERS ASSOCIATION (CMA) VERSUS THE COMPETITION COMMISSION OF INDIA AND",
+              "137.1": "C.A. No. THE INDIA CEMENTS LTD. VERSUS COMPETITION COMMISSION OF INDIA AND ORS.",
+              "137.2": "C.A. No. THE RAMCO CEMENTS LIMITED VERSUS COMPETITION COMMISSION OF INDIA AND ANR.",
+              "137.3": "C.A. No. 9763/2018 NUVOCO VISTAS CORPORATION LTD. VERSUS COMPETITION COMMISSION OF INDIA AND ORS.",
+              "137.4": "C.A. No. AMBUJA CEMENTS LIMITED VERSUS COMPETITION COMMISSION OF INDIA AND ORS.",
+              "137.5": "C.A. No. ACC LIMITED VERSUS COMPETITION COMMISSION OF INDIA AND ORS.",
+              "137.6": "C.A. No. JAIPRAKASH ASSOCIATES LTD. VERSUS COMPETITION COMMISSION OF INDIA AND ANR.",
+              "137.7": "C.A. No. 9744/2018 ULTRATECH CEMENT LIMITED VERSUS THE SECRETARY COMPETITION COMMISSION OF",
+              "137.8": "C.A. No. 9826/2018 ULTRATECH CEMENT LIMITED VERSUS THE SECRETARY COMPETITION COMMISSION OF",
+              "137.9": "C.A. No. J.K. CEMENT LTD. VERSUS COMPETITION COMMISSION OF INDIA AND ANR. JOSE ABRA",
+              "137.10": "C.A. No. 9864/2018 ULTRATECH CEMENT LIMITED VERSUS COMPETITION COMMISSION OF INDIA AND ORS.",
+              "137.11": "C.A. No. 9851/2018 ULTRATECH CEMENT LTD. VERSUS COMPETITION COMMISSION OF INDIA AND ORS.",
+              "137.12": "C.A. No. NATHDWARA CEMENT LTD BINANI CEMENT LTD NOW ULTRATECH VERSUS COMPETITION COMMISSION OF INDIA AND ANR.",
               "138": "C.A. No. 5386/2014 RAJENDRA SINGH AND ORS. VERSUS ROMAN CATHOLIC DIOCESE OF AGRA LTD. AND ANR.",
               "139": "C.A. No. 6535/2024 THE STATE OF MAHARASHTRA AND ORS. VERSUS PANDURANG B. SURVE AND ORS.",
               "140": "C.A. No. 5046-5047/2024 H.M. CONSTRUCTIONS VERSUS J.F. IRANI (DEAD) AND ORS.",
@@ -4168,12 +4183,12 @@
                 "resp": "R. V. KAMESHWARAN"
               },
               "136": {
-                "pet": "SUNNY CHOUDHARY",
+                "pet": "C. K. SASI",
                 "resp": "MITTER & MITTER CO RAJESH KUMAR GAUTAM"
               },
               "137": {
-                "pet": "E. C. AGRAWALA",
-                "resp": "JOSE ABRAHAM ASHWARYA SINHA"
+                "pet": "AVNEESH ARPUTHAM",
+                "resp": "JOSE ABRAHAM"
               },
               "138": {
                 "pet": "VIVEK SINGH",
@@ -6002,11 +6017,12 @@
           },
           "7": {
             "coram": "HON'BLE MR. JUSTICE DIPANKAR DATTA HON'BLE MR. JUSTICE SHEEL NAGU",
-            "total": "36",
+            "total": "37",
             "fresh": "",
             "items": {
               "2": "THEREAFTER REGULAR HEARING MATTERS WILL BE TAKEN UP.",
               "3": "AFTER NOTICE MATTERS AND SPECIALLY DIRECTED MATTERS",
+              "1501": "C.A. No. 3215/2026 S. S. DAS VERSUS UNION OF INDIA",
               "101": "C.A. No. 168-169/2026 NATIONAL INSTITUTE OF PHARMACEUTICAL VERSUS DR NEERAJ KUMAR AND ORS.",
               "101.1": "SLP(C) No. DR. NEERAJ KUMAR VERSUS NATIONAL INSTITUTE OF PHARMACEUTICAL",
               "102": "C.A. No. 7402/2018 HARILAL.R VERSUS SAJAN P.V. AND ORS.",
@@ -6264,6 +6280,10 @@
                 "pet": "WILL BE TAKEN UP",
                 "resp": "SHIVAJI M. JADHAV"
               },
+              "1501": {
+                "pet": "ANURAG OJHA",
+                "resp": "GURMEET SINGH MAKKER"
+              },
               "102": {
                 "pet": "M R LAW ASSOCIATES"
               },
@@ -6391,7 +6411,7 @@
               }
             },
             "main": 0,
-            "supp": 36
+            "supp": 37
           },
           "10": {
             "coram": "HON'BLE MR. JUSTICE MANOJ MISRA HON'BLE MR. JUSTICE VIJAY BISHNOI",
@@ -13207,7 +13227,7 @@
       "M_J_1": 810185,
       "M_J_2": 622133,
       "F_J_1": 998258,
-      "F_J_2": 778881,
+      "F_J_2": 789808,
       "M_R_1": 524376,
       "M_R_2": 504961,
       "M_CC_1": 537923
