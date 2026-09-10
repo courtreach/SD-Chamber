@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-10T16:41:17.442422Z",
+  "generated_at": "2026-09-10T17:22:39.120057Z",
   "parser_version": 8,
   "window": [
     "2026-09-10",
@@ -19771,6 +19771,9 @@
       "M_S_1": 510138,
       "M_R_1": 526265,
       "M_CC_1": 547041
+    },
+    "2026-09-17": {
+      "M_J_1": 973636
     }
   },
   "note": "Per-court bench + per-item case line from the SC published lists. Drafting aid only — the court's published list is authoritative."
