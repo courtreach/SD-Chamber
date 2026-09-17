@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-16T20:30:19.193245Z",
+  "generated_at": "2026-09-17T13:45:42.005228Z",
   "parser_version": 8,
   "window": [
     "2026-09-17",
@@ -8162,7 +8162,7 @@
             "supp": 0
           },
           "2": {
-            "coram": "HON'BLE MRS. JUSTICE B.V. NAGARATHNA HON'BLE MR. JUSTICE R. MAHADEVAN",
+            "coram": "HON'BLE MRS. JUSTICE B.V. NAGARATHNA HON'BLE MR. JUSTICE AUGUSTINE GEORGE MASIH",
             "total": "54",
             "fresh": "",
             "items": {
@@ -8213,7 +8213,7 @@
               "38": "SLP(C) No. 28098/2019 GSTAAD HOTELS PRIVATE LIMITED VERSUS UNION OF INDIA AND ORS.",
               "39": "SLP(C) No. 4806/2023 THE STATE OF UTTAR PRADESH AND ORS. VERSUS DHAMPUR SUGAR MILLS LIMITED AND ANR.",
               "40": "Diary No. 7815-2023 R. SARANYA AND ORS. VERSUS ICICI LOMBARD GIC LTD. EARLIER M/S BHARTI AXA",
-              "41": "SLP(C) No. 20337/2023 THE COMMISSIONER, COMMERCIAL TAX VERSUS M/S BALAJI POLYPACK",
+              "41": "SLP(C) No. 20337/2023 THE COMMISSIONER, COMMERCIAL TAX VERSUS M/S BALAJI POLYPACK AVNISH PANDEY [R-1]",
               "42": "Diary No. 25552-2023 KULDEEP SINGH HOODA VERSUS NARENDER MEHLAWAT AND ORS.",
               "43": "SLP(C) No. 13562/2024 SHUBHAM VERSUS THE STATE OF MAHARASHTRA AND ORS.",
               "44": "C.A. No. 2253/2025 OMKARA ASSETS RECONSTRUCTION PRIVATE VERSUS SUMAN MOTLES LIMITED AND ANR.",
@@ -8224,7 +8224,7 @@
               "49": "SLP(C) No. AMRUT GADA VERSUS SHAKUNTALA P. RAHEJA",
               "50": "C.A. No. J.C. FLOWERS ASSET RECONSTRUCTION PVT. LTD. VERSUS M/S. EXCLUSIVE MOTORS PRIVATE LIMITED AND",
               "51": "SLP(C) No. 35718/2025 ASHOK INVESTORS TRUST LTD. VERSUS CROSSLINK FOOD AND FARMS PVT. LTD. AND ORS.",
-              "52": "CONMT.PET.(C) No. GREEN VALLEY GROUP HOUSING SOCIETY VERSUS SHRI N.SARAVANA KUMAR, VICE CHAIRMAN DELHI",
+              "52": "CONMT.PET.(C) No. GREEN VALLEY GROUP HOUSING SOCIETY VERSUS SHRI N.SARAVANA KUMAR, VICE CHAIRMAN DELHI NITIN M",
               "53": "SLP(C) No. 4669/2026 RAKESH KANWAR VERSUS REGIONAL PASSPORT OFFICER, CHANDIGARH",
               "54": "SLP(C) No. 30152/2026 PUNIT AGARWAL VERSUS BANK OF BARODA AND ORS.",
               "54.1": "Connected PUNIT AGARWAL VERSUS RESERVE BANK OF INDIA AND ORS."
@@ -8239,15 +8239,15 @@
                 "resp": "PREM PRAKASH ASHISH KUMAR UPADHYAY"
               },
               "3": {
-                "pet": "VIVYA NAGPAL",
+                "pet": "NISHANT AWANA",
                 "resp": "PALLAV MONGIA"
               },
               "3.1": {
-                "pet": "VIVYA NAGPAL",
+                "pet": "NISHANT AWANA",
                 "resp": "RAVI SHARMA"
               },
               "3.2": {
-                "pet": "VIVYA NAGPAL",
+                "pet": "NISHANT AWANA",
                 "resp": "DEVYANI GUPTA"
               },
               "4": {
@@ -8271,11 +8271,12 @@
                 "resp": "HARMEET SINGH RUPRAH"
               },
               "9": {
-                "pet": "ARVIND KUMAR SHARMA"
+                "pet": "ARVIND KUMAR SHARMA",
+                "resp": "SAURABH AGRAWAL"
               },
               "10": {
                 "pet": "ASHISH KUMAR UPADHYAY",
-                "resp": "PREM PRAKASH"
+                "resp": "AKSHAY AMRITANSHU"
               },
               "11": {
                 "pet": "NIYATI LAW CHAMBERS LLP",
@@ -8286,7 +8287,8 @@
                 "resp": "SAMIR ALI KHAN"
               },
               "13": {
-                "pet": "RAJ BAHADUR YADAV , ADITI"
+                "pet": "SUDARSHAN LAMBA",
+                "resp": "ADITI ANIL DANI"
               },
               "14": {
                 "pet": "ANKIT YADAV"
@@ -8298,7 +8300,8 @@
                 "pet": "MAYANK KSHIRSAGAR"
               },
               "16": {
-                "pet": "RADIAM LAW"
+                "pet": "RADIAM LAW",
+                "resp": "E. C. AGRAWALA"
               },
               "17": {
                 "pet": "AJAY VIKRAM SINGH"
@@ -8397,8 +8400,7 @@
                 "resp": "PRIYA PURI"
               },
               "41": {
-                "pet": "BHAKTI VARDHAN SINGH",
-                "resp": "AVNISH PANDEY"
+                "pet": "BHAKTI VARDHAN SINGH"
               },
               "42": {
                 "pet": "AMIT PAWAN",
@@ -8431,7 +8433,7 @@
                 "resp": "C. GEORGE THOMAS"
               },
               "50": {
-                "pet": "EDICTUM LAW & CO",
+                "pet": "JASMEET SINGH",
                 "resp": "APOORV AGARWAL"
               },
               "51": {
@@ -8439,15 +8441,14 @@
                 "resp": "PRAMIT SAXENA"
               },
               "52": {
-                "pet": "PRERNA MEHTA",
-                "resp": "NITIN MISHRA"
+                "pet": "PRERNA MEHTA"
               },
               "53": {
                 "pet": "PARMINDER SINGH"
               },
               "54": {
                 "pet": "ABHINAV AGRAWAL",
-                "resp": "ARVIND KUMAR SHARMA"
+                "resp": "HIMANSHU BHUSHAN ARVIND KUMAR SHARMA"
               },
               "54.1": {
                 "pet": "ABHINAV AGRAWAL",
@@ -12109,394 +12110,9 @@
             },
             "main": 55,
             "supp": 0
-          },
-          "15": {
-            "coram": "HON'BLE MR. JUSTICE AUGUSTINE GEORGE MASIH HON'BLE MR. JUSTICE SANDEEP MEHTA",
-            "total": "55",
-            "fresh": "",
-            "items": {
-              "1": "Crl.A. No. 3561/2024 MANORANJAN SARDAR VERSUS THE STATE OF WEST BENGAL",
-              "2": "SLP(Crl) No. BEBI DEVI VERSUS STATE OF BIHAR AND ANR.",
-              "3": "SLP(Crl) No. XYZ VERSUS STATE OF CHHATTISGARH AND ANR.",
-              "4": "SLP(Crl) No. SITA RAM VERSUS STATE OF RAJASTHAN",
-              "5": "SLP(Crl) No. SOMESHWAR @ SHEM VERSUS THE STATE OF MADHYA PRADESH",
-              "6": "Diary No. 54504-2026 ISTAK VERSUS STAT OF UP AND ANR.",
-              "7": "SLP(Crl) No. DEEP PARIKH VERSUS M/S SHUBHAM AGENCIES",
-              "8": "SLP(Crl) No. HARMIT PAHWA VERSUS SURAJ VISHWAKARMA",
-              "9": "Diary No. 40709-2026 STATE OF RAJASTHAN AND ORS. VERSUS CHANDRALEKHA SEVAK AND ORS.",
-              "10": "Diary No. 44462-2026 SAMEER KAPOOR AND ANR. VERSUS STATE (GOVT. OF NCT OF DELHI) AND ORS.",
-              "11": "SLP(C) No. 31083/2026 N. RADHIKA VERSUS B. VENKATESHWAR RAO AND ORS.",
-              "12": "Diary No. 46540-2026 GENERAL MANAGER AND ANR. VERSUS SHAFI AHMAD AND ORS.",
-              "13": "Diary No. 46720-2026 TARA CHAND AND ANR. VERSUS RAM DAS",
-              "14": "Diary No. 48889-2026 RAJAN K K AND ORS. VERSUS THE MANAGER NATIONAL INSURANCE COMPANY",
-              "15": "Diary No. 50723-2026 RAM ABHILASH LASKAR VERSUS UNION OF INDIA AND ORS.",
-              "16": "SLP(C) No. 32293/2026 CHAMPA BAI VERMA AND ANR. VERSUS THE NEW INDIA ASSURANCE COMPANY LIMITED",
-              "17": "Diary No. 55274-2026 HAKEEM AHMED KHAN VERSUS LOKESH KUMAR AND ORS.",
-              "18": "Diary No. 55619-2026 B. PARTHIBA ANANDA KRISHNAN VERSUS GOMATHI AND ORS.",
-              "19": "SLP(C) No. 32680/2026 ANIL ANANTRAO BHURE VERSUS RAJNI AND ORS.",
-              "20": "SLP(C) No. 32811/2026 STATE OF HIMACHAL PRADESH AND ORS. VERSUS ROSHAN LAL",
-              "21": "Diary No. 29809-2026 DHIRENDRA VERSUS MALA DEVI AND ANR.",
-              "22": "Diary No. 32197-2026 ARUN SUBASH VERSUS THE STATE OF TAMIL NADU AND ORS.",
-              "23": "Diary No. 32398-2026 RAM NATH CHOUDHARY VERSUS STATE OF SIKKIM",
-              "24": "Diary No. 46663-2026 MRITYUNJAY KUMAR CHAUDHARY VERSUS STATE OF BIHAR AND ANR.",
-              "25": "Diary No. 49998-2026 HUMA @ HAMA VERSUS THE STATE OF MADHYA PRADESH",
-              "26": "Diary No. 51267-2026 MUNAVATH JAYARAM NAIK VERSUS MUNAVATH SRI USHA AND ORS.",
-              "27": "Diary No. 51441-2026 MOHD ANSAR HASHMI VERSUS STATE OF U.P. AND ANR.",
-              "28": "Diary No. 52071-2026 RAMEELA W/O LATE MAHENDRA VERSUS STATE OF RAJASTHAN AND ANR.",
-              "29": "SLP(Crl) No. NORRIS CRASTO VERSUS JIGAR PARMAR AND ORS.",
-              "30": "SLP(Crl) No. RAM DHANI VERSUS STATE OF UTTAR PRADESH",
-              "31": "SLP(C) No. 17857/2026 VINAY A AND ANR. VERSUS LAKSHMAMMA AND ORS.",
-              "32": "SLP(Crl) No. ARVIND KUMAR JOSHI VERSUS STATE OF UTTAR PRADESH AND ANR.",
-              "33": "SLP(Crl) No. RAKESH KUMAR VERSUS STATE OF HIMACHAL PRADESH AND ANR.",
-              "34": "SLP(Crl) No. MILAN DAS VERSUS THE STATE OF ASSAM AND ANR.",
-              "35": "T.P.(C) No. 143/2026 SHAIFALI VERMA VERSUS PRANSHU GOYAL",
-              "36": "T.P.(C) No. 573/2026 C DHANOOSHA VERSUS N.S. RAJESH",
-              "36.1": "Connected N S RAJESH AND ORS. VERSUS C DHANOOSHA",
-              "36.2": "Connected N S RAJESH AND ORS. VERSUS C DHANOOSHA",
-              "37": "T.P.(Crl.) No. 212/2026 NANDI JAIN VERSUS M/S BAIDYANATH AYURVED BHAWAN PRIVATE",
-              "38": "T.P.(C) No. 1457/2026 RITU VIVEK SINGH VERSUS VIVEK RAVINDRA SINGH ARJUN GARG [R-1]",
-              "39": "T.P.(Crl.) No. 685/2026 X VERSUS ABHAY KUMAR AND ANR.",
-              "40": "T.P.(Crl.) No. 531/2026 JAMAL AKHTAR ANSARI VERSUS BANDHAN BANK LIMITED",
-              "41": "T.P.(C) No. 1640/2026 MANISHA SHARMA VERSUS RAJIV SHARMA",
-              "42": "T.P.(C) No. 167/2026 KAJAL GUPTA VERSUS AKSHAY GUPTA",
-              "43": "SLP(Crl) No. 3088/2026 KOTA RAMANA REDDY VERSUS STATE OF ANDHRA PRADESH",
-              "44": "SLP(Crl) No. JAGRUTIBEN RAJENDRAKUMAR PATEL VERSUS STATE OF GUJARAT",
-              "45": "SLP(Crl) No. HARIVANSH VISHWAKARMA VERSUS STATE OF UTTAR PRADESH AND ORS.",
-              "46": "SLP(Crl) No. DEEPA C. PARVATHI VERSUS RAGHAVENDRA S AND ANR.",
-              "47": "SLP(C) No. 1303/2021 C. CHENNAKESAVAN VERSUS LAKSHMIDEVI (DEAD) AND ORS.",
-              "48": "SLP(C) No. 12788/2024 M RAJA RAJESWAR VERSUS M.KALPANA JYOTHIRMAYI",
-              "49": "SLP(C) No. KANUBHAI VALLABHBHAI SUTHAR AND ANR. VERSUS STATE OF GUJARAT AND ORS.",
-              "50": "SLP(C) No. 19405/2026 MAHANT RAMESHWAR DAS VERSUS GHANSHYAM DAS AND ORS.",
-              "51": "Diary No. 30807-2026 BHAGAT SINGH AND ORS. VERSUS VISHNU AND ORS.",
-              "52": "SLP(C) No. 27446/2026 AFSAR VERSUS FARHAT ALI SIDDQUI AND ANR.",
-              "53": "SLP(C) No. 30349/2026 STATE OF CHHATTISGARH AND ORS. VERSUS PRASHANT RANGARI AND ORS.",
-              "53.1": "Connected STATE OF CHHATTISGARH AND ORS. VERSUS MAMTA ELAMKAR",
-              "54": "SLP(C) No. 26017/2026 MONIKA SHARMA VERSUS THE STATE OF MADHYA PRADESH AND ORS.",
-              "55": "SLP(C) No. 26475/2026 HARMUJ ALI AND ANR. VERSUS DAKHIN SINGRA MILANJYOTI SANGHA MEEN PAAM"
-            },
-            "advocates": {
-              "1": {
-                "pet": "RAJAN KUMAR SINGH",
-                "resp": "SANJANA SADDY"
-              },
-              "2": {
-                "pet": "ASHISH CHOUDHURY",
-                "resp": "PREM PRAKASH AMRITA PANDA"
-              },
-              "3": {
-                "pet": "ABHIJIT SENGUPTA",
-                "resp": "PRABODH KUMAR"
-              },
-              "4": {
-                "pet": "NISHANT BISHNOI"
-              },
-              "5": {
-                "pet": "RAJIV KUMAR VIRMANI"
-              },
-              "6": {
-                "pet": "ANSAR AHMAD"
-              },
-              "7": {
-                "pet": "AYYAM PERUMAL KARTHIK"
-              },
-              "8": {
-                "pet": "KAUSTUBH SHUKLA"
-              },
-              "9": {
-                "pet": "S.. UDAYA KUMAR SAGAR",
-                "resp": "TOM JOSEPH , K PAARI VENDHAN"
-              },
-              "10": {
-                "pet": "DIVYAKANT LAHOTI"
-              },
-              "11": {
-                "pet": "AKSHAY SAHAY"
-              },
-              "13": {
-                "pet": "SHAGUN THAKUR"
-              },
-              "14": {
-                "pet": "KAILAS MORE"
-              },
-              "15": {
-                "pet": "ATUL KRISHNA"
-              },
-              "16": {
-                "pet": "SHAILESH SUMAN"
-              },
-              "17": {
-                "pet": "YUSUF"
-              },
-              "18": {
-                "pet": "G. BALAJI"
-              },
-              "19": {
-                "pet": "ISHAAN GEORGE",
-                "resp": "SATYAJEET KUMAR"
-              },
-              "20": {
-                "pet": "KETAN PAUL"
-              },
-              "21": {
-                "pet": "GOPAL SHARAN PATHAK"
-              },
-              "22": {
-                "pet": "R. SUDHAKARAN"
-              },
-              "23": {
-                "pet": "JAYESH K. UNNIKRISHNAN"
-              },
-              "24": {
-                "pet": "AKANSHA"
-              },
-              "25": {
-                "pet": "ANILENDRA PANDEY"
-              },
-              "26": {
-                "pet": "TANYA RAIZADA"
-              },
-              "27": {
-                "pet": "DEEPAK GOEL"
-              },
-              "28": {
-                "pet": "BHUSHAN MAHENDRA OZA"
-              },
-              "29": {
-                "pet": "SHASHWAT GOEL"
-              },
-              "30": {
-                "pet": "SIDDHARTHA SINHA"
-              },
-              "31": {
-                "pet": "HARISHA S.R"
-              },
-              "32": {
-                "pet": "R AND R LAW ASSOCIATES",
-                "resp": "GARVESH KABRA BHUWAN RAJ"
-              },
-              "33": {
-                "pet": "KAUSHAL YADAV"
-              },
-              "34": {
-                "pet": "AVIJIT ROY"
-              },
-              "35": {
-                "pet": "BALAJI SRINIVASAN",
-                "resp": "DHANANJAY GARG"
-              },
-              "36": {
-                "pet": "SRAVAN KUMAR KARANAM",
-                "resp": "CHAND QURESHI"
-              },
-              "36.1": {
-                "pet": "CHAND QURESHI"
-              },
-              "36.2": {
-                "pet": "CHAND QURESHI"
-              },
-              "37": {
-                "pet": "RAJEEV SINGH",
-                "resp": "ARUN AGGARWAL"
-              },
-              "38": {
-                "pet": "HARPREET SINGH GUPTA"
-              },
-              "39": {
-                "pet": "AJIT PRAVIN WAGH"
-              },
-              "40": {
-                "pet": "PRANAYA KUMAR",
-                "resp": "ARJUN GARG"
-              },
-              "41": {
-                "pet": "SARVESH SINGH"
-              },
-              "42": {
-                "pet": "GAURAV",
-                "resp": "VAGISHA KOCHAR"
-              },
-              "43": {
-                "pet": "V. N. RAGHUPATHY",
-                "resp": "GUNTUR PRAMOD KUMAR"
-              },
-              "44": {
-                "pet": "MANJU JETLEY",
-                "resp": "SWATI GHILDIYAL"
-              },
-              "45": {
-                "resp": "TULIKA MUKHERJEE"
-              },
-              "46": {
-                "pet": "PURUSHOTTAM SHARMA",
-                "resp": "KRISHNA & NISHANI LAW CHAMBERS"
-              },
-              "47": {
-                "pet": "M.P. PARTHIBAN",
-                "resp": "S. THANANJAYAN"
-              },
-              "48": {
-                "pet": "VENKAT PALWAI LAW",
-                "resp": "ABID ALI BEERAN P"
-              },
-              "49": {
-                "pet": "JESAL WAHI"
-              },
-              "50": {
-                "pet": "MRINMOI CHATTERJEE"
-              },
-              "51": {
-                "pet": "MANISH KUMAR GUPTA"
-              },
-              "52": {
-                "pet": "UMESH DUBEY"
-              },
-              "53": {
-                "pet": "SIDDHARTHA SINHA",
-                "resp": "ASHUTOSH GHADE"
-              },
-              "53.1": {
-                "pet": "SIDDHARTHA SINHA",
-                "resp": "ASHUTOSH GHADE"
-              },
-              "54": {
-                "pet": "ASHWANI KUMAR DUBEY"
-              },
-              "55": {
-                "pet": "FUZAIL AHMAD AYYUBI"
-              }
-            },
-            "main": 55,
-            "supp": 0
           }
         },
         "Chamber": {
-          "7": {
-            "coram": "HON'BLE MR. JUSTICE SANJEEV SACHDEVA",
-            "total": "27",
-            "fresh": "",
-            "items": {
-              "1701": "Diary No. 46666-2026 P.K. POUNRAJ VERSUS M/S. KABINI MINERALS PVT LTD",
-              "1702": "T.P.(C) No. 2583/2025 TADEPALLI MADHAVI VERSUS VENUGOPAL TADEPALLI",
-              "1703": "T.P.(C) No. 1023/2026 NB SUB SANTOSH VERSUS BASALINGAPPA AND ANR.",
-              "1704": "C.A. No. 4685/2012 NATHU (DEAD) THRU LRS PAWAN AND ANR. VERSUS GURDEV SINGH (DEAD) AND ORS.",
-              "1705": "SLP(C) No. STATE OF GUJARAT . AND ORS. VERSUS MUKTABEN MAGANBHAI (DECEASED) AND ORS. ASHUTOSH GH",
-              "1706": "Diary No. 10339-2025 OM PARKASH VERSUS LOK NAYAK HOSPITAL MANAGEMENT BOARD AND",
-              "1707": "Diary No. 12458-2026 PRADEEP KUMAR TRIVEDI VERSUS SRI UMA SHANKAR AND ORS.",
-              "1708": "SLP(C) No. 20513/2024 VEENA KUMARI MEENA VERSUS ABDUL WAHAB",
-              "1709": "Diary No. 10357-2025 GREATER NOIDA INDUSTRIAL DEVELOPMENT VERSUS BANSI LAL",
-              "1710": "Diary No. 11421-2025 GREATER NOIDA INDUSTRIAL DEVELOPMENT VERSUS GYAN CHAND",
-              "1711": "Diary No. 11751-2025 GREATER NOIDA INDUSTRIAL DEVELOPMENT VERSUS SANJAY",
-              "1712": "Diary No. 12721-2025 GREATER NOIDA INDUSTRIAL DEVELOPMENT VERSUS DEVENDRA KUMAR",
-              "1713": "SLP(Crl) No. 8747/2025 YADVINDER SINGH VERSUS BHATANA ALLOYS PVT LTD",
-              "1714": "Crl.A. No. 346/2026 KEJAR VERMA VERSUS THE STATE OF HARYANA",
-              "1715": "C.A. No. KENGAI AMMAL VERSUS B.S.N.ROBERT AND ORS.",
-              "1716": "T.P.(C) No. 2427/2025 SHEELA MINJ VERSUS RAJENDRA CHOUDHARY",
-              "1717": "T.P.(C) No. 2898/2025 JANPREET KAUR CHHABRA @ SHIPPI VERSUS JASVINDER SINGH CHHABRA",
-              "1718": "T.P.(C) No. 2385/2025 MINA KUMARI VERSUS SUNIL KUMAR",
-              "1719": "T.P.(C) No. 2684/2025 SURBHI AGARWAL AND ANR. VERSUS UNITED INDIA INSURANCE COMPANY LTD AND ORS.",
-              "1720": "Diary No. 52315-2025 SONAM VIJAYKUMAR DHUSHIYA AND ORS. VERSUS ANIKA MANISH DHUSHIYA AND ANR.",
-              "1721": "SLP(Crl) No. THE JOINT DIRECTOR, DIRECTORATE OF VERSUS VIKRAM RAVINDRAN",
-              "1722": "Diary No. 53433-2025 MANISHA ANAND VERSUS NILESH ANAND",
-              "1723": "T.P.(Crl.) No. 138/2026 KIRTI AHUJA VERSUS SHRIKANT TIWARI AND ORS.",
-              "1724": "SLP(Crl) No. 7965/2026 RANJIT SINGH VERSUS THE STATE OF PUNJAB AND ANR.",
-              "1725": "Diary No. 34130-2026 CENTRAL BUREAU OF INVESTIGATION VERSUS M/S MSPL LIMITED",
-              "1726": "Diary No. 53148-2026 KULDEEP SINGH VERSUS STATE OF HARYANA",
-              "1727": "SLP(C) No. 10119/2023 RAMILABEN AND ORS. VERSUS ISHWARBHAI DAYARAMBHAI PATEL SINCE (D)"
-            },
-            "advocates": {
-              "1701": {
-                "pet": "VIKASH SINGH"
-              },
-              "1702": {
-                "pet": "T. HARI HARA SUDHAN"
-              },
-              "1703": {
-                "pet": "SUNIL KUMAR SHARMA"
-              },
-              "1704": {
-                "pet": "SHARMILA UPADHYAY",
-                "resp": "VINEET BHAGAT MANSOOR ALI"
-              },
-              "1705": {
-                "pet": "DEEPANWITA PRIYANKA"
-              },
-              "1708": {
-                "pet": "SAKSHI KAKKAR",
-                "resp": "VINOD KUMAR TEWARI"
-              },
-              "1709": {
-                "pet": "BINAY KUMAR DAS",
-                "resp": "PREM MALHOTRA"
-              },
-              "1710": {
-                "pet": "BINAY KUMAR DAS",
-                "resp": "PREM MALHOTRA"
-              },
-              "1711": {
-                "pet": "BINAY KUMAR DAS",
-                "resp": "PREM MALHOTRA"
-              },
-              "1712": {
-                "pet": "BINAY KUMAR DAS",
-                "resp": "PREM MALHOTRA"
-              },
-              "1713": {
-                "pet": "KULDIP SINGH",
-                "resp": "KULDIP SINGH"
-              },
-              "1714": {
-                "pet": "VAIRAWAN A.S",
-                "resp": "SAMAR VIJAY SINGH"
-              },
-              "1715": {
-                "pet": "E. SUDARSANAN",
-                "resp": "G. BALAJI"
-              },
-              "1716": {
-                "pet": "ANIL KUMAR VERMA"
-              },
-              "1717": {
-                "pet": "SUVIDUTT M.S"
-              },
-              "1718": {
-                "pet": "ASHUTOSH THAKUR"
-              },
-              "1719": {
-                "pet": "PRIYA PURI",
-                "resp": "RAMESHWAR PRASAD GOYAL , PRIYA PURI"
-              },
-              "1720": {
-                "pet": "AKANKSHA MEHRA"
-              },
-              "1721": {
-                "pet": "ARVIND KUMAR SHARMA",
-                "resp": "BHARAT MONGA"
-              },
-              "1722": {
-                "pet": "AMISH AGGARWALA"
-              },
-              "1723": {
-                "pet": "ANILENDRA PANDEY",
-                "resp": "MUKESH KUMAR SINGH AND CO"
-              },
-              "1724": {
-                "pet": "RAJESH SINGH CHAUHAN"
-              },
-              "1725": {
-                "pet": "SHREEKANT NEELAPPA",
-                "resp": "E. C. AGRAWALA"
-              },
-              "1726": {
-                "pet": "DISHA SINGH"
-              },
-              "1727": {
-                "pet": "AYUSH ANAND",
-                "resp": "HIMANSHU CHAUBEY"
-              }
-            },
-            "main": 27,
-            "supp": 0
-          },
           "11": {
             "coram": "HON'BLE MR. JUSTICE SHREE CHANDRASHEKHAR",
             "total": "26",
@@ -13718,6 +13334,3058 @@
           }
         }
       }
+    },
+    "2026-09-21": {
+      "lists_found": [
+        "Chamber (main)"
+      ],
+      "lists": {
+        "Chamber": {
+          "5": {
+            "coram": "HON'BLE MR. JUSTICE ALOK ARADHE",
+            "total": "22",
+            "fresh": "",
+            "items": {
+              "1701": "Diary No. 23789-2026 JASPAL SHARMA AND ORS. VERSUS LAKHWINDER AND ORS.",
+              "1702": "Diary No. 51549-2026 MACHERI IBRAHIM VERSUS STATE OF KERALA",
+              "1703": "Diary No. 52789-2026 GIAN CHAND SAINI VERSUS STATE OF HARYANA AND ANR.",
+              "1704": "Diary No. 54289-2026 CHANDRA RAJAIAH VERSUS THE STATE OF ANDHRA PRADESH",
+              "1705": "Diary No. 54571-2026 RAM PAL SINGH VERSUS STATE OF U.P.",
+              "1706": "Diary No. 54666-2026 RANVIR SINGH VERSUS STATE OF PUNJAB",
+              "1707": "Diary No. 55007-2026 UDAIVEER SINGH KUSHWAH VERSUS SURESH KHANDELWAL",
+              "1708": "T.P.(C) No. 116/2026 BHAWNA ARYA VERSUS DEEPAK KUMAR KHAIRIYA",
+              "1709": "C.A. No. 3639/2018 VITHOBA MAMLEKAR (DECEASED THR. LRS.) AND VERSUS RAMESH VAMAN MAMLEKAR (DECEASED THROUGH",
+              "1710": "C.A. No. 14036/2024 SR. DEPOT MANAGER, INDIAN OIL CORPORATION VERSUS KU. VIDYAWATI RAMSWAROOP VERMA",
+              "1711": "W.P.(C) No. 313/2025 UDAY MAHURKAR AND ORS. VERSUS UNION OF INDIA AND ORS.",
+              "1712": "SLP(C) No. 26278/2025 GHANSHYAM VERSUS NIRMALA DEVI ALIAS NIRMALA BAI AND ORS.",
+              "1713": "Diary No. 51297-2025 JAGJEET SINGH VERSUS PUNJAB STATE POWER CORPORATION LIMITED",
+              "1714": "Diary No. 44406-2026 SITAB SINGH VERSUS STATE OF HARYANA",
+              "1715": "SLP(Crl) No. SUFAL BOSE @ RANA VERSUS CENTRAL BUREAU OF INVESTIGATION AND ANR.",
+              "1716": "C.A. No. 4701/2024 SOURAV MONDAL VERSUS SATISH CHANDRA MONDAL (DEAD) BY LRS. AND",
+              "1717": "C.A. No. 6825/2022 T. PRABHAKAR RAO, AND ORS. VERSUS THE LAND ACQUISITION OFFICER AND REVENUE",
+              "1718": "SLP(C) No. 5178/2020 U.P. AVAS EVAM VIKAS PARISHAD VERSUS TARA AND ORS.",
+              "1719": "C.A. No. 14309/2024 GANGADHAR KARBHARI JADHAV VERSUS UNION OF INDIA AND ORS.",
+              "1720": "Diary No. 44892-2023 HARYANA STAFF SELECTION COMMISSION VERSUS KULDEEP SINGH",
+              "1721": "Diary No. 36591-2024 KAMLA@ KAMLESH BAI VERSUS SANJAY KUMAR JHARIYA AND ORS.",
+              "1722": "SLP(C) No. 26750/2023 UNION OF INDIA AND ANR. VERSUS M/S LCL LOGISTIX INDIA PRIVATE LIMITED"
+            },
+            "advocates": {
+              "1701": {
+                "pet": "RAMESHWAR PRASAD"
+              },
+              "1702": {
+                "pet": "HARSHAD V. HAMEED"
+              },
+              "1703": {
+                "pet": "KRISHNA BALLABH THAKUR"
+              },
+              "1704": {
+                "pet": "SHASHIBHUSHAN P"
+              },
+              "1705": {
+                "pet": "RAMJEE PANDEY"
+              },
+              "1706": {
+                "pet": "UDIAN SHARMA"
+              },
+              "1707": {
+                "pet": "PRABHAT KUMAR"
+              },
+              "1708": {
+                "pet": "RAMESHWAR PRASAD"
+              },
+              "1709": {
+                "pet": "JAYANT MOHAN , APOORV",
+                "resp": "RESHMI REA SINHA"
+              },
+              "1710": {
+                "pet": "HARSH LATA",
+                "resp": "HARSH LATA"
+              },
+              "1711": {
+                "pet": "PARTH YADAV"
+              },
+              "1712": {
+                "pet": "RAHUL GUPTA",
+                "resp": "HARSH JAIN"
+              },
+              "1713": {
+                "pet": "SATYA VEER SINGH",
+                "resp": "AKSHAY AMRITANSHU"
+              },
+              "1714": {
+                "pet": "PRATIVA PRAKASH",
+                "resp": "ANURAG KULHARIA"
+              },
+              "1715": {
+                "pet": "TAVISH BHUSHAN PRASAD",
+                "resp": "SHREEKANT NEELAPPA TERDAL"
+              },
+              "1716": {
+                "pet": "BINAY KUMAR DAS",
+                "resp": "SURYA KANT , PINKY"
+              },
+              "1717": {
+                "pet": "RAVI SEHGAL",
+                "resp": "SRAVAN KUMAR KARANAM"
+              },
+              "1718": {
+                "pet": "ABHISHEK KUMAR SINGH",
+                "resp": "ALDANISH REIN"
+              },
+              "1719": {
+                "pet": "ANAND DILIP LANDGE"
+              },
+              "1720": {
+                "pet": "AKSHAY AMRITANSHU",
+                "resp": "RIDDHI SANCHETI"
+              },
+              "1721": {
+                "pet": "PRAVIR CHOUDHARY",
+                "resp": "SIDDHARTHA IYER"
+              },
+              "1722": {
+                "pet": "GURMEET SINGH MAKKER"
+              }
+            },
+            "main": 22,
+            "supp": 0
+          },
+          "7": {
+            "coram": "HON'BLE MR. JUSTICE SHEEL NAGU",
+            "total": "697",
+            "fresh": "",
+            "items": {
+              "1701": "Diary No. 5638-2025 KULDEEP @ LAMBU VERSUS THE STATE OF HARYANA",
+              "1702": "Diary No. 10941-2025 M/S DILIP TRADING COMPANY VERSUS GANESH BHAI AND ANR.",
+              "1703": "Diary No. 37931-2025 K SRINIVAS REDDY VERSUS VEERA VAHANA PRIVATE LIMITED AND ANR.",
+              "1704": "Diary No. 45423-2025 CHINNARASU @ RAMACHANDRIN (DIED) THROUGH VERSUS KARTHIKEYAN (DIED) THROUGH LRS AND ORS.",
+              "1705": "Diary No. 46596-2025 SANJAY KUMAR GUPTA VERSUS THE STATE OF CHHATTISGARH AND ORS.",
+              "1706": "Diary No. 54922-2025 STATE OF JAMMU AND KASHMIR VERSUS RAJ KUMAR FOTEDAR",
+              "1707": "Diary No. 58052-2025 ARTIFICIAL LIMBS MANUFACTURING VERSUS NEELU DWIVEDI AND ORS.",
+              "1708": "Diary No. 64599-2025 DIRECTORATE OF ENFORCEMENT VERSUS RAKESH KUMAR GULATI",
+              "1709": "Diary No. 65466-2025 RAJEEV SUNEJA VERSUS ASSISTANT COMMISSIONER OF INCOME TAX",
+              "1710": "Diary No. 75597-2025 THE STATE OF RAJASTHAN AND ORS. VERSUS ASHU SINGH BHATI",
+              "1711": "Diary No. 9248-2026 COMMISSIONER OF INCOME TAX VERSUS INTELSAT CORPORATION",
+              "1712": "Diary No. 17158-2026 SARDAR SAROVAR NARMADA NIGAM LIMITED AND VERSUS AYYUBBHAI LADARBHAI SIPAI",
+              "1713": "Diary No. 19133-2026 BAREILLY DEVELOPMENT AUTHORITY VERSUS LALKARAN SINGH",
+              "1714": "Diary No. 19931-2026 GRAM PANCHAYAT SHYAM KALAN VERSUS RAJ KUMAR AND ORS.",
+              "1715": "Diary No. 21296-2026 SARBATI DEVI AND ORS. VERSUS UNION OF INDIA AND ANR.",
+              "1716": "Diary No. 21698-2026 DHARAMPAL AND ORS. VERSUS UNION OF INDIA AND ANR.",
+              "1717": "Diary No. 22279-2026 AJIJUL HOSSAIN KHAN VERSUS THE ELECTION COMMISSION OF INDIA AND ORS.",
+              "1718": "Diary No. 22415-2026 GANESH BABAN BORHADE VERSUS THE STATE OF MAHARASHTRA",
+              "1719": "Diary No. 22487-2026 KAMTA SINGH YADAV AND ORS. VERSUS THE STATE OF BIHAR AND ORS.",
+              "1720": "Diary No. 22530-2026 SUMANTA PANDA VERSUS THE STATE OF ODISHA AND ORS.",
+              "1721": "Diary No. 22534-2026 SUMANTA PANDA VERSUS STATE OF ODISHA AND ORS.",
+              "1722": "Diary No. 22655-2026 MD. ALAUDDIN S.K. @ ALAUDDIN SHEIKH VERSUS THE UNION OF INDIA AND ORS.",
+              "1723": "Diary No. 22908-2026 MINATI HALDER VERSUS THE STATE OF WEST BENGAL AND ANR.",
+              "1724": "Diary No. 22913-2026 MINATI HALDER AND ORS. VERSUS STATE OF WEST BENGAL AND ORS.",
+              "1725": "Diary No. 22960-2026 KAMLESH MANOHAR KANUNUGO VERSUS DIRECTORATE OF ENFORCEMENT AND ANR.",
+              "1726": "Diary No. 22971-2026 BEERAIAH AND ORS. VERSUS THE COMPETENT AUTHORITY FOR SRI. KANVA",
+              "1727": "Diary No. 22993-2026 GULNAZ PARVEEN VERSUS STATE OF NCT OF DELHI AND ORS.",
+              "1728": "Diary No. 23034-2026 DILIP SAHNI @ NITESHJI VERSUS THE STATE OF BIHAR",
+              "1729": "Diary No. 23066-2026 ARCHANA KUMARI VERSUS THE STATE OF BIHAR AND ORS.",
+              "1730": "Diary No. 23145-2026 C MAHESH KUMAR VERSUS THE STATE OF KARNATAKA AND ANR.",
+              "1731": "Diary No. 23180-2026 RUDRAVEERYA DEVELOPERS LTD DIRECTOR VERSUS PRIME ZONE DEVELOPERS PRIVATE LTD DIRECTOR",
+              "1732": "Diary No. 23194-2026 DIRECTORATE OF ENFORCEMENT VERSUS Y. HARISH CHANDRA PRASAD AND ORS.",
+              "1733": "Diary No. 23291-2026 CHINNANNA REDDY AND ANR. VERSUS BANGALORE DEVELOPMENT AUTHORITY AND ORS.",
+              "1734": "Diary No. 23383-2026 PUSHP KUMAR SHARMA VERSUS THE STATE OF PUNJAB AND ANR.",
+              "109": "AND STATEMENT OF THE PETITIONER-IN-",
+              "1735": "Diary No. 23554-2026 VAISHALI JADHAV VERSUS NINA ANIL MATHRANI",
+              "1736": "Diary No. 23765-2026 SHIVMANI YADAV VERSUS UNION OF INDIA AND ORS.",
+              "1737": "Diary No. 23804-2026 JOSE BABU VERSUS STATE OF NCT OF MAHARASHTRA AND ORS.",
+              "1738": "Diary No. 23825-2026 NAGARJUNA FERTILIZERS AND CHEMICALS VERSUS TRAMMO DMCC",
+              "1739": "Diary No. 23884-2026 ANKUSH JAIN VERSUS UNION OF INDIA AND ANR.",
+              "1740": "Diary No. 23903-2026 CHARVI S. VERSUS UNION OF INDIA AND ORS.",
+              "1741": "Diary No. 23907-2026 VIJAY BHUSHAN GAUTAM VERSUS STATE OF UP AND ORS.",
+              "1742": "Diary No. 23911-2026 JEYAANANTHEN BALASUBRAMANIYAN VERSUS THE REGISTRAR GENERAL, MADRAS HIGH COURT",
+              "1743": "Diary No. 23915-2026 AVISHEK SINGH VERSUS UNION OF INDIA AND ORS.",
+              "1744": "Diary No. 23925-2026 KAPIL KUMAR DABAS VERSUS UNION OF INDIA AND ORS.",
+              "1745": "Diary No. 23986-2026 PARSHANT AND ANR. VERSUS UNION OF INDIA AND ORS.",
+              "1746": "Diary No. 23999-2026 PRAKASH CHOUBEY VERSUS BAR COUNCIL OF INDIA AND ANR.",
+              "1747": "Diary No. 24302-2026 DIRECTORATE OF ENFORCEMENT VERSUS NARESH T JAIN AND ORS.",
+              "1748": "Diary No. 24319-2026 PRADEEP RANJEET DEVKAR VERSUS UNION OF INDIA",
+              "1749": "Diary No. 24483-2026 RAJESAHEB AND ANR. VERSUS THE UNION OF INDIA AND ORS.",
+              "1750": "Diary No. 24563-2026 GAUTAM KHATTAR VERSUS STATE OF GOA",
+              "1751": "Diary No. 24634-2026 T.V MOHANDAS PAI AND ORS. VERSUS UNION OF INDIA AND ORS.",
+              "1752": "Diary No. 24635-2026 HINDUSTAN COPPER LIMITED VERSUS STATE OF JHARKHAND AND ANR.",
+              "1753": "Diary No. 24730-2026 MADHAV KHATTAR VERSUS STATE OF GOA",
+              "1754": "Diary No. 24801-2026 DIRECTORATE OF ENFORCEMENT MUMBAI ZONE II VERSUS MANGALDAS VITTHALRAO BANDAL",
+              "1755": "Diary No. 24983-2026 RAJKUMAR NANDLAL DHOOT VERSUS STATE BANK OF INDIA",
+              "1756": "Diary No. 24988-2026 PRADEEP NANDLAL DHOOT VERSUS STATE BANK OF INDIA",
+              "1757": "Diary No. 25089-2026 KERALA HIGH COURT ADVOCATES ASSOCIATION VERSUS STATE OF KERALA AND ORS.",
+              "1758": "Diary No. 25139-2026 TSUNAMI ON ROADS [NGO] VERSUS UNION OF INDIA AND ANR.",
+              "1759": "Diary No. 25265-2026 ANOOP TANEJA AND ORS. VERSUS NEW OKHLA INDUSTRIAL DEVELOPMENT",
+              "1760": "Diary No. 25355-2026 JYOTI RAI AND ANR. VERSUS BAR COUNCIL OF INDIA AND ANR.",
+              "1761": "Diary No. 25442-2026 BIHARIDAN JIVABHAI GADHVI VERSUS THE STATE OF GUJARAT AND ANR.",
+              "1762": "Diary No. 25486-2026 ALLA RAMAKRISHNA REDDY VERSUS THE UNION OF INDIA AND ORS.",
+              "1763": "Diary No. 25656-2026 CHANDERLATA GOSAI VERSUS UNION OF INDIA AND ORS.",
+              "1764": "Diary No. 25700-2026 MAZAHARUL SULTAN VERSUS BIRAJ NATH AND ORS.",
+              "1765": "Diary No. 25787-2026 JANABHAI BHODARBHAI RATHVA VERSUS STATE OF GUJARAT",
+              "1766": "Diary No. 25871-2026 VIJAY NISHANTH AND ANR. VERSUS UNION OF INDIA AND ORS.",
+              "1767": "Diary No. 25888-2026 PRATIMA MUDGAL VERSUS THE STATE OF MADHYA PRADESH AND ORS.",
+              "1768": "Diary No. 25991-2026 BHAWAR SINGH VERSUS INDIAN OIL CORPORATION LTD. AND ORS.",
+              "1769": "Diary No. 25998-2026 HAIDAR ALI VERSUS THE UNION OF INDIA AND ORS.",
+              "1770": "Diary No. 26043-2026 SRI. ALLA RAMAKRISHNA REDDY VERSUS NARA CHANDRA BABU NAIDU",
+              "1771": "Diary No. 26135-2026 ADITYA DAS VERSUS ELECTION COMMISSION OF INDIA AND ORS.",
+              "1772": "Diary No. 26146-2026 SRI. ALLA RAMAKRISHNA REDDY VERSUS THE STATE OF AP AND ANR.",
+              "1773": "Diary No. 26154-2026 ROHIT KUMAR DEHERI VERSUS UNION OF INDIA AND ORS.",
+              "1774": "Diary No. 26160-2026 DEEPA SINGH VERSUS STATE (NCT OF DELHI)",
+              "1775": "Diary No. 26371-2026 STATE OF CHHATTISGARH VERSUS ANIL TUTEJA",
+              "1776": "Diary No. 26382-2026 M/S DIVERSE REALTORS PVT LTD. VERSUS PARMANAND AND ORS.",
+              "1777": "Diary No. 26402-2026 TOIBUR SEKH AND ORS. VERSUS ELECTION COMMISSION OF INDIA AND ANR.",
+              "1778": "Diary No. 26457-2026 GOPAL CHAND VERSUS THE UNION OF INDIA",
+              "1779": "Diary No. 26506-2026 SATISH PANCHAL VERSUS THE STATE OF MADHYA PRADESH AND ANR.",
+              "1780": "Diary No. 26535-2026 RAO DEVENDRA SINGH VERSUS SHRI OMKARESHWAR TEMPLE PUBLIC TRUST AND",
+              "1781": "Diary No. 26648-2026 MANIKANDAN VATHAN VERSUS ANONYMOUS OFFICERS(S) OF MADRAS HIGH",
+              "1782": "Diary No. 26661-2026 ULLA SUNDARI AND ANR. VERSUS UNION OF INDIA AND ANR.",
+              "1783": "Diary No. 27003-2026 MUKESH NEGI AND ORS. VERSUS STATE OF UTTARAKHAND AND ORS.",
+              "1784": "Diary No. 27007-2026 SANJIV YADAV AND ORS. VERSUS STATE OF UTTARAKHAND AND ORS.",
+              "1785": "Diary No. 27017-2026 M/S DIVERSE REALTORS PVT. LTD. VERSUS JAIBIR AND ORS.",
+              "1786": "Diary No. 27039-2026 VAIBHAV JALAN VERSUS STATE OF UTTAR PRADESH AND ORS.",
+              "1787": "Diary No. 27089-2026 M/S. AGRAWAL FOOD STUFF LLP. VERSUS STATE OF MAHARASHTRA AND ORS.",
+              "1788": "Diary No. 27096-2026 SANJAY KUMAR DUBEY AND ORS. VERSUS UNION OF INDIA AND ORS.",
+              "1789": "Diary No. 27137-2026 SETHURAMAN MAHADEVAN AND ORS. VERSUS OZONE URBANA INFRA DEVELOPERS PRIVATE",
+              "1790": "Diary No. 27249-2026 VAIBHAV JALAN VERSUS STATE OF UTTAR PRADESH AND ORS.",
+              "1791": "Diary No. 27261-2026 VAIBHAV JALAN VERSUS STATE OF UTTAR PRADESH AND ORS.",
+              "1792": "Diary No. 27266-2026 BISHNU KUMAR AGARWALA VERSUS THE UNION OF INDIA",
+              "1793": "Diary No. 27339-2026 VAIBHAV JALAN VERSUS STATE OF UTTAR PRADESH AND ORS.",
+              "1794": "Diary No. 27377-2026 BISHNU KUMAR AGARWALA VERSUS THE UNION OF INDIA",
+              "1795": "Diary No. 27378-2026 M/S DIVERSE REALTORS PVT. LTD. VERSUS PARAS RAM",
+              "1796": "Diary No. 27387-2026 M/S DIVERSE REALTORS PVT. LTD. VERSUS RAMRATI AND ORS.",
+              "1797": "Diary No. 27399-2026 M/S DIVERSE REALTORS PVT. LTD. VERSUS BISRAM AND ORS.",
+              "1798": "Diary No. 27434-2026 KUNDAN AND ORS. VERSUS STATE OF UTTAR PRADESH AND ORS.",
+              "1799": "Diary No. 27536-2026 M/S SAFARI LAND FARM AND GUEST HOUSE VERSUS THE STATE OF TAMIL NADU AND ORS.",
+              "1800": "Diary No. 27537-2026 P. KISHORE VERSUS THE STATE OF TAMIL NADU AND ORS.",
+              "1801": "Diary No. 27539-2026 SAROOTHAM PADMANABHAN VERSUS THE STATE OF TAMIL NADU AND ORS.",
+              "1802": "Diary No. 27554-2026 SUNIL SURESHCHANDRA AGARWAL VERSUS NAVI MUMBAI MUNICIPAL CORPORATION (NMMC)",
+              "1803": "Diary No. 27676-2026 MAHESH PRASAD AND ORS. VERSUS THE STATE OF BIHAR AND ORS.",
+              "1804": "Diary No. 27722-2026 KRISHAN KUMAR VERSUS THE CHIEF MINISTER, GOVERNMENT OF HARYANA",
+              "1805": "Diary No. 27799-2026 KVUSHA INFRA PROJECTS PVT. LTD. VERSUS THE STATE OF KARNATAKA AND ORS.",
+              "1806": "Diary No. 27869-2026 CHATLA RAVI KIRAN VERSUS STATE OF TELANGANA AND ORS.",
+              "1807": "Diary No. 27931-2026 RAMANAND PRASAD AND ORS. VERSUS THE STATE OF BIHAR AND ORS.",
+              "1808": "Diary No. 28031-2026 GLAS TRUST COMPANY LLC VERSUS BYJU RAVEENDRAN AND ORS.",
+              "1809": "Diary No. 28076-2026 JASWINDER SINGH VERSUS UNION OF INDIA AND ORS.",
+              "1810": "Diary No. 28186-2026 SHAHAJI NANAI THORAT @ SHAHAJIRAO VERSUS THE STATE OF MAHARASHTRA",
+              "1811": "Diary No. 28196-2026 M/S. PATEL AND CO AND ORS. VERSUS UNION BANK AND ANR.",
+              "1812": "Diary No. 28435-2026 LALSANGLIANI COLNEY VERSUS STATE OF MIZORAM AND ORS.",
+              "1813": "Diary No. 28444-2026 GERALDINE G. SHABONG VERSUS STATE OF MEGHALAYA AND ORS.",
+              "1814": "Diary No. 28454-2026 KANAK SRIVASTAVA VERSUS THE VICE CHANCELLOR, BANARAS HINDU",
+              "1815": "Diary No. 28509-2026 EZHILARASI K VERSUS THE PRINCIPAL SECRETARY AND ORS.",
+              "1816": "Diary No. 28613-2026 EMPLOYEES PROVIDENT FUND ORGANIZATION VERSUS BALBIR SINGH AND ORS.",
+              "1817": "Diary No. 28757-2026 SURENDER SINGH VERSUS IDBI TRUSTEESHIP SERVICES LIMITED AND ANR.",
+              "1818": "Diary No. 28760-2026 M. RAMASUBRAMANI VERSUS UNION OF INDIA AND ORS.",
+              "1819": "Diary No. 28935-2026 KISHAN KUMAR RAWAT AND ANR. VERSUS THE STATE OF HARYANA AND ORS.",
+              "1820": "Diary No. 29015-2026 GO GREEN FOUNDATION TRUST AND ANR. VERSUS EVERSMILE PROPERTIES PRIVATE LIMITED AND",
+              "1821": "Diary No. 29075-2026 NASIR ALI VERSUS THE UNION OF INDIA AND ANR.",
+              "1822": "Diary No. 29176-2026 PRABHA NARENDRA GURI VERSUS NIRMALA TRIKAMDAS GURI",
+              "1823": "Diary No. 29297-2026 PANKAJ TANDON AND ORS. VERSUS LT. GOVERNOR NCT OF DELHI AND ORS.",
+              "1824": "Diary No. 29300-2026 M/S ANNAPOORNA INDUSTRIAL CORPORATION VERSUS LT GOVERNOR AND ORS.",
+              "1825": "Diary No. 29396-2026 KARAN CAB SERVICES PVT. LTD. VERSUS M/S HCL TECHNOLOGIES LTD.",
+              "1826": "Diary No. 29549-2026 SATYA PRAKASH GUPTA VERSUS M/S CHRYSO (INDIA) PRIVATE LIMITED AND ANR.",
+              "1827": "Diary No. 29553-2026 KUMAR CHINTAMAN KETKAR AND ORS. VERSUS CHARITY COMMISSIONER AND ORS.",
+              "1828": "Diary No. 29593-2026 MINAL ARUN SHINDE AND ORS. VERSUS UNION OF INDIA AND ORS.",
+              "1829": "Diary No. 29682-2026 PAYAL MODI VERSUS DIRECTORATE OF ENFORCEMENT AND ORS.",
+              "1830": "Diary No. 29900-2026 TAMIL NADU GENERATION AND DISTRIBUTION VERSUS THE SOUTH INDIAN SUGAR MILLS ASSOCIATION",
+              "1831": "Diary No. 29925-2026 G. BHAKTHAVATHSALAM VERSUS UNION OF INDIA AND ORS.",
+              "1832": "Diary No. 29944-2026 ANTONIO F. DO ROSARIO VERSUS STATE OF GOA AND ORS.",
+              "1833": "Diary No. 30165-2026 MEERUT DEVELOPMENT AUTHORITY VERSUS TARUN GUPTA AND ORS.",
+              "1834": "Diary No. 30203-2026 VASANT KRISHANJIVHATKAR VERSUS UNION OF INDIA",
+              "1835": "Diary No. 30344-2026 ASHOK KUMAR AND ORS. VERSUS THE STATE OF HARYANA AND ANR.",
+              "1836": "Diary No. 30575-2026 MANOJ KUMAR AND ORS. VERSUS UNION OF INDIA AND ORS.",
+              "1837": "Diary No. 30596-2026 MEERUT DEVELOPMENT AUTHORITY",
+              "1838": "Diary No. 30598-2026 SUMITRA DEVI JHANWAR AND ORS. VERSUS UNION OF INDIA AND ORS.",
+              "1839": "Diary No. 30617-2026 UPENDER BHARDWAJ VERSUS KOTAK MAHINDRA BANK",
+              "1840": "Diary No. 30667-2026 MD. MANZOOR ALAM VERSUS NATIONAL HIGHWAYS AUTHORITY OF INDIA AND",
+              "1841": "Diary No. 30760-2026 MEERUT DEVELOPMENT AUTHORITY VERSUS RAMESHWAR DAYAL AND ANR.",
+              "1842": "Diary No. 30762-2026 MEERUT DEVELOPMENT AUTHORITY VERSUS TEJ PAL SINGH TYAGI",
+              "1843": "Diary No. 30766-2026 MEERUT DEVELOPMENT AUTHORITY VERSUS OM PRAKASH AND ANR.",
+              "1844": "Diary No. 30767-2026 MEERUT DEVELOPMENT AUTHORITY VERSUS HAMID KHAN",
+              "1845": "Diary No. 30768-2026 MEERUT DEVELOPMENT AUTHORITY VERSUS BHAGWAN SINGH AND ANR.",
+              "1846": "Diary No. 30769-2026 MEERUT DEVELOPMENT AUTHORITY VERSUS BRAHM DUTT AND ANR.",
+              "1847": "Diary No. 30771-2026 MEERUT DEVELOPMENT AUTHORITY VERSUS LAKHMI CHAND AND ANR.",
+              "1848": "Diary No. 30772-2026 MEERUT DEVELOPMENT AUTHORITY VERSUS ATRI AND ANR.",
+              "1849": "Diary No. 30773-2026 MEERUT DEVELOPMENT AUTHORITY VERSUS AND ANR.",
+              "1850": "Diary No. 30774-2026 MEERUT DEVELOPMENT AUTHORITY VERSUS VED PRAKASH RASTOGI (DECEASED) AND ANR.",
+              "1851": "Diary No. 30775-2026 MEERUT DEVELOPMENT AUTHORITY VERSUS OM PRAKASH AND ANR.",
+              "1852": "Diary No. 30777-2026 MEERUT DEVELOPMENT AUTHORITY VERSUS PARMANAND AND ANR.",
+              "1853": "Diary No. 30780-2026 MEERUT DEVELOPMENT AUTHORITY VERSUS ATRI AND ANR.",
+              "1854": "Diary No. 30786-2026 VICTORIA CROSS INDIA PVT. LTD. VERSUS VICTORINOX AG",
+              "1855": "Diary No. 30971-2026 THE COMMISSIONER AND ORS. VERSUS N. SRINIVAS AND ORS.",
+              "1856": "Diary No. 31094-2026 ANWAR AHMAD SIDDIQUI VERSUS STATE OF UTTAR PRADESH AND ORS.",
+              "1857": "Diary No. 31127-2026 JYOTIKA BHALLA VERSUS GAUGE DATA SOLUTIONS PVT. LTD. AND ORS.",
+              "1858": "Diary No. 31255-2026 VISHWA HINDU SEWA SANGH VERSUS STATE OF TAMIL NADU AND ORS.",
+              "1859": "Diary No. 31302-2026 M/S SR STONE CRUSHER VERSUS UNION OF INDIA AND ORS.",
+              "1860": "Diary No. 31315-2026 MADURAI FAROOQ AHMED VERSUS STATE OF TAMIL NADU AND ANR.",
+              "1861": "Diary No. 31322-2026 SHIV CHARAN AHIR AND ORS. VERSUS KAPSA @ SHERA AHIR AND ORS.",
+              "1862": "Diary No. 31362-2026 MONIKA VERSUS STATE OF KARNATAKA AND ANR.",
+              "1863": "Diary No. 31415-2026 SHAMAEM AYESHA JAWAID VERSUS UNION OF INDIA AND ANR.",
+              "1864": "Diary No. 31485-2026 AKANKSHA SHASHWAT SRIVASTAVA VERSUS SHASHWAT SRIVASTAVA",
+              "1865": "Diary No. 31490-2026 AJAY KUMAR GUPTA VERSUS AKHOURI BHUJANG BHUSHAN SAHAY AND ORS.",
+              "1866": "Diary No. 31498-2026 VIJAY KUMAR SHARMA AND ORS. VERSUS RAHUL SHARMA @ RAHUL TINGHINAYAT AND ORS.",
+              "1867": "Diary No. 31532-2026 NAGARATHNAMMA N AND ORS. VERSUS STATE OF KARNATAKA AND ORS.",
+              "1868": "Diary No. 31539-2026 KHEM SINGH VERSUS UNION OF INDIA AND ANR.",
+              "1869": "Diary No. 31691-2026 A.V. SESHAGIRI RAO VERSUS BAR COUNCIL OF INDIA",
+              "1870": "Diary No. 31734-2026 MAFATLAL INDUSTRIES LIMITED AUTHORISED VERSUS STATE OF MAHARASHTRA AND ORS.",
+              "1871": "Diary No. 31827-2026 M/S SRP MINERALS PVT LTD VERSUS UNION OF INDIA AND ORS.",
+              "1872": "Diary No. 31830-2026 SONI DEVI AND ORS. VERSUS JAIPUR DEVELOPMENT AUTHORITY, JAIPUR AND",
+              "1873": "Diary No. 31865-2026 SADAB VERSUS STATE OF U.P. AND ANR.",
+              "1874": "Diary No. 31883-2026 MS NEPTUNE SYSTEMS PRIVATE LTD VERSUS STATE OF HARYANA",
+              "1875": "Diary No. 31886-2026 GEETA CHAUDHARY VERSUS ANITA VERMA AND ORS.",
+              "1876": "Diary No. 31901-2026 BENOYENDRA ROY VERSUS UNION OF INDIA",
+              "1877": "Diary No. 31911-2026 MOHAN VERSUS PUSHPA",
+              "1878": "Diary No. 31913-2026 AU SMALL FINANCE BANK VERSUS STATE OF UTTAR PRADESH AND ANR.",
+              "1879": "Diary No. 31945-2026 OM PRAKASH KASHI AND ORS. VERSUS BASANT LAL AND ORS.",
+              "1880": "Diary No. 32036-2026 MAYA DEVI VERSUS RAGHVENDRA SINGH AND ORS.",
+              "1881": "Diary No. 32047-2026 SATNAM SINGH VERSUS HUSAN LAL AND ANR.",
+              "1882": "Diary No. 32076-2026 CHANDRANI ENTERPRISES PRIVATE LIMITED VERSUS THE STATE OF WEST BENGAL AND ORS.",
+              "1883": "Diary No. 32130-2026 SALES AND SERVICE PRIVATE LIMITED VERSUS THE STATE OF WEST BENGAL AND ORS.",
+              "1884": "Diary No. 32138-2026 MAROJU SAROJANA AND ORS. VERSUS ICICI LOMBARD MOTOR INSURANCE COMPANY",
+              "1885": "Diary No. 32150-2026 PRINCIPAL COMMISSIONER OF INCOME TAX VERSUS M/S ROYAL TOUCH FABLON PRIVATE LIMITED",
+              "1886": "Diary No. 32159-2026 THE PRINCIPAL COMMISSIONER OF INCOME TAX 3 VERSUS SPICE ISLAND APPAREL LIMITED",
+              "1887": "Diary No. 32164-2026 M/S SHRIMM CONSTRUCTION VERSUS TENSILE STEEL LIMITED AND ORS.",
+              "1888": "Diary No. 32215-2026 MUKUND CHOUDHARY AND ORS. VERSUS PRAKASH COTTON",
+              "1889": "Diary No. 32233-2026 SHEELA DEVI VERSUS STATE OF HARYANA AND ORS.",
+              "1890": "Diary No. 32236-2026 MUKUND CHOUDHARY AND ORS. VERSUS PRAKASH COTTON",
+              "1891": "Diary No. 32239-2026 SILIGURI AUTO WORKS PRIVATE LIMITED VERSUS THE STATE OF WEST BENGAL AND ORS.",
+              "1892": "Diary No. 32243-2026 MUKUND CHOUDHARY AND ORS. VERSUS PRAKASH COTTON",
+              "1893": "Diary No. 32256-2026 ANAND KUMAR SINGH VERSUS THE STATE OF JHARKHAND AND ORS.",
+              "1894": "Diary No. 32262-2026 NATIONAL PLASTO PRODUCTS PRIVATE LIMITED VERSUS THE STATE OF WEST BENGAL AND ORS.",
+              "1895": "Diary No. 32282-2026 TATA CONSUMER PRODUCTS LTD VERSUS UNION OF INDIA AND ORS.",
+              "1896": "Diary No. 32288-2026 MUKUL AGARWAL VERSUS THE STATE OF WEST BENGAL AND ORS.",
+              "1897": "Diary No. 32294-2026 GAUTAM BUDDHA UNIVERSITY VERSUS STATE OF U.P. AND ANR.",
+              "1898": "Diary No. 32321-2026 R. SARADA VERSUS THE STATE OF TAMIL NADU AND ORS.",
+              "1899": "Diary No. 32331-2026 MOHD UVESH VERSUS STATE",
+              "1900": "Diary No. 32340-2026 UNION TERRITORY OF JANDK AND ORS. VERSUS GULZAR AHMAD KHAN",
+              "1901": "Diary No. 32368-2026 ZUHAIR MOHAMEDALI MERCHANT VERSUS IDFC BANK AND ORS.",
+              "1902": "Diary No. 32376-2026 PARVEEN KUMAR KANSAL VERSUS THE STATE OF PUNJAB AND ANR.",
+              "1903": "Diary No. 32388-2026 SANDA PADMA AND ANR. VERSUS SRIRAM GENERAL INSURANCE CO. LTD. AND ANR.",
+              "1904": "Diary No. 32396-2026 OMKAR VERSUS STATE OF U.P",
+              "1905": "Diary No. 32421-2026 THE STATE OF STATE OF ANDHRA PRADESH (NOW VERSUS VIJAYANTHI CO-OPERATIVE HOUSING SOCIETY AND",
+              "1906": "Diary No. 32425-2026 X VERSUS THE STATE OF JHARKHAND AND ANR.",
+              "1907": "Diary No. 32431-2026 ASHA VAID AND ORS. VERSUS STATE OF PUNJAB AND ORS.",
+              "1908": "Diary No. 32455-2026 SITA SHUKLA AND ANR. VERSUS RADHA KUMARI TIWARI AND ORS.",
+              "1909": "Diary No. 32468-2026 BANTI AND ORS. VERSUS RAMRATI AND ORS.",
+              "1910": "Diary No. 32506-2026 D RAJ KUMAR VERSUS K VIKRAM AND ANR.",
+              "1911": "Diary No. 32513-2026 PATIRAM VERSUS PALARAM AND ORS.",
+              "1912": "Diary No. 32525-2026 ASHA SETHI VERSUS MANAGING DIRECTOR POWER GRID CORPORATION",
+              "1913": "Diary No. 32534-2026 THE STATE OF WEST BENGAL AND ORS. VERSUS M/S. SUKRITI PEBBLES",
+              "1914": "Diary No. 32551-2026 AMIRTHARAJ VERSUS STATE OF TAMIL NADU",
+              "1915": "Diary No. 32558-2026 KANWAR PAL AND ORS. VERSUS UNION OF INDIA AND ANR.",
+              "1916": "Diary No. 32570-2026 DANDIBOINA KASULU VERSUS THE STATE OF ANDHRA PRADESH",
+              "1917": "Diary No. 32583-2026 M/S RAMA SPINNER PVT. LTD. MANAGING VERSUS THE CENTRAL POWER DISTRIBUTION COMPANY OF",
+              "1918": "Diary No. 32598-2026 AVATAR SINGH AND ORS. VERSUS UJJAGAR SINGH AND ORS.",
+              "1919": "Diary No. 32633-2026 JAYANTHI AND ORS. VERSUS RAJEGOWDA",
+              "1920": "Diary No. 32640-2026 MURUGAMMAL VERSUS STATE OF TAMIL NADU AND ORS.",
+              "1921": "Diary No. 32644-2026 THE EXECUTIVE ENGINEER VERSUS THE STATE OF MAHARASHTRA AND ORS.",
+              "1922": "Diary No. 32660-2026 CHAMPAK VERSUS STATE OF HARYANA AND ORS.",
+              "1923": "Diary No. 32667-2026 SAMIR BAPODRA VERSUS STATE ENVIRONMENT IMPACT ASSESSMENT",
+              "1924": "Diary No. 32669-2026 SAMIR BAPODRA VERSUS STATE ENVIRONMENT IMPACT ASSESSMENT",
+              "1925": "Diary No. 32697-2026 GOPAL AND ORS. VERSUS THE STATE OF KARNATAKA THE STATE OF",
+              "1926": "Diary No. 32706-2026 KARNAIL SINGH AND ORS. VERSUS STATE OF UTTARAKHAND AND ORS.",
+              "1927": "Diary No. 32707-2026 KRISHNAKANT RAI VERSUS UNION OF INDIA AND ORS.",
+              "1928": "Diary No. 32708-2026 M/A BB VERMA VERSUS UNITED INDIA INSURANCE COMPANY LTD. AND",
+              "1929": "Diary No. 32709-2026 M/S BB VERMA VERSUS UNITED INDIA INSURANCE CO.LTD. AND ORS.",
+              "1930": "Diary No. 32754-2026 GRAM PANCHAYAT MANAKSAR AND ANR. VERSUS STATE OF RAJASTHAN AND ORS.",
+              "1931": "Diary No. 32755-2026 BANDARI LAVANYA AND ORS. VERSUS SAMIUDDIN AND ANR.",
+              "1932": "Diary No. 32756-2026 STATE OF ODISHA AND ORS. VERSUS THE MANAGING COMMITTEE OF PORLI HIGH",
+              "1933": "Diary No. 32780-2026 SANJAY KUMAR GUPTA VERSUS UMESH KUMAR SINGH AND ANR.",
+              "1934": "Diary No. 32784-2026 DEVENDRA JHA VERSUS SUNIL KUMAR SONI AND ORS.",
+              "1935": "Diary No. 32786-2026 ZAMEER AHMED VERSUS UNION OF INDIA AND ORS.",
+              "1936": "Diary No. 32810-2026 STATE OF CHHATTISGARH AND ORS. VERSUS SANDEEP KUMAR TIWARI",
+              "1937": "Diary No. 32850-2026 M/S. AIRBUS TRAINING INDIA PRIVATE LIMITED. VERSUS THE COMMISSIONER OF CENTRAL EXCISE,",
+              "1938": "Diary No. 32853-2026 THE STATE OF JHARKHAND AND ORS. VERSUS M/S SHRI SHYAM KRIPA",
+              "1939": "Diary No. 32865-2026 DEBABRATA SARKA VERSUS BALURGHAT CO-OPERATIVE LABOUR CONTRACT",
+              "1940": "Diary No. 32874-2026 SHRISTI INFRASTRUCTURE DEVELOPMENT VERSUS SCORPIO ENGINEERING PRIVATE LIMITED AND",
+              "1941": "Diary No. 32882-2026 SHAMJI @ SUNIL @ DAKUDO VERSUS STATE OF GUJARAT",
+              "1942": "Diary No. 32884-2026 RAMPHAL AND ORS. VERSUS STATE OF HARYANA AND ORS.",
+              "1943": "Diary No. 32885-2026 JAGJIT VERSUS STATE OF HARYANA AND ORS.",
+              "1944": "Diary No. 32903-2026 RAVI RAJAN PANDAYAN VERSUS THE STATE OF MAHARASHTRA AND ORS.",
+              "1945": "Diary No. 32913-2026 S.S. TIGGA VERSUS STATE OF CHHATTISGARH AND ORS.",
+              "1946": "Diary No. 32931-2026 SHIV BACHAN GAUTAM VERSUS STATE PUBLIC SERVICES TRIBUNAL AND ORS.",
+              "1947": "Diary No. 32938-2026 LOKNATH SAHU @ LOKU AND ANR. VERSUS PREM BAI DHRUV AND ORS.",
+              "1948": "Diary No. 32939-2026 KULDEEP AND ORS. VERSUS STATE OF HARYANA AND ORS.",
+              "1949": "Diary No. 32962-2026 NITIN GOPALSINGH RATHOD VERSUS STATE OF UTTAR PRADESH AND ORS.",
+              "1950": "Diary No. 32984-2026 THOMAS MAR THEMOTHIOUS METROPOLITAN VERSUS M.A. CHERIAN AND ORS.",
+              "1951": "Diary No. 33004-2026 STATE OF U.P. VERSUS VIMLESH KUMAR JAISWAL AND ORS.",
+              "1952": "Diary No. 33022-2026 THE LAND ACQUISITION OFFICER AND ASSISTANT VERSUS PRALAHALADACHAR",
+              "1953": "Diary No. 33037-2026 BHAGYALAKSHMI AND ORS. VERSUS M/S. JADE GARDEN PLOT OWNER&RSQUO;S",
+              "1954": "Diary No. 33042-2026 BHASKAR DADA GAWARE AND ORS. VERSUS ABASAHEB BHASKAR GAWARE AND ORS.",
+              "1955": "Diary No. 33045-2026 SHANKAREPPA GANAGI AND ORS. VERSUS YALLAVVA PATIL AND ORS.",
+              "1956": "Diary No. 33055-2026 SHYAM CHAND AND ORS. VERSUS STATE OF HP AND ORS.",
+              "1957": "Diary No. 33089-2026 MANTRAM AND ORS. VERSUS DURGA BAI SHARMA AND ORS.",
+              "1958": "Diary No. 33135-2026 NAGAMMA AND ANR. VERSUS KANTHAMMA AND ORS.",
+              "1959": "Diary No. 33143-2026 GADWALA ANURADHA VERSUS THE ORIENTAL INSURANCE CO LTD AND ANR.",
+              "1960": "Diary No. 33147-2026 VARUN KATIYAR VERSUS UNION OF INDIA AND ORS.",
+              "1961": "Diary No. 33162-2026 SIDHANT KUMAR VERSUS STATE OF BIHAR",
+              "1962": "Diary No. 33178-2026 NARENDRA KUMAR BHANSALI VERSUS ANANYA VIVEK BHANSALI",
+              "1963": "Diary No. 33201-2026 AARIFUL HAQ VERSUS STATE OF CHHATTISGARH",
+              "1964": "Diary No. 33213-2026 THE STATE OF JHARKHAND AND ORS. VERSUS SUPERINTENDENT OF POLICE (ESTABLISHMENT)",
+              "1965": "Diary No. 33214-2026 ANWAR MOHD. ISHAQ MOMIN AND ANR. VERSUS BHIWANDI-NIZAMPUR CITY MUNICIPAL",
+              "1966": "Diary No. 33220-2026 THE STATE OF RAJASTHAN AND ORS. VERSUS HARI AND ORS.",
+              "1967": "Diary No. 33224-2026 MD. ABDUR RAHAMAN AND ORS. VERSUS THE STATE OF WEST BENGAL",
+              "1968": "Diary No. 33232-2026 SAMUBEN AND ORS. VERSUS RAMESHBHAI KALIDAS @ KALABHAI CHAUDHARY",
+              "1969": "Diary No. 33235-2026 VIMAL KUMAR VERSUS THE STATE OF BIHAR AND ORS.",
+              "1970": "Diary No. 33251-2026 HAMIDDUL HAQ @ HAMEED VERSUS STATE OF CHHATTISGARH",
+              "1971": "Diary No. 33264-2026 SURAJ PAL SINGH VERSUS UNION OF INDIA AND ORS.",
+              "1972": "Diary No. 33268-2026 VIJAY VERSUS RUPA",
+              "1973": "Diary No. 33276-2026 RAHUL BAGHEL VERSUS SHALINI",
+              "1974": "Diary No. 33280-2026 SHOBHA GUPTA VERSUS UNION OF INDIA AND ORS.",
+              "1975": "Diary No. 33281-2026 ANKIT GRAH NIRMAN SAHKARI SANSTHA VERSUS THE STATE OF MADHYA PRADESH AND ORS.",
+              "1976": "Diary No. 33283-2026 JAYARAM K.H. AND ORS. VERSUS THE STATE OF KARNATAKA AND ORS.",
+              "1977": "Diary No. 33284-2026 SELVAM VERSUS THE COMMISSIONER AND ANR.",
+              "1978": "Diary No. 33292-2026 SIMARDEEP SINGH ARORA AND ORS. VERSUS THE STATE OF DELHI THE STATE OF DELHI HOME",
+              "1979": "Diary No. 33305-2026 MANGALA DEVIDAS BUDHE AND ANR. VERSUS STATE OF MAHARASHTRA AND ORS.",
+              "1980": "Diary No. 33311-2026 YASHANK WASON VERSUS STATE OF U.P. AND ORS.",
+              "1981": "Diary No. 33316-2026 NITESH SATRUGHAN SHARMA @ NITESH S. VERSUS THE STATE OF BIHAR AND ANR.",
+              "1982": "Diary No. 33318-2026 NITIN DINKAR KHARCHE VERSUS STATE OF MAHARASHTRA AND ANR.",
+              "1983": "Diary No. 33324-2026 INDER MOHAN SACHDEV VERSUS NAGAR NIGAM GHAZIABAD AND ANR.",
+              "1984": "Diary No. 33328-2026 SATYA PRAKASH VERSUS LUCKNOW DEVOLOPMENT AUTHORITY AND ORS.",
+              "1985": "Diary No. 33335-2026 G. SUNDARRAJ VERSUS THE DIVISIONAL ENGINEER, STATE OF HIGHWAYS",
+              "1986": "Diary No. 33341-2026 STATE OF ODISHA AND ORS. VERSUS TANUJA PATTNAIK AND ANR.",
+              "1987": "Diary No. 33345-2026 VIJAY SINGH AND ORS. VERSUS THE STATE OF MADHYA PRADESH AND ORS.",
+              "1988": "Diary No. 33348-2026 STATE OF ODISHA AND ORS. VERSUS SUBASINI MOHANTA AND ORS.",
+              "1989": "Diary No. 33353-2026 DINESH CHANDRA MISHRA VERSUS JOINT DIRECTOR OF CONSOLIDATION AND ORS.",
+              "1990": "Diary No. 33360-2026 PRIYANKA @ DEEPTI AND ANR. VERSUS THE STATE OF KARNATAKA AND ANR.",
+              "1991": "Diary No. 33379-2026 M/S. EADS DS INDIA PRIVATE LIMITED VERSUS THE COMMISSIONER OF CENTRAL EXCISE",
+              "1992": "Diary No. 33386-2026 KRISHNA VERSUS U.F.M. GAJANAN AND ORS.",
+              "1993": "Diary No. 33392-2026 COMMISSIONER OF CUSTOMS (APPEALS) VERSUS M/S NUNHEMS INDIA PVT. LTD.",
+              "1994": "Diary No. 33395-2026 ANAND PRAKASH AND ORS. VERSUS BUDDHU AND ORS.",
+              "1995": "Diary No. 33420-2026 ANASUYA @ AKKAMAHADEVI VERSUS CHANNABASAVVA AND ORS.",
+              "1996": "Diary No. 33422-2026 MANISH KUMAR YADAV VERSUS THE STATE OF BIHAR AND ANR.",
+              "1997": "Diary No. 33424-2026 ANASUYA @ AKKAMAHADEVI VERSUS SIDDAPPA AND ORS.",
+              "1998": "Diary No. 33432-2026 AJITSING NAVNITSINGH RAJPUT VERSUS THE STATE OF MAHARASHTRA AND ANR.",
+              "1999": "Diary No. 33438-2026 M. ANUPRIYA VERSUS V. SIVASANKARAN",
+              "2000": "Diary No. 33440-2026 STATE OF ODISHA AND ORS. VERSUS RAJKISHORE BARAL",
+              "2001": "Diary No. 33444-2026 STATE OF ODISHA AND ORS. VERSUS MANAGING COMMITTEE OF HAZI MAHAMOOED",
+              "2002": "Diary No. 33453-2026 HARENDRA VERSUS STATE OF RAJASTHAN AND ANR.",
+              "2003": "Diary No. 33456-2026 STATE OF ODISHA AND ORS. VERSUS GITA BAI",
+              "2004": "Diary No. 33457-2026 MAHINDER LAL VERSUS VIDYA SAGAR AND ORS.",
+              "2005": "Diary No. 33483-2026 SAURABH SHEKHAR VERSUS STATE OF WEST BENGAL AND ANR.",
+              "2006": "Diary No. 33491-2026 UNION OF INDIA AND ORS. VERSUS HEMANTA KUMAR BEHERA",
+              "2007": "Diary No. 33495-2026 ADVANCE INDIA PROJECTS LTD. VERSUS M/S IREO RESIDENCES COMPANY PVT. LTD. AND",
+              "2008": "Diary No. 33510-2026 BANGALORE DEVELOPMENT AUTHORITY AND ANR. VERSUS SYED FATHIMA BEGUM AND ORS.",
+              "2009": "Diary No. 33517-2026 KTC LOGISTICS COMPANY LLC VERSUS POTA GLOBAL LOGISTICS (INDIA) PVT LTD",
+              "2010": "Diary No. 33522-2026 THE COLLECTOR OF RAJKOT AND ANR. VERSUS BHIKHUBHAI B PATEL AND ORS.",
+              "2011": "Diary No. 33535-2026 X JUVENILE VERSUS THE STATE OF UP AND ANR.",
+              "2012": "Diary No. 33539-2026 SHIVKANT UPADHYAY AND ORS. VERSUS SUSHMA DEVI AND ORS.",
+              "2013": "Diary No. 33574-2026 STATE OF ODISHA AND ORS. VERSUS MINATI KUMARI KAR AND ORS.",
+              "2014": "Diary No. 33579-2026 S. PADMA AND ORS. VERSUS THANGAMANI AND ANR.",
+              "2015": "Diary No. 33584-2026 THE ADDITIONAL CHIEF SECRETARY AND ORS. VERSUS RAMESH KUMAR VERMA",
+              "2016": "Diary No. 33594-2026 M/S BLACK PEPPER ENTERPRISES PVT LTD VERSUS UNION OF INDIA AND ORS.",
+              "2017": "Diary No. 33595-2026 SOFIE KAUR JAGGI AND ORS. VERSUS UNION OF INDIA AND ORS.",
+              "2018": "Diary No. 33598-2026 MUKESH KUMAR GOEL AND ORS. VERSUS KUNWARPREET SINGH AND ANR.",
+              "2019": "Diary No. 33601-2026 THE MAHARASHTRA STATE ELECTRICITY VERSUS THE STATE OF MAHARASHTRA AND ORS.",
+              "2020": "Diary No. 33609-2026 PARAMJIT KAUR VERSUS HARJIT SINGH AND ORS.",
+              "2021": "Diary No. 33613-2026 NATIONAL HIGHWAY AUTHORITY OF INDIA VERSUS KIKUBHAI JAIRAMBHAI PATEL AND ORS.",
+              "2022": "Diary No. 33615-2026 DATTATRAYA UTTAM PAVBAKE AND ANR. VERSUS KARBHARI GOPALAN PAVBAKE AND ORS.",
+              "2023": "Diary No. 33618-2026 PAWAN KUMAR AND ORS. VERSUS HIGH COURT OF PATNA AND ORS.",
+              "2024": "Diary No. 33630-2026 SIMON JOSEPH AND ORS. VERSUS BHAGUBAI VITHU PAWSHE AND ORS.",
+              "2025": "Diary No. 33632-2026 M.R.AJAYAN VERSUS M.K.SASEENDRAN AND ORS.",
+              "2026": "Diary No. 33651-2026 LOKNEESH PITAMBER SINGH VERSUS JYOTI CHAHAR",
+              "2027": "Diary No. 33661-2026 CHIRAKAL KOVILAKOM DEVASWOM VERSUS SPECIAL TAHSILDAR AND ORS.",
+              "2028": "Diary No. 33675-2026 BUNNO FINTECH TECHBRIDGE SOFTWARE VERSUS UNION OF INDIA AND ORS.",
+              "2029": "Diary No. 33678-2026 M/S GHUMAKKAR MASTI TECHNOLOGIES PRIVATE VERSUS UNION OF INDIA AND ORS.",
+              "2030": "Diary No. 33679-2026 AKASH NAGAR @ AAKASH VERSUS STATE OF HARYANA",
+              "2031": "Diary No. 33690-2026 KURAKULA GAJENDRA MOHAN AND ANR. VERSUS KURAKULA SHANTA AND ORS.",
+              "2032": "Diary No. 33692-2026 AVINASH VERSUS VISHAKHA AND ORS.",
+              "2033": "Diary No. 33704-2026 ANJANAPPA VERSUS YASHODA @YASHODAMMA AND ORS.",
+              "2034": "Diary No. 33706-2026 STATE OF U.P. AND ORS. VERSUS KRISHNA SINGH AND ORS.",
+              "2035": "Diary No. 33712-2026 AJAY SINGH VERSUS STATE OF CHHATTISGARH",
+              "2036": "Diary No. 33727-2026 DEVENDER SINGH VERSUS AWANTIKA BUILDCON AND ANR.",
+              "2037": "Diary No. 33734-2026 ANOOP RANA VERSUS RAJESH SINGH CHANDEL AND ANR.",
+              "2038": "Diary No. 33751-2026 RAKESH SHARMA VERSUS UNION OF INDIA AND ORS.",
+              "2039": "Diary No. 33777-2026 DIKSHA CHAUHAN AND ANR. VERSUS PANDIT BHAGWAT DAYAL SHARMA UNIVERSITY OF",
+              "2040": "Diary No. 33783-2026 NEHA CHADHA VERSUS NITIN MEHRA",
+              "2041": "Diary No. 33788-2026 PALLE VENKATA RAMANA REDDY @ VENKAT VERSUS PALLE BHARATHI",
+              "2042": "Diary No. 33806-2026 SARUDHAN ALI @ ASIROT ALI VERSUS PADUMI PHUKAN",
+              "2043": "Diary No. 33817-2026 AJAY KUMAR VERSUS STATE (NCT OF DELHI)",
+              "2044": "Diary No. 33823-2026 SIMRANJEET SINGH VERSUS UNION OF INDIA AND ORS.",
+              "2045": "Diary No. 33827-2026 JAGARNATH ORAON VERSUS RAIMAT URAON @ RAIYAT URAON",
+              "2046": "Diary No. 33836-2026 V.SRAMAN VERSUS UNION OF INDIA AND ORS.",
+              "2047": "Diary No. 33849-2026 NEWSLAUNDRY MEDIA PRIVATE LIMITED VERSUS T.V. TODAY NETWORK LIMITED AND ANR.",
+              "2048": "Diary No. 33863-2026 PRINCE KUMAR YADAV @ ITTA @ PRINCE KUMAR VERSUS THE STATE OF BIHAR AND ANR.",
+              "2049": "Diary No. 33892-2026 GUJARAT MEDICAL SERVICES CORPORATION LTD. VERSUS ALLIED MEDICAL LTD. AND ANR.",
+              "2050": "Diary No. 33894-2026 ANAND K VERSUS STATE OF ORISSA",
+              "2051": "Diary No. 33896-2026 STATE OF UP AND ORS. VERSUS GOKRAN RAO AND ANR.",
+              "2052": "Diary No. 33905-2026 NILOFAR SIDDIQUI VERSUS RASHID KHAN",
+              "2053": "Diary No. 33909-2026 DEPUTY DIRECTOR OF EDUCATION AND ORS. VERSUS VISHNU LAL SHARMA AND ANR.",
+              "2054": "Diary No. 33914-2026 SUNIL SHARMA VERSUS M.P. KHADI GRAMODHOG",
+              "2055": "Diary No. 33916-2026 MANSIH JAIN VERSUS AMARJIT SINGH LUTHRA",
+              "2056": "Diary No. 33928-2026 JAVARABI AND ORS. VERSUS PAPACHAND AND ORS.",
+              "2057": "Diary No. 33931-2026 RAGHUNATH @PALU TUDU VERSUS STATE OF ORISSA",
+              "2058": "Diary No. 33945-2026 VIJAYBHAI RAMESHBHAI MAKWANA VERSUS THE STATE OF GUJARAT",
+              "2059": "Diary No. 33948-2026 NATIONAL BUILDINGS CONSTRUCTION VERSUS UP STATE BRIDGE CORPORATION LTD.",
+              "2060": "Diary No. 33957-2026 M/S AIRBUS TRAINING INDIA PRIVATE LIMITED VERSUS COMMISSIONER OF CENTRAL EXCISE, CUSTOMS",
+              "2061": "Diary No. 33964-2026 T. INDIRA VERSUS M. SANJAYGANDHI AND ORS.",
+              "2062": "Diary No. 33965-2026 M/S. AIRBUS GROUP INDIA PRIVATE LIMITED VERSUS THE COMMISSIONER OF CENTRAL EXCISE",
+              "2063": "Diary No. 33971-2026 AGILANDEESWARI VERSUS L. JAISANKAR",
+              "2064": "Diary No. 33995-2026 RIPON DAS AND ORS. VERSUS MRINAL KANTI DAS AND ORS.",
+              "2065": "Diary No. 34001-2026 PREMALATA SOREN AND ORS. VERSUS SINGO MARADI AND ORS.",
+              "2066": "Diary No. 34017-2026 SUROJIT BASUDEV JANA VERSUS STATE OF KERALA AND ORS.",
+              "2067": "Diary No. 34029-2026 SATYAPAL SINGH YADAV VERSUS DEBT RECOVERY APPELLATE TRIBUNAL AND ORS.",
+              "2068": "Diary No. 34038-2026 PADMAVATHI AND ORS. VERSUS BHAGYA AND ORS.",
+              "2069": "Diary No. 34043-2026 DEEPAK DNYANESHWAR HALWAR AND ORS. VERSUS PRINCIPAL SECRETARY HOME DEPARTMENT AND",
+              "2070": "Diary No. 34050-2026 M/S CHINTAMANI JAGGERY PLANT LLP AND ORS. VERSUS UNION BANK OF INDIA",
+              "2071": "Diary No. 34081-2026 PARAS PANDEY VERSUS NOHAR PRASAD AND ORS.",
+              "2072": "Diary No. 34084-2026 ADITYA BHARTIYA VERSUS THE STATE OF UTTAR PRADESH",
+              "2073": "Diary No. 34114-2026 A M JAMBUNATHAN VERSUS THE STATE OF TAMIL NADU AND ORS.",
+              "2074": "Diary No. 34135-2026 D LOGANATHAN VERSUS THE STATE REP. BY THE INSPECTOR OF POLICE",
+              "2075": "Diary No. 34136-2026 DEEPK BHANDARI VERSUS UNION OF INDIA",
+              "2076": "Diary No. 34144-2026 REVATHI VERSUS K. THIRUNAVUKKARASU",
+              "2077": "Diary No. 34146-2026 RAJDHANI SYSTEMS AND ESTATES PVT LTD VERSUS REENA MISHRA AND ORS.",
+              "2078": "Diary No. 34147-2026 RAKESH VERSUS STATE NCT OF DELHI AND ANR.",
+              "2079": "Diary No. 34148-2026 RAJDHANI SYSTEMS AND ESTATES PVT LTD VERSUS REENA MISHRA AND ORS.",
+              "2080": "Diary No. 34163-2026 MAMATA CHOUDHARY AND ORS. VERSUS STATE OF MADHYA PRADESH AND ORS.",
+              "2081": "Diary No. 34176-2026 MONA RANJAN VERSUS RAHUL RANJAN",
+              "2082": "Diary No. 34184-2026 MEENA SHARMA AND ANR. VERSUS STATE OF BIHAR",
+              "2083": "Diary No. 34203-2026 THE DEPUTY COMMISSIONER/ ASST VERSUS JASWANT SINGH",
+              "2084": "Diary No. 34217-2026 STATE OF MADHYA PRADESH AND ORS. VERSUS MADANLAL AND ORS.",
+              "2085": "Diary No. 34236-2026 SANGAPPA VERSUS THE DIVISIONAL CONTROLLER",
+              "2086": "Diary No. 34258-2026 GANESH BABAN BORHADE VERSUS THE STATE OF MAHARASHTRA AND ANR.",
+              "2087": "Diary No. 34261-2026 KAMANA CHOURASIYA VERSUS STATE OF KERALA AND ORS.",
+              "2088": "Diary No. 34264-2026 TENSILE STEEL LIMITED VERSUS STATE OF GUJARAT AND ANR.",
+              "2089": "Diary No. 34271-2026 STATE OF ODISHA AND ANR. VERSUS PRAVAMAYEE MOHAPATRA AND ORS.",
+              "2090": "Diary No. 34272-2026 STATE OF ODISHA AND ORS. VERSUS CITIZENS ACTION FORUM, BHUBANESWAR",
+              "2091": "Diary No. 34281-2026 RAKESH JOSHI VERSUS STATE OF RAJASTHAN AND ANR.",
+              "2092": "Diary No. 34285-2026 STATE OF HARYANA AND ORS. VERSUS KAMLA CHAUDHARY",
+              "2093": "Diary No. 34292-2026 CHINNAPILLAI AND ORS. VERSUS CHINNAPONNU AND ORS.",
+              "2094": "Diary No. 34293-2026 ADITYA RAJURANJAN SAHU VERSUS NIKITA SHAW (SAHU)",
+              "2095": "Diary No. 34295-2026 CHINNAPILLAI AND ORS. VERSUS GNANSEKARAN AND ORS.",
+              "2096": "Diary No. 34297-2026 ORAPPAM VILLAGE PEOPLES DEVELOPMENT VERSUS THE PRESIDENT AND ORS.",
+              "2097": "Diary No. 34298-2026 MOHAN JOSHI VERSUS LAXMI NIVAS",
+              "2098": "Diary No. 34299-2026 PINKI DEVI VERSUS STATE OF BIHAR AND ANR.",
+              "2099": "Diary No. 34301-2026 HARPRASAD AHIRWAR AND ORS. VERSUS HARI CHAND",
+              "2100": "Diary No. 34304-2026 M/S SUBHI ISPAT SALES VERSUS UNION OF INDIA, AND ORS.",
+              "2101": "Diary No. 34307-2026 M.RANGASAMY AND ORS. VERSUS RUKMANI AND ORS.",
+              "2102": "Diary No. 34310-2026 K.KICHENEMOURTHY VERSUS THE UNION OF INDIA AND ORS.",
+              "2103": "Diary No. 34323-2026 ASHOK SONI VERSUS STATE OF CHHATTISGARH",
+              "2104": "Diary No. 34330-2026 ANIL TUTEJA VERSUS CENTRAL BUREAU OF INVESTIGATION",
+              "2105": "Diary No. 34338-2026 ANIL TUTEJA VERSUS STATE OF CHHATTISGARH",
+              "2106": "Diary No. 34343-2026 ANIL TUTEJA VERSUS CENTRAL BUREAU OF INVESTIGATION",
+              "2107": "Diary No. 34350-2026 VIJAY PARASHARAM SOMANACHE VERSUS CHIDANAND C. WALAKE",
+              "2108": "Diary No. 34354-2026 MURALEEDHARAN NAMBIAR AND ANR. VERSUS STATE OF KERALA AND ORS.",
+              "2109": "Diary No. 34356-2026 MURALEEDHARAN NAMBIAR AND ANR. VERSUS STATE OF KERALA AND ORS.",
+              "2110": "Diary No. 34357-2026 MURALEEDHARAN NAMBIAR AND ANR. VERSUS STATE OF KERALA AND ORS.",
+              "2111": "Diary No. 34358-2026 P. RAJENDRAN VERSUS THE STATE OF TAMIL NADU",
+              "2112": "Diary No. 34364-2026 SUBHASH CHOUDHARY VERSUS STATE OF JHARKHAND AND ORS.",
+              "2113": "Diary No. 34369-2026 P.C. SRINIVAS VERSUS SRILAKSHMI AND ORS.",
+              "2114": "Diary No. 34370-2026 THAMMANNA VERSUS BADREESH AND ORS.",
+              "2115": "Diary No. 34371-2026 JEETENDRA VERSUS CHANNAPPA AND ORS.",
+              "2116": "Diary No. 34373-2026 THAMMANNA VERSUS H.S. GOPALASWAMY AND ORS.",
+              "2117": "Diary No. 34399-2026 K. MANGAMMA VERSUS SRIRAM GENERAL INSURANCE COMPANY LIMITED",
+              "2118": "Diary No. 34400-2026 PURUSHOTTAM AND ORS. VERSUS MAHATMA GANDHI SMARAK SAMITI AND ANR.",
+              "2119": "Diary No. 34409-2026 MANOHAR SINGH THAKUR VERSUS THE STATE OF MADHYA PRADESH",
+              "2120": "Diary No. 34417-2026 SUDHA M VERSUS STATE OF KARNATAKA AND ANR.",
+              "2121": "Diary No. 34420-2026 SHAMSHER SINGH VERSUS SOHAN LAL AND ORS.",
+              "2122": "Diary No. 34432-2026 B SIVANESAN VERSUS STATE OF KARNATAKA",
+              "2123": "Diary No. 34443-2026 HARJEET KAUR SEKHON VERSUS STATE OF (GNCTD) AND ORS.",
+              "2124": "Diary No. 34446-2026 RAVINDER KUMAR GUPTA VERSUS STATE OF UTTAR PRADESH AND ANR.",
+              "2125": "Diary No. 34466-2026 CHANDRA SEKHA AND ORS. VERSUS STATE OF UP AND ORS.",
+              "2126": "Diary No. 34477-2026 ANIL CHILLAR VERSUS THE STATE OF HARYANA AND ORS.",
+              "2127": "Diary No. 34517-2026 SIVAKUMAR VERSUS GEETHA",
+              "2128": "Diary No. 34530-2026 SANTHOSH T.A VERSUS THE STATE OF KERALA AND ORS.",
+              "2129": "Diary No. 34531-2026 STATE OF U.P. VERSUS NAWAB SINGH",
+              "2130": "Diary No. 34533-2026 SRICHARAN BISWAL VERSUS THE SECRETARY, STATE CONSUMENR DISPUTES",
+              "2131": "Diary No. 34535-2026 STATE OF U.P VERSUS VEERPAL @ NILU",
+              "2132": "Diary No. 34536-2026 THE STATE OF UTTAR PRADESH THE STATE OF VERSUS POOJA TOMAR",
+              "2133": "Diary No. 34538-2026 M/S SAMARPANA CHARITABLE TRUST AND ORS. VERSUS PHOENIX ARC PVT. LTD. AND ORS.",
+              "2134": "Diary No. 34541-2026 MOHD. RAZA KHAN VERSUS STATE OF UP AND ANR.",
+              "2135": "Diary No. 34544-2026 RAKESH KUMAR DUBEY VERSUS STATE OF BIHAR AND ORS.",
+              "2136": "Diary No. 34551-2026 BASAVARAJU E. AND ANR. VERSUS THE STATE OF KARNATAKA AND ORS.",
+              "2137": "Diary No. 34566-2026 MEGHA VIVEK PATEL VERSUS VIVEK RAJENDRA KUMAR PATEL",
+              "2138": "Diary No. 34577-2026 MUZAFFAR ALI VERSUS COMMITTEE OF MANAGMENT AND ORS.",
+              "2139": "Diary No. 34578-2026 MUZAFFAR ALI VERSUS COMMITTEE OF MANAGMENT AND ORS.",
+              "2140": "Diary No. 34589-2026 VUTUKURU SUNEETHAMMA VERSUS SURAMPALLY VENKAYAMMA AND ORS.",
+              "2141": "Diary No. 34596-2026 SHARAD C. WASEKAR AND ANR. VERSUS CHANDRAKALA AND ORS.",
+              "2142": "Diary No. 34600-2026 SHARAD C. WASEKAR AND ANR. VERSUS CHANDRAKALA AND ORS.",
+              "2143": "Diary No. 34615-2026 P.SURESHS VERSUS KARTHIKA",
+              "2144": "Diary No. 34616-2026 SIMRANJEET SINGH VERSUS TEJVIR SINGH AND ORS.",
+              "2145": "Diary No. 34623-2026 NARENDRA SHARMA VERSUS URBAN IMPROVEMENT TRUST BHARATPUR AND",
+              "2146": "Diary No. 34637-2026 M/S. APEX HOSPITALITY VERSUS M/S. AVIS MOTORS PVT. LTD.",
+              "2147": "Diary No. 34648-2026 CHANDAN DIGAMBAR PAWASKAR VERSUS TANVI DATTARAJ GAD",
+              "2148": "Diary No. 34683-2026 ARMY INSTITUTE OF TECHNOLOGY VERSUS SATISH SHIVAJI JAGTAP",
+              "2149": "Diary No. 34705-2026 SOHAIL MALIK VERSUS STATE (GOVT. OF NCT OF DELHI) AND ORS.",
+              "2150": "Diary No. 34709-2026 STATE OF MADHYA PRADESH AND ORS. VERSUS RAMBAI RAJAK",
+              "2151": "Diary No. 34711-2026 ARMY INSTITUTE OF TECHNOLOGY VERSUS NILESH SITARAM SAWAN",
+              "2152": "Diary No. 34713-2026 MAHENDRA PRASAD SAHU VERSUS DISTRICT LAND ACQUISITION OFFICER",
+              "2153": "Diary No. 34725-2026 ARMY INSTITUTE OF TECHNOLOGY VERSUS GANESH ANAND SARGADE",
+              "2154": "Diary No. 34726-2026 R.S. THAKUR @ RAMSEVAK SINGH VERSUS UNION OF INDIA AND ANR.",
+              "2155": "Diary No. 34729-2026 THE STATE OF JHARKHAND AND ANR. VERSUS AJAY KUMAR AND ORS.",
+              "2156": "Diary No. 34731-2026 THE STATE OF JHARKHAND AND ORS. VERSUS JYOTI LAL MAHTO AND ORS.",
+              "2157": "Diary No. 34738-2026 RAJENDRA PAL SINGH AND ORS. VERSUS OM PRAKASH AND ORS.",
+              "2158": "Diary No. 34743-2026 P.SEETHALAKSHMI VERSUS S.PERMAL",
+              "2159": "Diary No. 34752-2026 ASHISH KASHYAP VERSUS STATE OF UTTAR PRADESH",
+              "2160": "Diary No. 34764-2026 T MEIYAPPAN AND ANR. VERSUS C.SELVAN",
+              "2161": "Diary No. 34769-2026 SUSHILA KUMARI VERSUS STATE OF HARYANA AND ORS.",
+              "2162": "Diary No. 34784-2026 THE STATE OF GUJARAT VERSUS HIRABHAIARJANBHAI JOTVA",
+              "2163": "Diary No. 34786-2026 PAWAN KUMAR SHARMA VERSUS MAHESHWAR SHARMA AND ORS.",
+              "2164": "Diary No. 34788-2026 S. MANOHARAN VERSUS THE DISTRICT COLLECTOR AND ORS.",
+              "2165": "Diary No. 34789-2026 THE STATE OF GUJARAT VERSUS DIGVIJAY HIRABHAI JOTWA",
+              "2166": "Diary No. 34791-2026 N P RAVISH VERSUS K.B. PREETHI AND ANR.",
+              "2167": "Diary No. 34803-2026 CHARAN SINGH VERSUS SAHIB RAM SEHRAWAT AND ANR.",
+              "2168": "Diary No. 34817-2026 UNION TERRITORY OF JAMMU AND KASHMIR VERSUS BILAL AHMAD KHAN AND ORS.",
+              "2169": "Diary No. 34822-2026 HARSHWARDHAN ALIAS HARSHAL SHIV KUMAR VERSUS UNION OF INDIA AND ORS.",
+              "2170": "Diary No. 34823-2026 SHISHUPAL GARAIN VERSUS THE STATE OF BIHAR",
+              "2171": "Diary No. 34826-2026 UTTAM RAMTEKE VERSUS STATE OF CHATTISGARH",
+              "2172": "Diary No. 34828-2026 SATYA GARG VERSUS KENDRIYA VIDYALAYA SANGATHAN AND ORS.",
+              "2173": "Diary No. 34830-2026 KHELA HANSDA VERSUS THE STATE OF JHARKHAND AND ORS.",
+              "2174": "Diary No. 34832-2026 MAILARAPPA VERSUS THE ASSISTANT COMMISSIONER AND LAND",
+              "2175": "Diary No. 34842-2026 KRUSHNA TUKARAM KHUTALE AND ORS. VERSUS KISHOR TOTARAM LULLA AND ORS.",
+              "2176": "Diary No. 34859-2026 P. YOGANANDAM AND ORS. VERSUS NATIONAL HIGHWAYS AUTHORITY (MINISTRY OF",
+              "2177": "Diary No. 34863-2026 RUDRESH AND ORS. VERSUS K SUSHEELA AND ORS.",
+              "2178": "Diary No. 34867-2026 THE EXECUTIVE ENGINEER VERSUS S. MANOHARI AND ORS.",
+              "2179": "Diary No. 34877-2026 CHANDRA PRAKASH MITTAL VERSUS STATE OF CHHATTISGARH AND ORS.",
+              "2180": "Diary No. 34885-2026 BUKYA LALITHA AND ORS. VERSUS RELIANCE GENERAL INSURANCE COMPANY",
+              "2181": "Diary No. 34891-2026 BHIM SINGH LAKRA VERSUS STATE (NCT OF DELHI)",
+              "2182": "Diary No. 34901-2026 BRUHAT BANGALORE MAHANAGAR PALIKE VERSUS ANIL KUMAR SHETTY K. AND ORS.",
+              "2183": "Diary No. 34909-2026 ASHISH JAYANTILAL SHETH VERSUS KUNTAL PRATIK SHAH",
+              "2184": "Diary No. 34923-2026 STATE OF ODISHA AND ORS. VERSUS DEBASIS PARIDA AND ORS.",
+              "2185": "Diary No. 34932-2026 JYOTI SUBBA VERSUS INDIAN RENEWABLE ENERGY DEVELOPMENT",
+              "2186": "Diary No. 34934-2026 STATE OF ODISHA AND ORS. VERSUS NARAYAN CHANDRA MALLICK AND ORS.",
+              "2187": "Diary No. 34940-2026 STATE OF ODISHA AND ORS. VERSUS SACHINDRANATH BHOI AND ORS.",
+              "2188": "Diary No. 34942-2026 COLLEGE OF NURSING HARISH HOSPITAL, ALWAR VERSUS STATE OF RAJASTHAN AND ORS.",
+              "2189": "Diary No. 34943-2026 BALJINDERJEET SINGH VERSUS SIMRANJIT KAUR",
+              "2190": "Diary No. 34945-2026 THE STATE OF GUJARAT VERSUS JODHABHAI NARANBHAI SABHAD AND ANR.",
+              "2191": "Diary No. 34950-2026 THE STATE OF GUJARAT VERSUS HARENDRASINHBALWANTSI NH PARMAR",
+              "2192": "Diary No. 34952-2026 STATE OF ODISHA AND ORS. VERSUS MADHUSUDAN RANASINGH",
+              "2193": "Diary No. 34954-2026 ALPA PRAKASH SHETH VERSUS KUNTAL PRATIK SHAH",
+              "2194": "Diary No. 34956-2026 THE STATE OF GUJARAT VERSUS MAHAMMAD SAHAL ISMAIL PATEL",
+              "2195": "Diary No. 34959-2026 STATE OF ODISHA AND ORS. VERSUS SUSIL KUMAR TANDI",
+              "2196": "Diary No. 34966-2026 BASAVVA AND ANR. VERSUS THE ASSISTANT COMMISSIONER AND LAND",
+              "2197": "Diary No. 34968-2026 RAJINDER SINGH AND ORS. VERSUS THE STATE OF PUNJAB AND ORS.",
+              "2198": "Diary No. 34987-2026 STATE OF RAJASTHAN VERSUS SATPAL @ VEER BAHADUR AND ORS.",
+              "2199": "Diary No. 34989-2026 STATE OF JHARKHAND AND ANR. VERSUS RAVI CHOUDHARY AND ANR.",
+              "2200": "Diary No. 34994-2026 NALLURI GIRI PRASAD S/O N.R. JANAKIRAM VERSUS MOHAMMAD SHAMIM ANSARI AND ANR.",
+              "2201": "Diary No. 34999-2026 ALKABEN JAYANTILAL SHETH VERSUS KUNTAL PRATIK SHAH",
+              "2202": "Diary No. 35004-2026 BHUPINDER PAL SINGH VERSUS RAJ NANGIA",
+              "2203": "Diary No. 35006-2026 TAKHAT SINGH AND ORS. VERSUS NARENDER SINGH AND ORS.",
+              "2204": "Diary No. 35007-2026 THE STATE OF JHARKHAND AND ANR. VERSUS MRINAL KUMAR ROY AND ORS.",
+              "2205": "Diary No. 35022-2026 ALKABEN JAYANTILAL SHETH VERSUS KUNTAL PRATIK SHAH",
+              "2206": "Diary No. 35024-2026 MAYANK J. SHAH AND ORS. VERSUS RAJU V. SHAH AND ORS.",
+              "2207": "Diary No. 35036-2026 PARIVESH SHUKLA VERSUS THE STATE OF WEST BENGAL AND ORS.",
+              "2208": "Diary No. 35050-2026 THE CHIEF OFFICER VERSUS AHMEDNAGAR ZILLA NAGAR PALIKA KAMGAR",
+              "2209": "Diary No. 35064-2026 MADHUMITA SINGH VERSUS NIRAJ KUMAR",
+              "2210": "Diary No. 35077-2026 M. SADAYAPPA GOUNDER AND ORS. VERSUS IDOL SRI. KALYANA PASUPATHEESWARA SWAMY",
+              "2211": "Diary No. 35087-2026 GEETHA MOHANAN AND ORS. VERSUS AJITHA JAYAKUMAR AND ORS.",
+              "2212": "Diary No. 35109-2026 H.SANTHILA PREMKUMAR VERSUS UNION OF INDIA AND ANR.",
+              "2213": "Diary No. 35110-2026 THE STATE OF GUJARAT VERSUS SARMAN HARDASBHAI SOLANKI",
+              "2214": "Diary No. 35118-2026 CHANDAN DIGAMBAR PAWASKAR VERSUS TANVI DATTARAJ GAD",
+              "2215": "Diary No. 35138-2026 BABULI SHARMA AND ANR. VERSUS STATE OF ODISHA",
+              "2216": "Diary No. 35144-2026 RAJAT RABHA VERSUS THE STATE OF ASSAM AND ANR.",
+              "2217": "Diary No. 35146-2026 ASHOK KUMAR UPADHAYA VERSUS UNION OF INDIA AND ORS.",
+              "2218": "Diary No. 35150-2026 THE STATE OF GUJARAT VERSUS RAJESHBHAIMAHADEVBHAI TAYLOR",
+              "2219": "Diary No. 35152-2026 LALTA PRASAD BAGHEL VERSUS THE STATE OF MADHYA PRADESH AND ORS.",
+              "2220": "Diary No. 35158-2026 LALTA PRASAD BAGHEL VERSUS ASHOK SINGH TOMAR",
+              "2221": "Diary No. 35172-2026 ABDUL RAUF VERSUS STATE OF MADHYA PRADESH",
+              "2222": "Diary No. 35174-2026 UDAYA SAHKARI GRIH NIRMAN SAHKARI SANSTHA VERSUS BUDHRAM SAHU AND ORS.",
+              "2223": "Diary No. 35193-2026 THE STATE OF GUJARAT VERSUS SHOAIB MOHAMMAD YUSUF DOLA",
+              "2224": "Diary No. 35197-2026 ALPESH VASUDEV GANDHI VERSUS VINODKUMAR S. SHAH",
+              "2225": "Diary No. 35198-2026 SUSHANT KHOBRAGADE VERSUS PRIYANKA KHOBRAGADE AND ANR.",
+              "2226": "Diary No. 35200-2026 IRSHAD KHAN AND ORS. VERSUS HAMID KHAN AND ANR.",
+              "2227": "Diary No. 35201-2026 SUBHASH KAWADKAR VERSUS M.P.E.B RAMPUR JABALPUR AND ANR.",
+              "2228": "Diary No. 35204-2026 SHYAM LALI AND ORS. VERSUS STATE OF U.P. AND ORS.",
+              "2229": "Diary No. 35213-2026 BHANMATI AND ORS. VERSUS THE NEW INDIA ASSURANCE COMPANY LTD. AND",
+              "2230": "Diary No. 35217-2026 M/S OKAY ESTATE DEVELOPERS VERSUS KHALIL AHMED M.A. HAMDULAY AND ORS.",
+              "2231": "Diary No. 35237-2026 AAKIB @ NANHE VERSUS STATE OF UTTARAKHAND",
+              "2232": "Diary No. 35261-2026 THE COMMISSIONER OF LOCAL BODY TAX/CESS VERSUS HINDUSTAN PETROLEUM CORPORATION LTD. AND",
+              "2233": "Diary No. 35264-2026 THE COMMISSIONER OF LOCAL BODY TAX/CESS VERSUS HINDUSTAN PETROLEUM CORPORATION LTD. AND",
+              "2234": "Diary No. 35267-2026 THE COMMISSIONER OF LOCAL BODY TAX CESS VERSUS HINDUSTAN PETROLEUM CORPORATION LTD AND",
+              "2235": "Diary No. 35278-2026 NAVAL HARIKISHAN VARMA AND ANR. VERSUS HARIAL BHANUSHALI AND ORS.",
+              "2236": "Diary No. 35279-2026 ASHOK DEVI VERSUS C SENTHIL KUMAR AND ANR.",
+              "2237": "Diary No. 35291-2026 UNION TERRITORY OF JANDK AND ORS. VERSUS ABDUL MAJID SHEIKH",
+              "2238": "Diary No. 35296-2026 SH DALIP SINGH ADHIKARI VERSUS THE ORIENTAL INSURANCE COMPANY LTD.",
+              "2239": "Diary No. 35307-2026 BAJAJ ALLIANZ GENERAL INSURANCE COMPANY VERSUS LAXMI ALLIES PRIYA CHHUGANI AND ORS.",
+              "2240": "Diary No. 35314-2026 SUNIL SITARAM NEWALKAR VERSUS UNION OF INDIA AND ORS.",
+              "2241": "Diary No. 35315-2026 LIC TENANTS WELFARE SOCIETY VERSUS UNION OF INDIA AND ORS.",
+              "2242": "Diary No. 35317-2026 CHIMAN SINGH AND ANR. VERSUS KEHAR SINGH AND ORS.",
+              "2243": "Diary No. 35318-2026 TENANTS OF ASIAN BUILDING VERSUS UNION OF INDIA AND ORS.",
+              "2244": "Diary No. 35319-2026 PUBLIC SECTOR TENANTS ACTION COMMITTEE VERSUS UNION OF INDIA AND ORS.",
+              "2245": "Diary No. 35340-2026 SHANKRAVVA VERSUS THE ASSISTANT COMMISSIONER AND LAND",
+              "2246": "Diary No. 35342-2026 M/S. A.B. MOTORS PVT. LTD. AND ORS. VERSUS AUTHUM INVESTMENT AND INFRASTRUCTURE",
+              "2247": "Diary No. 35346-2026 AMBRI FIRDOS AND ORS. VERSUS MANOWWAR ALAM AND ORS.",
+              "2248": "Diary No. 35360-2026 SHIVAJI LAXMAN BONGANE AND ORS. VERSUS AAPPASO SHAMRAO KADAM AND ORS.",
+              "2249": "Diary No. 35368-2026 MANISHA @ BHARATI DHANAJI KOLEKAR AND ANR. VERSUS SHIVAJI KASHINATH LAVTE AND ORS.",
+              "2250": "Diary No. 35374-2026 JSW STEEL LIMITED VERSUS LAKSHMIDEVI AND ORS.",
+              "2251": "Diary No. 35414-2026 S. SHANMUGANATHAN VERSUS G. RAMAR",
+              "2252": "Diary No. 35416-2026 M/S. KONARAK ENTERPRISE VERSUS HALDIA DEVELOPMENT AUTHORITY",
+              "2253": "Diary No. 35438-2026 SELVIN KANAGARAJ VERSUS MURUGESAN",
+              "2254": "Diary No. 35443-2026 ALL INDIA FARMERS UNION VERSUS MINISTRY OF FINANCE AND ORS.",
+              "2255": "Diary No. 35446-2026 SURABHI RAUT VERSUS UNION OF INDIA AND ORS.",
+              "2256": "Diary No. 35460-2026 CHANDAN DIGAMBAR PAWASKAR VERSUS TANVI DATTARAJ GAD",
+              "2257": "Diary No. 35462-2026 MAKBUL HOSSIAN MIAH VERSUS ABDUL MAJID MIYA AND ORS.",
+              "2258": "Diary No. 35471-2026 SNR COMPANY VERSUS MOHAR SHIPPING COMPANY SINGAPORE",
+              "2259": "Diary No. 35481-2026 THE COMMISSIONER OF LOCAL BODY TAX, NAVI VERSUS SIEMENS LIMITED AND ANR.",
+              "2260": "Diary No. 35493-2026 SIMRAT SINGH AND ORS. VERSUS STATE OF U.P. AND ANR.",
+              "2261": "Diary No. 35567-2026 NAVI MUMBAI MUNICIPAL CORPORATION VERSUS PRATIBHA INDUSTRIES LIMITED (IN LIQUIDATION)",
+              "2262": "Diary No. 35570-2026 SUNNEHARI BAGH BUILDERS PVT LTD VERSUS AIRPORTS AUTHORITY OF INDIA",
+              "2263": "Diary No. 35572-2026 LOVINA PRAKASH MIRCHANDANI AND ANR. VERSUS UNION OF INDIA AND ORS.",
+              "2264": "Diary No. 35576-2026 THE EXECUTIVE ENGINEER VERSUS SHIVAJI KISAN DANAWALE",
+              "2265": "Diary No. 35578-2026 MOHIT SURESH VELKAR AND ANR. VERSUS UNION OF INDIA AND ORS.",
+              "2266": "Diary No. 35604-2026 BABANRAO RUSTUMRAO SANGALE VERSUS JALALUDDIN NAJMUDDIN SYED AND ANR.",
+              "2267": "Diary No. 35634-2026 RAJASHEKHAR VERSUS SHARADA",
+              "2268": "Diary No. 35641-2026 REENU KUMAR VERSUS THE STATE OF JHARKHAND AND ORS.",
+              "2269": "Diary No. 35651-2026 GUNAWANTHRAO AND ORS. VERSUS BABURAO AND ANR.",
+              "2270": "Diary No. 35652-2026 THE EXECUTIVE ENGINEER VERSUS SOPAN BABURAO ROMAN",
+              "2271": "Diary No. 35654-2026 THE EXECUTIVE ENGINEER VERSUS POPAT DATTATRAYA SONAWANE",
+              "2272": "Diary No. 35655-2026 THE EXECUTIVE ENGINEER VERSUS SHANKAR HARI BIRHAMANE",
+              "2273": "Diary No. 35657-2026 THE EXECUTIVE ENGINEER VERSUS DHONDABAI BALU GOLE",
+              "2274": "Diary No. 35659-2026 THE EXECUTIVE ENGINEER VERSUS TUKARAM APPAJI BADAK",
+              "2275": "Diary No. 35664-2026 THE EXECUTIVE ENGINEER VERSUS KALAWATI NARAYAN KINDRE",
+              "2276": "Diary No. 35666-2026 THE EXECUTIVE ENGINEER,",
+              "2277": "Diary No. 35671-2026 THE EXECUTIVE ENGINEER VERSUS INDUBAI DINKAR BODAKE",
+              "2278": "Diary No. 35675-2026 ARMY WELFARE HOUSING ORGANISATION (AWHO) VERSUS NAGARAJAN VASUDEVA RAO AND ORS.",
+              "2279": "Diary No. 35680-2026 THE EXECUTIVE ENGINEER VERSUS TARABAI NATHABA GULAMKAR",
+              "2280": "Diary No. 35683-2026 THE EXECUTIVE ENGINEER VERSUS VITTHAL SAMPAT MOHITE",
+              "2281": "Diary No. 35686-2026 THE EXECUTIVE ENGINEER VERSUS ANAND YASHWANT DANAWALE",
+              "2282": "Diary No. 35689-2026 THE EXECUTIVE ENGINEER VERSUS SUMAN BABURAO KAMBLE",
+              "2283": "Diary No. 35697-2026 MAHENDRA SALGAONKAR VERSUS STATE OF GOA AND ANR.",
+              "2284": "Diary No. 35700-2026 THE CHAIRMAN AND ANR. VERSUS J.VIMALA AND ORS.",
+              "2285": "Diary No. 35719-2026 ASHOK KUMAR AND ORS. VERSUS BALBIR SINGH",
+              "2286": "Diary No. 35724-2026 M. SRINIVASAN VERSUS THE UNION OF INDIA AND ORS.",
+              "2287": "Diary No. 35728-2026 SANJAY KUMAR VERSUS THE STATE OF HIMACHAL PRADESH",
+              "2288": "Diary No. 35729-2026 ASHOK KUMAR YADAV VERSUS STATE OF UP AND ANR.",
+              "2289": "Diary No. 35734-2026 STATE OF RAJASTHAN VERSUS PRAMOD SHARMA AND ANR.",
+              "2290": "Diary No. 35739-2026 LALU VERSUS STATE",
+              "2291": "Diary No. 35785-2026 SIDDAVVA AND ORS. VERSUS YAMANAVVA AND ANR.",
+              "2292": "Diary No. 35798-2026 NAVJOT KAUR VERSUS STATE OF PUNJAB AND ORS.",
+              "2293": "Diary No. 35806-2026 STATE OF HIMACHAL PRADESH AND ORS. VERSUS CENTRAL BANK OF INDIA AND ORS.",
+              "2294": "Diary No. 35826-2026 RAMASWAMI KUMARAVEL VERSUS M/S TEXMO PIPES AND PRODUCTS LTD AND ORS.",
+              "2295": "Diary No. 35835-2026 RAHUL JAISWAL VERSUS THE STATE OF WEST BENGAL AND ORS.",
+              "2296": "Diary No. 35840-2026 M/S MAYA HOTEL PVT LTD. AND ORS. VERSUS UNION BANK OF INDIA AND ANR.",
+              "2297": "Diary No. 35845-2026 HARI PAL RANA AND ORS. VERSUS STATE OF HARYANA AND ORS.",
+              "2298": "Diary No. 35846-2026 NAGENDRAN VERSUS STATE",
+              "2299": "Diary No. 35868-2026 V.R.T. BALAJI VERSUS RAJA ANNAMALAI AND ORS.",
+              "2300": "Diary No. 35876-2026 SHANAMUKAPPA VERSUS THE ASSISTANT COMMISSIONER AND LAND",
+              "2301": "Diary No. 35880-2026 SAMIR DAS VERSUS THE STATE OF WEST BENGAL",
+              "2302": "Diary No. 35887-2026 RAJMAL VERSUS S.D.O. AND ANR.",
+              "2303": "Diary No. 35897-2026 UTPAL MITRA VERSUS UNION OF INDIA AND ORS.",
+              "2304": "Diary No. 35925-2026 GHANSHYAM VERSUS OM PRAKASH",
+              "2305": "Diary No. 35931-2026 C SIDDALINGAIAH VERSUS SHARADAMMA AND ORS.",
+              "2306": "Diary No. 35967-2026 PUBLIC WORKS DEPARTMENT, NATIONAL VERSUS A VAKIL A SALAM DESHMUKH AND ORS.",
+              "2307": "Diary No. 35969-2026 PUBLIC WORKS DEPARTMENT VERSUS ASHOK VISHWANATH PATIL AND ORS.",
+              "2308": "Diary No. 35971-2026 PUBLIC WORKS DEPARTMENT, NATIONAL VERSUS JIJABAI BHIMRAJ PATIL AND ORS.",
+              "2309": "Diary No. 35974-2026 PUBLIC WORKS DEPARTMENT VERSUS RAVINDRA KASHINATH PATIL AND ORS.",
+              "2310": "Diary No. 35975-2026 TARUN PODDAR AND ANR. VERSUS ANJALIM PANDIT",
+              "2311": "Diary No. 35977-2026 H RAMU AND ORS. VERSUS JAYAMMA AND ORS.",
+              "2312": "Diary No. 35980-2026 PUBLIC WORKS DEPARTMENT VERSUS SACHIN BHIKAN PATIL AND ORS.",
+              "2313": "Diary No. 35981-2026 PUBLIC WORKS DEPARTMENT, NATIONAL VERSUS SATISH PADMAKAR BILDIKAR AND ORS.",
+              "2314": "Diary No. 35987-2026 UTTAM MONDAL VERSUS THE STATE OF WEST BENGAL AND ANR.",
+              "2315": "Diary No. 35994-2026 SHISHIR CHAND VERSUS TERI UNIVERSITY",
+              "2316": "Diary No. 36001-2026 UNION TERRITORY OF J AND K AND ORS. VERSUS MANZOOR KHAN",
+              "2317": "Diary No. 36014-2026 ARUN G. KRISHNAN VERSUS CENTRAL BUREAU OF INVESTIGATION AND ORS.",
+              "2318": "Diary No. 36026-2026 RAJIK @ AJJU VERSUS THE STATE OF MADHYA PRADESH",
+              "2319": "Diary No. 36039-2026 SASTI BOURI VERSUS STATE OF WEST BENGAL",
+              "2320": "Diary No. 36042-2026 IBRAHIM SHAMDHUDDIN SHAIKH VERSUS MOYONDIN PAPAIYA JAHAGIRDAR AND ORS.",
+              "2321": "Diary No. 36092-2026 NOOR SHARIEFF VERSUS STATE OF KARNATAKA AND ANR.",
+              "2322": "Diary No. 36100-2026 JAI PRAKASH KUMAR VERSUS RAHUL KUMAR AND ANR.",
+              "2323": "Diary No. 36105-2026 XXX VERSUS STATE OF HARYANA AND ORS.",
+              "2324": "Diary No. 36107-2026 KESHAV BIHANI AND ANR. VERSUS COMPETITION COMMISSION OF INDIA",
+              "2325": "Diary No. 36114-2026 GOLAGANI SRNIVAS RAO VERSUS STATE OF ANDHRA PRADESH",
+              "2326": "Diary No. 36117-2026 M/S PRENDA CREATIONS PVT. LTD. VERSUS PRINCIPAL COMMISSIONER OF CUSTOMS",
+              "2327": "Diary No. 36119-2026 MAHESH KUMAR SINGH VERSUS RAJU BALA DEVI AND ORS.",
+              "2328": "Diary No. 36123-2026 PUBLIC WORKS DEPARTMENT, NATIONAL VERSUS SHAKUNTALABAI RAMDAS PATIL AND ORS.",
+              "2329": "Diary No. 36124-2026 PUBLIC WORKS DEPARTMENT VERSUS VIJAYSINGH ISHWARSINGH RAJPUT AND ORS.",
+              "2330": "Diary No. 36159-2026 SAIBABA PRATISTHAN BHOKAR AND ORS. VERSUS THE STATE OF MAHARASHTRA AND ORS.",
+              "2331": "Diary No. 36171-2026 UNION TERRITORY OF J AND K AND ORS. VERSUS GH NABI MIR AND ANR.",
+              "2332": "Diary No. 36183-2026 PR COMMISSIONER OF INCOME TAX AND ANR. VERSUS M/S GOOGLE LLC",
+              "2333": "Diary No. 36189-2026 DEEPU @ DEEPAK GOSWAMI VERSUS STATE OF RAJASTHAN HOME DEPARTMENT",
+              "2334": "Diary No. 36193-2026 SUPERINTENDING ENGINEER (ESTABLISHMENT) VERSUS VIJAY KUMAR",
+              "2335": "Diary No. 36211-2026 THE COMMISSIONER MYSURU CITY CORPORATION VERSUS MANJU M.S. AND ANR.",
+              "2336": "Diary No. 36215-2026 THE COMMISSIONER AND ANR. VERSUS M GANGADHARA AND ANR.",
+              "2337": "Diary No. 36219-2026 THE COMMISSIONER AND ANR. VERSUS MANJU M.S. AND ANR.",
+              "2338": "Diary No. 36225-2026 THE COMMISSIONER AND ANR. VERSUS CHENNAPPA AND ANR.",
+              "2339": "Diary No. 36252-2026 ARCHANA DEVI VERSUS THE NEW INDIA ASSURANCE COMPANY LTD. AND",
+              "2340": "Diary No. 36254-2026 STATE OF ODISHA AND ANR. VERSUS RAJIB LOCHAN ACHARYA AND ANR.",
+              "2341": "Diary No. 36276-2026 STATE OF WEST BENGAL AND ORS. VERSUS SWARAJ PATRA AND ORS.",
+              "2342": "Diary No. 36282-2026 PRATEEK RAMESH CHANDRA SHAH VERSUS CASME INDUSRIAL PARK DEVELOPMENT INDIA",
+              "2343": "Diary No. 36302-2026 CHIRANJEEV KUMAR JHA VERSUS REKHA KUMARI JHA",
+              "2344": "Diary No. 36308-2026 UMA DEVI VERSUS RAM KALI AND ORS.",
+              "2345": "Diary No. 36318-2026 KAMAL KISHOR UCHADIYA VERSUS DEEPAK SENGAR AND ORS.",
+              "2346": "Diary No. 36357-2026 SAPNA DEVI VERSUS STATE OF H.P. AND ORS.",
+              "2347": "Diary No. 36358-2026 NIK COOL VERSUS THE ASSISTANT COMMISSIONER AND ORS.",
+              "2348": "Diary No. 36362-2026 SANDEEP @ SUNNY VERSUS THE STATE OF NCT OF DELHI",
+              "2349": "Diary No. 36381-2026 KAILASH MALGHANI VERSUS R C LALWANI AND ANR.",
+              "2350": "Diary No. 36445-2026 THE STATE OF TRIPURA AND ORS. VERSUS PRASHANT KUMAR",
+              "2351": "Diary No. 36456-2026 NEELAKANTAYYA VERSUS THE ASSISTANT COMMISSIONER AND SPECIAL",
+              "2352": "Diary No. 36458-2026 MAULANA RIZWAN VERSUS STATE OF U.P. AND ORS.",
+              "2353": "Diary No. 36481-2026 NAGAVARMA PRABHU A. VERSUS VISHAK G. AND ANR.",
+              "2354": "Diary No. 36509-2026 UNION OF INDIA AND ORS. VERSUS SUKHVINDER SINGH",
+              "2355": "Diary No. 36560-2026 SAROJ VERSUS STATE OF UTTAR PRADESH",
+              "2356": "Diary No. 36569-2026 KANDEESWARAN POORNAMATHI VERSUS ESWARAN VIJAYAKUMAR",
+              "2357": "Diary No. 36588-2026 NANDIMINTI DHANUNJAYA NAIDU VERSUS THE STATE OF A.P. AND ORS.",
+              "2358": "Diary No. 36609-2026 M/S SANYEEJI ISPAT LTD. AND ANR. VERSUS ASSAM POWER DISTRIBUTION COMPANY LTD.",
+              "2359": "Diary No. 36627-2026 NAGARATHNA RAJU VERSUS THE PROPRIETOR AND ANR.",
+              "2360": "Diary No. 36630-2026 BELAGAVI URBAN DEVELOPMENT AUTHORITY VERSUS AZAD CO-OPERATIVE HOUSING SOCIETY LTD. AND",
+              "2361": "Diary No. 36635-2026 THE MANAGING DIRECTOR AND ENQUIRY VERSUS LAKSHMI S AND ORS.",
+              "2362": "Diary No. 36639-2026 THE MANAGING DIRECTOR AND ENQUIRY VERSUS T. NARAYANA SWAMY AND ORS.",
+              "2363": "Diary No. 36681-2026 ROMESH SATYANARAYAN SHARMA VERSUS SWARAN SINGH CHAWLA AND ORS.",
+              "2364": "Diary No. 36682-2026 SACHIN RAMBHAU (RAMNATH) MHASKE VERSUS PRADEEP DATTATRAYA SADARE AND ORS.",
+              "2365": "Diary No. 36683-2026 HAPHSA K.M VERSUS STATE OF WEST BENGAL AND ORS.",
+              "2366": "Diary No. 36689-2026 ARVIND KUMAR JIYALAL VERSUS M/S MAYA INFRATECH AND ORS.",
+              "2367": "Diary No. 36695-2026 LAXMAN GOVERDHAN PAWAR VERSUS MALANABAI UDHAV KALE AND ORS.",
+              "2368": "Diary No. 36696-2026 JEYA VERSUS M. ARUNACHALAM AND ORS.",
+              "2369": "Diary No. 36705-2026 DHIRAJLAL GIRDHARBHAI CHANIYARA VERSUS STATE BANK OF INDI",
+              "2370": "Diary No. 36706-2026 ANSUYABEN MANSUKHLAL CHANIYARA VERSUS STATE BANK OF INDIA",
+              "2371": "Diary No. 36729-2026 THE DISTRICT COLLECTOR AND ORS. VERSUS KAMAN @ KAMATCHI NALLASIVAM",
+              "2372": "Diary No. 36738-2026 PUSPRAJSINH ANOPSINH CHUDASMA VERSUS STATE BANK OF INDIA",
+              "2373": "Diary No. 36779-2026 K SURESHKUMAR VERSUS PUSHPALATHA AND ANR.",
+              "2374": "Diary No. 36797-2026 UNION TERRITORY OF J AND K AND ORS. VERSUS MOHD. MAQBOOL SHEIKH AND ANR.",
+              "2375": "Diary No. 36798-2026 THE GENERAL MANAGER, TAMIL NADU STATE VERSUS V. BALAJI AND ANR.",
+              "2376": "Diary No. 36816-2026 UNION TERRITORY OF J AND K AND ORS. VERSUS AMBIR BHAT AND ANR.",
+              "2377": "Diary No. 36827-2026 PRASANNA KISHAN VERSUS STATE OF ORISSA",
+              "2378": "Diary No. 36833-2026 VINOD KUMAR KAD AND ORS. VERSUS STATE (N.C.T.) OF DELHI",
+              "2379": "Diary No. 36839-2026 DEVUBEN MANGABHAI @ SHANTUBEN AND ANR. VERSUS DEPUTY EXECUTIVE ENGINEER AND ORS.",
+              "2380": "Diary No. 36842-2026 RAJENDER SINGH CHAHAL VERSUS THE GOVERNMENT OF HARYANA AND ANR.",
+              "2381": "Diary No. 36878-2026 PRABHAKAR SAO VERSUS THE STATE OF JHARKHAND",
+              "2382": "Diary No. 36900-2026 SANMAT KUMBHAR VERSUS THE STATE OF ODISHA",
+              "2383": "Diary No. 36937-2026 AMIT MITTAL VERSUS STATE OF CHHATTISGARH",
+              "2384": "Diary No. 36952-2026 J.MARY IMMAGULATE REDERIGO VERSUS B.JOSEPH CLARANCE PEERIS",
+              "2385": "Diary No. 36998-2026 PANDU BHOGAM VERSUS STATE OF CHHATTISGARH",
+              "2386": "Diary No. 37027-2026 DEEPENDRA VIKRAM VERSUS STATE OF UP HOME DEPARTMENT AND ANR.",
+              "2387": "Diary No. 37055-2026 RUDRA KUMAR SAHU @ RAHUL VERSUS THE STATE OF CHHATTISGARH",
+              "2388": "Diary No. 37086-2026 MANIKRAO INGALE VERSUS THE STATE OF MAHARASHTRA AND ANR.",
+              "2389": "Diary No. 37091-2026 HRIDAY NARAYAN SINGH AND ANR. VERSUS THE STATE OF MAHARASHTRA AND ORS.",
+              "2390": "Diary No. 37114-2026 RAM PAL VERSUS STATE OF UTTAR PRADESH",
+              "2391": "Diary No. 37120-2026 M/S ANITA CONSTRUCTION VERSUS STATE OF CHHATTISGARH AND ORS.",
+              "2392": "Diary No. 37126-2026 DINESH SAHU VERSUS ANJU SAHU AND ORS.",
+              "2393": "Diary No. 37140-2026 NAND KISHORE YADAV VERSUS STATE OF CHHATTISGARH AND ORS.",
+              "2394": "Diary No. 37196-2026 UNION TERRITORY OF J AND K VERSUS FARZANA ARA NAQASHBANDI",
+              "2395": "Diary No. 37212-2026 GOPINATH AND ANR. VERSUS STATE AND ANR.",
+              "2396": "Diary No. 37287-2026 UMA SHANKAR KUMAR DAS VERSUS THE STATE OF JHARKHAND"
+            },
+            "advocates": {
+              "1701": {
+                "pet": "MOHD. SAQUIB SIDDIQUI"
+              },
+              "1702": {
+                "pet": "ABHISAR BHANU"
+              },
+              "1703": {
+                "pet": "SRIRAM P"
+              },
+              "1704": {
+                "pet": "SRIRAM P"
+              },
+              "1706": {
+                "pet": "PASHUPATHI NATH RAZDAN"
+              },
+              "1707": {
+                "pet": "KUMAR DUSHYANT SINGH",
+                "resp": "ANAND VARMA"
+              },
+              "1708": {
+                "pet": "ARVIND KUMAR SHARMA"
+              },
+              "1709": {
+                "pet": "PRAVEEN SWARUP"
+              },
+              "1710": {
+                "pet": "NIDHI JASWAL",
+                "resp": "ANAND VARMA"
+              },
+              "1711": {
+                "pet": "SUDARSHAN LAMBA"
+              },
+              "1712": {
+                "pet": "DEEPANWITA PRIYANKA"
+              },
+              "1713": {
+                "pet": "PRANAYA KUMAR"
+              },
+              "1714": {
+                "pet": "GOPAL SHARAN PATHAK"
+              },
+              "1715": {
+                "pet": "ASHUTOSH DUBEY"
+              },
+              "1716": {
+                "pet": "ASHUTOSH DUBEY"
+              },
+              "1717": {
+                "pet": "SHEKHAR KUMAR"
+              },
+              "1719": {
+                "pet": "KISALAYA SHUKLA"
+              },
+              "1720": {
+                "pet": "MANISH PALIWAL"
+              },
+              "1721": {
+                "pet": "MANISH PALIWAL"
+              },
+              "1722": {
+                "pet": "BIJU P RAMAN"
+              },
+              "1723": {
+                "pet": "RANJAN MUKHERJEE"
+              },
+              "1724": {
+                "pet": "RANJAN MUKHERJEE"
+              },
+              "1725": {
+                "pet": "NIKILESH RAMACHANDRAN"
+              },
+              "1726": {
+                "pet": "NAVEEN CHANDRASHEKAR"
+              },
+              "1727": {
+                "pet": "PRITHVI PAL"
+              },
+              "1728": {
+                "pet": "CHAND QURESHI"
+              },
+              "1729": {
+                "pet": "NITESH RANJAN"
+              },
+              "1730": {
+                "pet": "DEVASA & CO"
+              },
+              "1731": {
+                "pet": "P. GEORGE GIRI"
+              },
+              "1732": {
+                "pet": "ARVIND KUMAR SHARMA"
+              },
+              "1733": {
+                "pet": "NULI & NULI"
+              },
+              "1735": {
+                "pet": "AMITA SACHDEVA"
+              },
+              "1736": {
+                "pet": "R AND R LAW ASSOCIATES"
+              },
+              "1737": {
+                "pet": "SHRUTI BISHT"
+              },
+              "1738": {
+                "pet": "CHANDRA PRAKASH",
+                "resp": "VIDHI PANKAJ THAKER"
+              },
+              "1739": {
+                "pet": "ASHISH BATRA"
+              },
+              "1740": {
+                "pet": "ANJUMAN TRIPATHY"
+              },
+              "1746": {
+                "pet": "SATISH PANDEY"
+              },
+              "1747": {
+                "pet": "ARVIND KUMAR SHARMA"
+              },
+              "1749": {
+                "pet": "SAMRAT KRISHNARAO",
+                "resp": "RAJEEV MAHESHWARANAND ROY"
+              },
+              "1750": {
+                "pet": "PARTH YADAV"
+              },
+              "1751": {
+                "pet": "NAMIT SAXENA"
+              },
+              "1752": {
+                "pet": "NAVEEN KUMAR"
+              },
+              "1753": {
+                "pet": "PARTH YADAV"
+              },
+              "1754": {
+                "pet": "ARVIND KUMAR SHARMA"
+              },
+              "1755": {
+                "pet": "APOORV SHUKLA"
+              },
+              "1756": {
+                "pet": "APOORV SHUKLA",
+                "resp": "CYRIL AMARCHAND MANGALDAS AOR"
+              },
+              "1757": {
+                "pet": "A. KARTHIK"
+              },
+              "1759": {
+                "pet": "DHANANJAI JAIN"
+              },
+              "1760": {
+                "pet": "MRIGANK PRABHAKAR"
+              },
+              "1761": {
+                "pet": "MANDEEP KALRA"
+              },
+              "1762": {
+                "pet": "SIDDHANT BUXY"
+              },
+              "1763": {
+                "pet": "ANILENDRA PANDEY"
+              },
+              "1764": {
+                "pet": "ARUP BANERJEE"
+              },
+              "1765": {
+                "pet": "AKANKSHA RAI"
+              },
+              "1766": {
+                "pet": "ISHAAN GEORGE"
+              },
+              "1767": {
+                "pet": "VARUN THAKUR &"
+              },
+              "1768": {
+                "pet": "SIDDHARTH GAUTAM"
+              },
+              "1769": {
+                "pet": "ADEEL AHMED"
+              },
+              "1770": {
+                "pet": "ARUNA GUPTA"
+              },
+              "1771": {
+                "pet": "SANCHIT GARGA"
+              },
+              "1772": {
+                "pet": "ARUNA GUPTA"
+              },
+              "1773": {
+                "pet": "ROBIN KHOKHAR"
+              },
+              "1774": {
+                "pet": "ANIL KUMAR VERMA"
+              },
+              "1775": {
+                "pet": "APOORV SHUKLA"
+              },
+              "1776": {
+                "pet": "SAURABH AJAY GUPTA"
+              },
+              "1777": {
+                "pet": "MANORANJAN PAIKARAY"
+              },
+              "1778": {
+                "pet": "SHUBHAM BHALLA"
+              },
+              "1779": {
+                "pet": "AMAN MALIK"
+              },
+              "1780": {
+                "pet": "SACHIN MIGLANI"
+              },
+              "1782": {
+                "pet": "ANIL KUMAR"
+              },
+              "1783": {
+                "pet": "NAMIT SAXENA"
+              },
+              "1784": {
+                "pet": "NAMIT SAXENA"
+              },
+              "1785": {
+                "pet": "SAURABH AJAY GUPTA"
+              },
+              "1786": {
+                "pet": "VAGISHA KOCHAR",
+                "resp": "PBA LEGAL"
+              },
+              "1787": {
+                "pet": "RANJEETA ROHATGI"
+              },
+              "1789": {
+                "pet": "SHUBHAM JAIN"
+              },
+              "1790": {
+                "pet": "VAGISHA KOCHAR"
+              },
+              "1791": {
+                "pet": "VAGISHA KOCHAR"
+              },
+              "1792": {
+                "pet": "PRAGYA SHARMA"
+              },
+              "1793": {
+                "pet": "VAGISHA KOCHAR",
+                "resp": "SURESH DUTT DOBHAL"
+              },
+              "1794": {
+                "pet": "PRAGYA SHARMA"
+              },
+              "1795": {
+                "pet": "SAURABH AJAY GUPTA"
+              },
+              "1796": {
+                "pet": "SAURABH AJAY GUPTA",
+                "resp": "HIMANSHU SHARMA"
+              },
+              "1797": {
+                "pet": "SAURABH AJAY GUPTA"
+              },
+              "1798": {
+                "pet": "MOHD FARAZ ANEES"
+              },
+              "1799": {
+                "pet": "TUSHAR GIRI"
+              },
+              "1800": {
+                "pet": "TUSHAR GIRI"
+              },
+              "1801": {
+                "pet": "TUSHAR GIRI"
+              },
+              "1802": {
+                "pet": "VISHAL ARUN MISHRA",
+                "resp": "E. C. AGRAWALA"
+              },
+              "1803": {
+                "pet": "KISALAYA SHUKLA"
+              },
+              "1804": {
+                "pet": "ANIL KUMAR"
+              },
+              "1805": {
+                "pet": "ABHIGYA KUSHWAH"
+              },
+              "1806": {
+                "pet": "MUKESH KUMAR SINGH"
+              },
+              "1807": {
+                "pet": "KISALAYA SHUKLA"
+              },
+              "1808": {
+                "pet": "KMNP LAW AOR"
+              },
+              "1809": {
+                "pet": "KEDAR NATH TRIPATHY"
+              },
+              "1811": {
+                "pet": "SATYA KAM SHARMA"
+              },
+              "1812": {
+                "pet": "PULKIT AGARWAL"
+              },
+              "1813": {
+                "pet": "RISHI MATOLIYA"
+              },
+              "1814": {
+                "pet": "ABHIJIT SENGUPTA"
+              },
+              "1815": {
+                "pet": "A. LAKSHMINARAYANAN"
+              },
+              "1816": {
+                "pet": "SIDDHARTH"
+              },
+              "1817": {
+                "resp": "ANAGHA S. DESAI"
+              },
+              "1818": {
+                "pet": "G. SIVABALAMURUGAN"
+              },
+              "1820": {
+                "pet": "SHANKEY AGRAWAL"
+              },
+              "1821": {
+                "pet": "J. JOE ANTON BENO"
+              },
+              "1822": {
+                "pet": "C. ANKEETA APPANNA"
+              },
+              "1823": {
+                "pet": "PRITHVI PAL"
+              },
+              "1824": {
+                "pet": "PRITHVI PAL"
+              },
+              "1825": {
+                "pet": "RAKESH DAHIYA"
+              },
+              "1826": {
+                "pet": "SWASTIK VERMA"
+              },
+              "1827": {
+                "pet": "UDITA SINGH",
+                "resp": "SUBODH S. PATIL"
+              },
+              "1828": {
+                "pet": "RAKESH KUMAR"
+              },
+              "1829": {
+                "pet": "VIDHI PANKAJ THAKER"
+              },
+              "1830": {
+                "pet": "SABARISH SUBRAMANIAN",
+                "resp": "PAREKH & CO"
+              },
+              "1831": {
+                "pet": "ABHIGYA KUSHWAH"
+              },
+              "1832": {
+                "pet": "RUCHI GUPTA"
+              },
+              "1833": {
+                "pet": "KAMLENDRA MISHRA",
+                "resp": "MITHU JAIN"
+              },
+              "1834": {
+                "pet": "PRABHAT KUMAR RAI"
+              },
+              "1835": {
+                "pet": "RAVI BHUSHAN"
+              },
+              "1836": {
+                "pet": "RANI MISHRA"
+              },
+              "1837": {
+                "pet": "KAMLENDRA MISHRA"
+              },
+              "1838": {
+                "pet": "PRIYA PURI"
+              },
+              "1840": {
+                "pet": "ANIMESH KUMAR",
+                "resp": "SAA CHAMBERS"
+              },
+              "1841": {
+                "pet": "KAMLENDRA MISHRA",
+                "resp": "MITHU JAIN"
+              },
+              "1842": {
+                "pet": "KAMLENDRA MISHRA"
+              },
+              "1843": {
+                "pet": "KAMLENDRA MISHRA"
+              },
+              "1844": {
+                "pet": "KAMLENDRA MISHRA"
+              },
+              "1845": {
+                "pet": "KAMLENDRA MISHRA"
+              },
+              "1846": {
+                "pet": "KAMLENDRA MISHRA"
+              },
+              "1847": {
+                "pet": "KAMLENDRA MISHRA"
+              },
+              "1848": {
+                "pet": "KAMLENDRA MISHRA"
+              },
+              "1849": {
+                "pet": "KAMLENDRA MISHRA"
+              },
+              "1850": {
+                "pet": "KAMLENDRA MISHRA"
+              },
+              "1851": {
+                "pet": "KAMLENDRA MISHRA"
+              },
+              "1852": {
+                "pet": "KAMLENDRA MISHRA",
+                "resp": "MITHU JAIN"
+              },
+              "1853": {
+                "pet": "KAMLENDRA MISHRA"
+              },
+              "1854": {
+                "pet": "SHASHANK SHEKHAR"
+              },
+              "1855": {
+                "pet": "ANKUR S. KULKARNI"
+              },
+              "1856": {
+                "pet": "ANURAG KISHORE",
+                "resp": "SHAURYA SAHAY CHAND QURESHI SAMIR ALI KHAN"
+              },
+              "1857": {
+                "pet": "ABHISHEK KUMAR SINGH"
+              },
+              "1858": {
+                "pet": "VEER PRATAAP SINGH"
+              },
+              "1859": {
+                "pet": "PALLAVI PRATAP"
+              },
+              "1861": {
+                "pet": "KAILASH PRASHAD PANDEY"
+              },
+              "1862": {
+                "pet": "RANU PUROHIT",
+                "resp": "A. KARTHIK"
+              },
+              "1864": {
+                "pet": "RAJESH SINGH"
+              },
+              "1865": {
+                "pet": "BALAJI SRINIVASAN"
+              },
+              "1866": {
+                "pet": "MRIDULA RAY BHARADWAJ"
+              },
+              "1867": {
+                "pet": "SUDHANSHU PRAKASH"
+              },
+              "1868": {
+                "pet": "ASHUTOSH DUBEY"
+              },
+              "1870": {
+                "pet": "SIDDHARTHA CHOWDHURY"
+              },
+              "1871": {
+                "pet": "GOLDY GOYAL",
+                "resp": "PAROMITA MAJUMDAR"
+              },
+              "1872": {
+                "pet": "NIVESH KUMAR"
+              },
+              "1873": {
+                "pet": "DIVYESH PRATAP SINGH"
+              },
+              "1874": {
+                "pet": "ABHISHEK KUMAR SINGH"
+              },
+              "1875": {
+                "pet": "KARUNAKAR MAHALIK"
+              },
+              "1876": {
+                "pet": "M. P. SRIVIGNESH"
+              },
+              "1877": {
+                "pet": "SHOBHA RAMAMOORTHY"
+              },
+              "1878": {
+                "pet": "SHUBHAM UPADHYAY"
+              },
+              "1879": {
+                "pet": "KAUSTUBH SHUKLA"
+              },
+              "1880": {
+                "pet": "PRAVEEN SWARUP"
+              },
+              "1881": {
+                "pet": "R. C. KAUSHIK"
+              },
+              "1882": {
+                "pet": "PREM PRAKASH"
+              },
+              "1883": {
+                "pet": "PREM PRAKASH"
+              },
+              "1884": {
+                "pet": "ANIL KUMAR"
+              },
+              "1885": {
+                "pet": "SUDARSHAN LAMBA"
+              },
+              "1886": {
+                "pet": "SUDARSHAN LAMBA"
+              },
+              "1887": {
+                "pet": "SHIVANSH BHARATKUMAR"
+              },
+              "1888": {
+                "pet": "PULKIT SRIVASTAVA"
+              },
+              "1889": {
+                "pet": "SIDDHARTH BATRA"
+              },
+              "1890": {
+                "pet": "PULKIT SRIVASTAVA"
+              },
+              "1891": {
+                "pet": "PREM PRAKASH"
+              },
+              "1892": {
+                "pet": "PULKIT SRIVASTAVA"
+              },
+              "1893": {
+                "pet": "DEB DEEPA MAJUMDAR"
+              },
+              "1894": {
+                "pet": "PREM PRAKASH"
+              },
+              "1895": {
+                "pet": "DHARMENDRA KUMAR"
+              },
+              "1896": {
+                "pet": "PREM PRAKASH"
+              },
+              "1897": {
+                "pet": "RANJAN KUMAR PANDEY"
+              },
+              "1898": {
+                "pet": "DANISH ZUBAIR KHAN"
+              },
+              "1899": {
+                "pet": "EKANSH BANSAL"
+              },
+              "1900": {
+                "pet": "PASHUPATHI NATH RAZDAN"
+              },
+              "1901": {
+                "pet": "V. MAHESHWARI & CO"
+              },
+              "1902": {
+                "pet": "C. ANKEETA APPANNA"
+              },
+              "1903": {
+                "pet": "ANIL KUMAR"
+              },
+              "1904": {
+                "pet": "KARTIKEYA BHARGAVA"
+              },
+              "1905": {
+                "resp": "RAHUL PRATAP"
+              },
+              "1906": {
+                "pet": "MRS. VIPIN GUPTA"
+              },
+              "1907": {
+                "pet": "ANKUR BANSAL",
+                "resp": "HIMANSHU SHARMA"
+              },
+              "1908": {
+                "pet": "ANU GUPTA"
+              },
+              "1909": {
+                "pet": "GOLDY GOYAL"
+              },
+              "1910": {
+                "pet": "PRABHAT KUMAR RAI"
+              },
+              "1911": {
+                "pet": "PRAVEEN SWARUP"
+              },
+              "1912": {
+                "pet": "ASHOK MATHUR"
+              },
+              "1913": {
+                "pet": "SANJANA SADDY"
+              },
+              "1914": {
+                "pet": "VAIRAWAN A.S"
+              },
+              "1915": {
+                "pet": "ASHUTOSH DUBEY"
+              },
+              "1916": {
+                "pet": "VIKRAM HEGDE"
+              },
+              "1917": {
+                "pet": "SUDHIR NAAGAR"
+              },
+              "1918": {
+                "pet": "SIDDHANT SHARMA"
+              },
+              "1919": {
+                "pet": "NULI & NULI"
+              },
+              "1920": {
+                "pet": "RUCHI GUPTA"
+              },
+              "1921": {
+                "pet": "M. Y. DESHMUKH",
+                "resp": "SAGAR PAHUNE PATIL"
+              },
+              "1922": {
+                "pet": "PRAVEEN SWARUP"
+              },
+              "1923": {
+                "pet": "ANUSHREE PRASHIT"
+              },
+              "1924": {
+                "pet": "ANUSHREE PRASHIT"
+              },
+              "1925": {
+                "pet": "S-LEGAL ASSOCIATES"
+              },
+              "1926": {
+                "pet": "BINISA MOHANTY"
+              },
+              "1927": {
+                "pet": "UMESH DUBEY",
+                "resp": "RAJENDRA SAHU"
+              },
+              "1928": {
+                "pet": "AKSHAT SHRIVASTAVA"
+              },
+              "1929": {
+                "pet": "AKSHAT SHRIVASTAVA"
+              },
+              "1930": {
+                "resp": "B. SHRAVANTH SHANKER"
+              },
+              "1931": {
+                "pet": "ANIL KUMAR"
+              },
+              "1932": {
+                "pet": "GARIMA JAIN",
+                "resp": "NAGENDRA KASANA"
+              },
+              "1933": {
+                "pet": "SWARNENDU CHATTERJEE"
+              },
+              "1934": {
+                "pet": "PRAVEEN CHATURVEDI"
+              },
+              "1935": {
+                "pet": "DIVYA SWAMY"
+              },
+              "1936": {
+                "pet": "SIDDHARTHA SINHA"
+              },
+              "1937": {
+                "pet": "T. V. S. RAGHAVENDRA"
+              },
+              "1938": {
+                "pet": "PALLAVI LANGAR",
+                "resp": "KAUSHIK PODDAR"
+              },
+              "1939": {
+                "pet": "UPMA SHRIVASTAVA"
+              },
+              "1940": {
+                "pet": "DIVYA ROY"
+              },
+              "1941": {
+                "pet": "KAILAS BAJIRAO AUTADE"
+              },
+              "1942": {
+                "pet": "HOODA & CO"
+              },
+              "1943": {
+                "pet": "HOODA & CO"
+              },
+              "1944": {
+                "pet": "SUSHIL BALWADA"
+              },
+              "1945": {
+                "pet": "PADMESH MISHRA",
+                "resp": "ABHINAV SHRIVASTAVA"
+              },
+              "1946": {
+                "pet": "AJAY VIKRAM SINGH"
+              },
+              "1947": {
+                "pet": "CHANDRIKA PRASAD"
+              },
+              "1948": {
+                "pet": "HOODA & CO"
+              },
+              "1949": {
+                "pet": "T. R. B. SIVAKUMAR"
+              },
+              "1950": {
+                "pet": "M R LAW ASSOCIATES"
+              },
+              "1951": {
+                "pet": "RUCHIRA GOEL"
+              },
+              "1952": {
+                "pet": "PATIL REKHA CHANDRA"
+              },
+              "1953": {
+                "pet": "SAKET GOGIA"
+              },
+              "1954": {
+                "pet": "KAILAS MORE"
+              },
+              "1955": {
+                "pet": "H. CHANDRA SEKHAR"
+              },
+              "1956": {
+                "pet": "NATASHA DALMIA",
+                "resp": "RADHIKA GAUTAM"
+              },
+              "1957": {
+                "pet": "VIPIN KUMAR"
+              },
+              "1958": {
+                "pet": "SURBHI MEHTA",
+                "resp": "DHAWESH PAHUJA"
+              },
+              "1959": {
+                "pet": "ANIL KUMAR"
+              },
+              "1961": {
+                "pet": "VISHAL ARUN MISHRA"
+              },
+              "1962": {
+                "pet": "SHWETA GARG"
+              },
+              "1963": {
+                "pet": "MANOHAR PRATAP"
+              },
+              "1964": {
+                "pet": "SHANTANU SAGAR"
+              },
+              "1965": {
+                "pet": "ADS LEGAL"
+              },
+              "1966": {
+                "pet": "SAURABH RAJPAL"
+              },
+              "1967": {
+                "pet": "JITENDRA KUMAR"
+              },
+              "1968": {
+                "pet": "RASHID N. AZAM"
+              },
+              "1969": {
+                "pet": "KISALAYA SHUKLA"
+              },
+              "1970": {
+                "pet": "MANOHAR PRATAP"
+              },
+              "1971": {
+                "pet": "ARTI SINGH"
+              },
+              "1972": {
+                "pet": "VATSALYA VIGYA"
+              },
+              "1973": {
+                "pet": "RITU RENIWAL"
+              },
+              "1974": {
+                "pet": "RONAK KARANPURIA"
+              },
+              "1975": {
+                "pet": "SUGANDH RATHOR"
+              },
+              "1976": {
+                "pet": "PURUSHOTTAM SHARMA"
+              },
+              "1977": {
+                "pet": "K. SHIVA"
+              },
+              "1978": {
+                "pet": "PULKIT AGARWAL"
+              },
+              "1979": {
+                "pet": "ISHAAN GEORGE"
+              },
+              "1980": {
+                "pet": "ABHINAV AGRAWAL",
+                "resp": "E. C. AGRAWALA"
+              },
+              "1981": {
+                "pet": "SURYA NATH PANDEY"
+              },
+              "1982": {
+                "pet": "VISHAL ARUN MISHRA"
+              },
+              "1983": {
+                "pet": "VANSHDEEP DALMIA"
+              },
+              "1984": {
+                "pet": "GUNNAM VENKATESWARA"
+              },
+              "1985": {
+                "pet": "R. SUDHAKARAN"
+              },
+              "1986": {
+                "pet": "SHOVAN MISHRA"
+              },
+              "1987": {
+                "pet": "ANSHUMAN ASHOK"
+              },
+              "1988": {
+                "pet": "SHOVAN MISHRA",
+                "resp": "ANSHUMAN SIDDHARTH NAYAK"
+              },
+              "1989": {
+                "pet": "CHAND QURESHI",
+                "resp": "SUMANT DATT"
+              },
+              "1990": {
+                "pet": "VATSALYA VIGYA"
+              },
+              "1991": {
+                "pet": "T. V. S. RAGHAVENDRA"
+              },
+              "1992": {
+                "pet": "SUDHANSHU PRAKASH"
+              },
+              "1993": {
+                "pet": "GURMEET SINGH MAKKER",
+                "resp": "CHARANYA LAKSHMIKUMARAN"
+              },
+              "1994": {
+                "pet": "AKANSHA"
+              },
+              "1995": {
+                "pet": "V. N. RAGHUPATHY"
+              },
+              "1996": {
+                "pet": "ROHIT KUMAR SINGH"
+              },
+              "1997": {
+                "pet": "V. N. RAGHUPATHY"
+              },
+              "1998": {
+                "pet": "SRAVAN KUMAR KARANAM"
+              },
+              "1999": {
+                "pet": "DESHMUKH ADITH SATISH"
+              },
+              "2000": {
+                "pet": "PRAKASH RANJAN NAYAK"
+              },
+              "2001": {
+                "pet": "SHOVAN MISHRA",
+                "resp": "ABHIJIT BHATNAGAR"
+              },
+              "2002": {
+                "pet": "DEVENDRA KUMAR SHUKLA"
+              },
+              "2003": {
+                "pet": "SHOVAN MISHRA"
+              },
+              "2004": {
+                "pet": "RAJIV RANJAN DWIVEDI"
+              },
+              "2005": {
+                "pet": "PREM PRAKASH"
+              },
+              "2006": {
+                "pet": "SHREEKANT NEELAPPA"
+              },
+              "2007": {
+                "pet": "AKSHAY SRIVASTAVA",
+                "resp": "MANOHAR PRATAP"
+              },
+              "2008": {
+                "pet": "ANKUR S. KULKARNI",
+                "resp": "SANJAY JAIN"
+              },
+              "2009": {
+                "pet": "PALAK ARORA"
+              },
+              "2010": {
+                "pet": "DEEPANWITA PRIYANKA"
+              },
+              "2011": {
+                "pet": "PRAVEEN SWARUP"
+              },
+              "2012": {
+                "pet": "VIKAS UPADHYAY"
+              },
+              "2013": {
+                "pet": "SHOVAN MISHRA",
+                "resp": "ANSHUMAN SIDDHARTH NAYAK ABHIJIT BHATNAGAR"
+              },
+              "2014": {
+                "pet": "ANURAG"
+              },
+              "2015": {
+                "pet": "SAURABH RAJPAL"
+              },
+              "2016": {
+                "pet": "ABDUL QADIR ABBASI"
+              },
+              "2017": {
+                "pet": "ANIL KUMAR"
+              },
+              "2018": {
+                "pet": "ABHAY KUMAR TAYAL"
+              },
+              "2019": {
+                "pet": "M. Y. DESHMUKH",
+                "resp": "SAGAR PAHUNE PATIL"
+              },
+              "2020": {
+                "pet": "CHRITARTH PALLI",
+                "resp": "PRIYANJALI SINGH"
+              },
+              "2021": {
+                "pet": "JAIKRITI S. JADEJA"
+              },
+              "2022": {
+                "pet": "KHUSHBU SAHU"
+              },
+              "2023": {
+                "pet": "KISALAYA SHUKLA"
+              },
+              "2024": {
+                "pet": "SUDHIR MENDIRATTA"
+              },
+              "2025": {
+                "pet": "ASWATHI M.K"
+              },
+              "2026": {
+                "pet": "SHASHI SHEKHAR PANDEY"
+              },
+              "2027": {
+                "pet": "ROOPALI LAKHOTIA"
+              },
+              "2028": {
+                "pet": "ABDUL QADIR ABBASI"
+              },
+              "2029": {
+                "pet": "ABDUL QADIR ABBASI"
+              },
+              "2030": {
+                "pet": "ASHOK ANAND"
+              },
+              "2031": {
+                "pet": "DEVI VENKATA SRIKAR",
+                "resp": "SAHIL RAVEEN"
+              },
+              "2032": {
+                "pet": "C. SOLOMON"
+              },
+              "2033": {
+                "pet": "SHILPA SINGH"
+              },
+              "2034": {
+                "pet": "ANKIT GOEL"
+              },
+              "2035": {
+                "pet": "AKSHAT SHRIVASTAVA"
+              },
+              "2036": {
+                "pet": "SATYENDRA KUMAR",
+                "resp": "KUMAR PRASHANT"
+              },
+              "2037": {
+                "pet": "ADARSH TRIPATHI"
+              },
+              "2038": {
+                "pet": "VISHAL ARUN MISHRA"
+              },
+              "2039": {
+                "pet": "RAVI KUMAR TOMAR"
+              },
+              "2040": {
+                "pet": "RAJIV RANJAN DWIVEDI"
+              },
+              "2042": {
+                "pet": "RAMESHWAR PRASAD"
+              },
+              "2043": {
+                "pet": "ASHISH PANDEY"
+              },
+              "2045": {
+                "pet": "SUCHITRA PANDEY"
+              },
+              "2046": {
+                "pet": "ANANDH KANNAN N"
+              },
+              "2047": {
+                "pet": "MUKESH KUMAR"
+              },
+              "2048": {
+                "pet": "GOPAL SHARAN PATHAK"
+              },
+              "2049": {
+                "pet": "DEEPANWITA PRIYANKA"
+              },
+              "2050": {
+                "pet": "V. N. RAGHUPATHY"
+              },
+              "2051": {
+                "pet": "SAKSHI KAKKAR"
+              },
+              "2052": {
+                "pet": "SATISH PANDEY"
+              },
+              "2053": {
+                "pet": "SAKSHI KAKKAR"
+              },
+              "2054": {
+                "pet": "NAVNEET R"
+              },
+              "2055": {
+                "pet": "KARUNAKAR MAHALIK"
+              },
+              "2056": {
+                "pet": "ANIL KUMAR"
+              },
+              "2057": {
+                "pet": "TINA GARG"
+              },
+              "2058": {
+                "pet": "MINHAJUDDIN MOINUDDIN"
+              },
+              "2059": {
+                "pet": "KMNP LAW AOR"
+              },
+              "2060": {
+                "pet": "T. V. S. RAGHAVENDRA"
+              },
+              "2061": {
+                "pet": "DEB DEEPA MAJUMDAR"
+              },
+              "2062": {
+                "pet": "T. V. S. RAGHAVENDRA"
+              },
+              "2063": {
+                "pet": "VAIRAWAN A.S"
+              },
+              "2064": {
+                "pet": "SATISH KUMAR"
+              },
+              "2065": {
+                "pet": "MAHAK RATHEE"
+              },
+              "2066": {
+                "pet": "RAMESHWAR PRASAD"
+              },
+              "2067": {
+                "pet": "RAJEEV KUMAR DUBEY"
+              },
+              "2068": {
+                "pet": "T. R. B. SIVAKUMAR"
+              },
+              "2069": {
+                "pet": "ANIL KUMAR"
+              },
+              "2070": {
+                "pet": "T. HARI HARA SUDHAN"
+              },
+              "2071": {
+                "pet": "ADARSH TRIPATHI"
+              },
+              "2072": {
+                "pet": "MUKESH KUMAR"
+              },
+              "2073": {
+                "pet": "T. R. B. SIVAKUMAR"
+              },
+              "2074": {
+                "pet": "GEETHA KOVILAN"
+              },
+              "2075": {
+                "pet": "PALLAVI SINGH"
+              },
+              "2076": {
+                "pet": "SHASHI BHUSHAN KUMAR"
+              },
+              "2077": {
+                "pet": "ANSAR AHMAD"
+              },
+              "2078": {
+                "pet": "SHIV SAGAR TIWARI"
+              },
+              "2079": {
+                "pet": "ANSAR AHMAD"
+              },
+              "2080": {
+                "pet": "INDIRA GOSWAMI"
+              },
+              "2081": {
+                "pet": "SATYENDRA KUMAR"
+              },
+              "2082": {
+                "pet": "GARIMA BAJAJ"
+              },
+              "2083": {
+                "pet": "SUDARSHAN LAMBA"
+              },
+              "2084": {
+                "pet": "HARMEET SINGH RUPRAH"
+              },
+              "2085": {
+                "pet": "K. KRISHNA KUMAR"
+              },
+              "2088": {
+                "pet": "AURA & CO"
+              },
+              "2089": {
+                "pet": "NAVEEN KUMAR"
+              },
+              "2090": {
+                "pet": "PRAKASH RANJAN NAYAK",
+                "resp": "SURJEET SINGH"
+              },
+              "2091": {
+                "pet": "RISHI MATOLIYA"
+              },
+              "2092": {
+                "pet": "SAMAR VIJAY SINGH"
+              },
+              "2093": {
+                "pet": "ANKUR KASHYAP"
+              },
+              "2094": {
+                "pet": "FAUZIA SHAKIL"
+              },
+              "2095": {
+                "pet": "ANKUR KASHYAP"
+              },
+              "2096": {
+                "pet": "G. BALAJI"
+              },
+              "2097": {
+                "pet": "ANIL KUMAR"
+              },
+              "2098": {
+                "pet": "CHAND QURESHI"
+              },
+              "2099": {
+                "pet": "SATVIC MATHUR"
+              },
+              "2100": {
+                "pet": "ASHOK ANAND"
+              },
+              "2101": {
+                "pet": "SHILP VINOD"
+              },
+              "2102": {
+                "pet": "SHILP VINOD"
+              },
+              "2103": {
+                "pet": "PALLAV MONGIA"
+              },
+              "2104": {
+                "pet": "MANOHAR PRATAP"
+              },
+              "2105": {
+                "pet": "MANOHAR PRATAP"
+              },
+              "2106": {
+                "pet": "MANOHAR PRATAP"
+              },
+              "2107": {
+                "pet": "DESHPANDE CHINMAY"
+              },
+              "2108": {
+                "pet": "TOM JOSEPH"
+              },
+              "2109": {
+                "pet": "TOM JOSEPH"
+              },
+              "2110": {
+                "pet": "TOM JOSEPH"
+              },
+              "2111": {
+                "pet": "PRASANNA S"
+              },
+              "2112": {
+                "pet": "SRIJA CHOUDHURY"
+              },
+              "2113": {
+                "pet": "CHARUDATTA VIJAYRAO"
+              },
+              "2114": {
+                "pet": "CHARUDATTA VIJAYRAO"
+              },
+              "2115": {
+                "pet": "CHARUDATTA VIJAYRAO"
+              },
+              "2116": {
+                "pet": "CHARUDATTA VIJAYRAO"
+              },
+              "2117": {
+                "pet": "ANIL KUMAR"
+              },
+              "2118": {
+                "pet": "RAJAT JOSEPH"
+              },
+              "2119": {
+                "pet": "DHAWESH PAHUJA"
+              },
+              "2120": {
+                "pet": "AMISH AGGARWALA"
+              },
+              "2121": {
+                "pet": "HIMANSHU SHARMA"
+              },
+              "2122": {
+                "pet": "SAKET GOGIA"
+              },
+              "2123": {
+                "pet": "UMANG SHANKAR",
+                "resp": "ADITI TRIPATHI"
+              },
+              "2124": {
+                "pet": "SATISH PANDEY"
+              },
+              "2125": {
+                "pet": "ABHIJIT SENGUPTA"
+              },
+              "2126": {
+                "pet": "HIMANSHU SHARMA"
+              },
+              "2127": {
+                "pet": "BHARADWAJ S"
+              },
+              "2128": {
+                "pet": "M R LAW ASSOCIATES"
+              },
+              "2129": {
+                "pet": "YASHARTH KANT"
+              },
+              "2130": {
+                "pet": "ANKUR MISHRA"
+              },
+              "2131": {
+                "pet": "YASHARTH KANT"
+              },
+              "2132": {
+                "pet": "YASHARTH KANT"
+              },
+              "2133": {
+                "pet": "REVATHY RAGHAVAN",
+                "resp": "SURESH DUTT DOBHAL"
+              },
+              "2134": {
+                "pet": "ADARSH VERMA"
+              },
+              "2135": {
+                "pet": "ROHIT KUMAR SINGH"
+              },
+              "2136": {
+                "pet": "H. CHANDRA SEKHAR"
+              },
+              "2137": {
+                "pet": "PIYUSH BERIWAL"
+              },
+              "2138": {
+                "pet": "RAMESHWAR PRASAD"
+              },
+              "2139": {
+                "pet": "RAMESHWAR PRASAD"
+              },
+              "2141": {
+                "pet": "SAKSHI KAKKAR"
+              },
+              "2142": {
+                "pet": "SAKSHI KAKKAR"
+              },
+              "2143": {
+                "pet": "SHILP VINOD"
+              },
+              "2145": {
+                "pet": "RANDHIR KUMAR OJHA"
+              },
+              "2146": {
+                "pet": "UPMANYU TEWARI"
+              },
+              "2148": {
+                "pet": "SRINIVASAN RAMASWAMY"
+              },
+              "2149": {
+                "pet": "PIYUSH SHARMA"
+              },
+              "2150": {
+                "pet": "PASHUPATHI NATH RAZDAN"
+              },
+              "2151": {
+                "pet": "SRINIVASAN RAMASWAMY"
+              },
+              "2152": {
+                "pet": "KUMAR SHIVAM"
+              },
+              "2153": {
+                "pet": "SRINIVASAN RAMASWAMY"
+              },
+              "2154": {
+                "pet": "VIKRANT NARAYAN"
+              },
+              "2155": {
+                "pet": "TULIKA MUKHERJEE"
+              },
+              "2156": {
+                "pet": "TULIKA MUKHERJEE"
+              },
+              "2157": {
+                "pet": "SATYA VEER SINGH"
+              },
+              "2158": {
+                "pet": "SHOBHA RAMAMOORTHY"
+              },
+              "2159": {
+                "pet": "SHASHWAT ANAND"
+              },
+              "2160": {
+                "pet": "RATISH KUMAR SHARMA",
+                "resp": "R. SUDHAKARAN"
+              },
+              "2161": {
+                "pet": "RAM NARESH YADAV"
+              },
+              "2162": {
+                "pet": "SWATI GHILDIYAL"
+              },
+              "2163": {
+                "pet": "SANDEEP CHOUDHARY"
+              },
+              "2164": {
+                "pet": "PRASANNA S"
+              },
+              "2165": {
+                "pet": "SWATI GHILDIYAL"
+              },
+              "2166": {
+                "pet": "NISHANT"
+              },
+              "2167": {
+                "pet": "ANIL KUMAR"
+              },
+              "2168": {
+                "pet": "PASHUPATHI NATH RAZDAN",
+                "resp": "PALLAVI PRATAP"
+              },
+              "2169": {
+                "pet": "ARTI SINGH"
+              },
+              "2170": {
+                "pet": "TINA GARG"
+              },
+              "2171": {
+                "pet": "DEVENDRA KUMAR SHUKLA"
+              },
+              "2172": {
+                "pet": "VIPIN KUMAR"
+              },
+              "2173": {
+                "pet": "DEVENDRA KUMAR SHUKLA"
+              },
+              "2174": {
+                "pet": "S-LEGAL ASSOCIATES"
+              },
+              "2175": {
+                "pet": "BLACK & WHITE"
+              },
+              "2176": {
+                "pet": "NISHANT"
+              },
+              "2177": {
+                "pet": "NISHANT"
+              },
+              "2178": {
+                "pet": "SHREEKANT NEELAPPA"
+              },
+              "2179": {
+                "pet": "DHAWESH PAHUJA"
+              },
+              "2180": {
+                "pet": "ANIL KUMAR"
+              },
+              "2181": {
+                "pet": "DHURVA SHANKAR MISHRA"
+              },
+              "2182": {
+                "pet": "NULI & NULI"
+              },
+              "2183": {
+                "pet": "DHARMAPRABHAS LAW"
+              },
+              "2184": {
+                "pet": "PRAKASH RANJAN NAYAK"
+              },
+              "2185": {
+                "pet": "KMNP LAW AOR"
+              },
+              "2186": {
+                "pet": "PRAKASH RANJAN NAYAK"
+              },
+              "2187": {
+                "pet": "PRAKASH RANJAN NAYAK"
+              },
+              "2188": {
+                "pet": "SHILPA SINGH"
+              },
+              "2189": {
+                "pet": "ARVIND GUPTA"
+              },
+              "2190": {
+                "pet": "SWATI GHILDIYAL"
+              },
+              "2191": {
+                "pet": "SWATI GHILDIYAL"
+              },
+              "2192": {
+                "pet": "SHOVAN MISHRA"
+              },
+              "2193": {
+                "pet": "DHARMAPRABHAS LAW"
+              },
+              "2194": {
+                "pet": "SWATI GHILDIYAL"
+              },
+              "2195": {
+                "pet": "SHOVAN MISHRA"
+              },
+              "2196": {
+                "pet": "S-LEGAL ASSOCIATES"
+              },
+              "2197": {
+                "pet": "AJIT PRAVIN WAGH"
+              },
+              "2198": {
+                "pet": "SAURABH RAJPAL"
+              },
+              "2199": {
+                "pet": "TULIKA MUKHERJEE"
+              },
+              "2200": {
+                "pet": "MAYANK KSHIRSAGAR"
+              },
+              "2201": {
+                "pet": "DHARMAPRABHAS LAW"
+              },
+              "2202": {
+                "pet": "GOPAL SHARAN PATHAK"
+              },
+              "2203": {
+                "pet": "MANOJ C. MISHRA"
+              },
+              "2204": {
+                "pet": "TULIKA MUKHERJEE"
+              },
+              "2205": {
+                "pet": "DHARMAPRABHAS LAW"
+              },
+              "2206": {
+                "pet": "DHRUV GAUTAM"
+              },
+              "2207": {
+                "pet": "MUKESH KUMAR"
+              },
+              "2208": {
+                "pet": "BLACK & WHITE",
+                "resp": "KAILAS MORE"
+              },
+              "2209": {
+                "pet": "ARUP BANERJEE",
+                "resp": "ROHIT KUMAR SINGH"
+              },
+              "2210": {
+                "pet": "T. HARISH KUMAR"
+              },
+              "2211": {
+                "pet": "ANNE MATHEW"
+              },
+              "2212": {
+                "pet": "VINODH KANNA B"
+              },
+              "2213": {
+                "pet": "SWATI GHILDIYAL"
+              },
+              "2215": {
+                "pet": "RAHUL JAJOO"
+              },
+              "2216": {
+                "pet": "RITU RENIWAL"
+              },
+              "2217": {
+                "pet": "VISHAL ARUN MISHRA"
+              },
+              "2218": {
+                "pet": "SWATI GHILDIYAL"
+              },
+              "2219": {
+                "pet": "VISHAL ARUN MISHRA"
+              },
+              "2220": {
+                "pet": "VISHAL ARUN MISHRA"
+              },
+              "2221": {
+                "pet": "LZAFEER AHMAD B. F"
+              },
+              "2222": {
+                "pet": "NIRAJ SHARMA",
+                "resp": "SOUMYA DUTTA"
+              },
+              "2223": {
+                "pet": "SWATI GHILDIYAL"
+              },
+              "2224": {
+                "pet": "MPS LEGAL"
+              },
+              "2225": {
+                "pet": "DHARMENDRA KUMAR"
+              },
+              "2226": {
+                "pet": "DEVI VENKATA SRIKAR"
+              },
+              "2227": {
+                "pet": "ASHISH KUMAR UPADHYAY"
+              },
+              "2228": {
+                "pet": "UPMA SHRIVASTAVA"
+              },
+              "2229": {
+                "pet": "STHAVI ASTHANA"
+              },
+              "2230": {
+                "pet": "AKANKSHA MEHRA"
+              },
+              "2231": {
+                "pet": "AKANSHA"
+              },
+              "2232": {
+                "pet": "BLACK & WHITE"
+              },
+              "2233": {
+                "pet": "BLACK & WHITE"
+              },
+              "2234": {
+                "pet": "BLACK & WHITE"
+              },
+              "2237": {
+                "pet": "PASHUPATHI NATH RAZDAN",
+                "resp": "ADIL MUNEER ANDRABI"
+              },
+              "2238": {
+                "pet": "ABHIMANYU KUMAR"
+              },
+              "2239": {
+                "pet": "SIDDHARTH"
+              },
+              "2240": {
+                "pet": "ABHISHEK VIKRAM"
+              },
+              "2241": {
+                "pet": "ABHISHEK VIKRAM"
+              },
+              "2242": {
+                "pet": "HIMANSHU SHARMA"
+              },
+              "2243": {
+                "pet": "ABHISHEK VIKRAM"
+              },
+              "2244": {
+                "pet": "ABHISHEK VIKRAM"
+              },
+              "2245": {
+                "pet": "S-LEGAL ASSOCIATES"
+              },
+              "2246": {
+                "pet": "YADAV NARENDER SINGH"
+              },
+              "2247": {
+                "pet": "RAJ SINGH RANA"
+              },
+              "2248": {
+                "pet": "BLACK & WHITE"
+              },
+              "2249": {
+                "pet": "MANJU JETLEY"
+              },
+              "2250": {
+                "pet": "KHAITAN & CO"
+              },
+              "2251": {
+                "pet": "M. VEERARAGAVAN"
+              },
+              "2252": {
+                "pet": "KUNAL MALIK"
+              },
+              "2253": {
+                "pet": "PARIJAT KISHORE"
+              },
+              "2257": {
+                "pet": "RAMESHWAR PRASAD"
+              },
+              "2258": {
+                "pet": "SHRUTI BISHT"
+              },
+              "2259": {
+                "pet": "BLACK & WHITE",
+                "resp": "ABHISHEK VIKAS"
+              },
+              "2260": {
+                "pet": "MRS. VIPIN GUPTA"
+              },
+              "2261": {
+                "pet": "BLACK & WHITE",
+                "resp": "NIKHIL JAIN"
+              },
+              "2262": {
+                "pet": "BHARTI TYAGI"
+              },
+              "2263": {
+                "pet": "VIJAY KASANA"
+              },
+              "2264": {
+                "pet": "BLACK & WHITE"
+              },
+              "2265": {
+                "pet": "VIJAY KASANA"
+              },
+              "2266": {
+                "pet": "DHARMENDRA KUMAR"
+              },
+              "2267": {
+                "pet": "DESHPANDE CHINMAY"
+              },
+              "2268": {
+                "pet": "PRITHVI PAL"
+              },
+              "2269": {
+                "pet": "AKSHAT SHRIVASTAVA"
+              },
+              "2270": {
+                "pet": "BLACK & WHITE"
+              },
+              "2271": {
+                "pet": "BLACK & WHITE"
+              },
+              "2272": {
+                "pet": "BLACK & WHITE"
+              },
+              "2273": {
+                "pet": "BLACK & WHITE"
+              },
+              "2274": {
+                "pet": "BLACK & WHITE"
+              },
+              "2275": {
+                "pet": "BLACK & WHITE"
+              },
+              "2276": {
+                "pet": "BLACK & WHITE"
+              },
+              "2277": {
+                "pet": "BLACK & WHITE"
+              },
+              "2278": {
+                "pet": "ARVIND KUMAR TEWARI"
+              },
+              "2279": {
+                "pet": "BLACK & WHITE"
+              },
+              "2280": {
+                "pet": "BLACK & WHITE"
+              },
+              "2281": {
+                "pet": "BLACK & WHITE"
+              },
+              "2282": {
+                "pet": "BLACK & WHITE"
+              },
+              "2283": {
+                "pet": "ISHAAN GEORGE"
+              },
+              "2284": {
+                "pet": "G. INDIRA"
+              },
+              "2285": {
+                "pet": "KAUSAR RAZA FARIDI"
+              },
+              "2286": {
+                "pet": "ACHINTYA TIWARI",
+                "resp": "RAM SANKAR & CO"
+              },
+              "2287": {
+                "pet": "GARIMA BAJAJ"
+              },
+              "2288": {
+                "pet": "ROHIT KUMAR SINGH"
+              },
+              "2289": {
+                "pet": "NIDHI JASWAL"
+              },
+              "2290": {
+                "pet": "PIYUSH BERIWAL"
+              },
+              "2291": {
+                "pet": "DESHPANDE CHINMAY"
+              },
+              "2292": {
+                "pet": "SHREY KAPOOR"
+              },
+              "2293": {
+                "pet": "VINOD KUMAR TEWARI"
+              },
+              "2294": {
+                "pet": "AARTHI RAJAN"
+              },
+              "2295": {
+                "pet": "SUBHRO SANYAL"
+              },
+              "2296": {
+                "pet": "PRAVEEN CHATURVEDI"
+              },
+              "2297": {
+                "pet": "SANDEEP SINGH"
+              },
+              "2298": {
+                "pet": "ASWATHI M.K"
+              },
+              "2299": {
+                "pet": "ASWATHI M.K"
+              },
+              "2300": {
+                "pet": "S-LEGAL ASSOCIATES"
+              },
+              "2301": {
+                "pet": "VARINDER KUMAR SHARMA"
+              },
+              "2302": {
+                "pet": "BHUPENDER SINGH"
+              },
+              "2303": {
+                "pet": "PRAVEEN CHATURVEDI"
+              },
+              "2304": {
+                "pet": "ANIRUDDHA"
+              },
+              "2305": {
+                "pet": "SAKET GOGIA"
+              },
+              "2306": {
+                "pet": "SOUMIK GHOSAL"
+              },
+              "2307": {
+                "pet": "SOUMIK GHOSAL"
+              },
+              "2308": {
+                "pet": "SOUMIK GHOSAL"
+              },
+              "2309": {
+                "pet": "SOUMIK GHOSAL"
+              },
+              "2310": {
+                "pet": "ALPANA SHARMA"
+              },
+              "2311": {
+                "pet": "P. GEORGE GIRI"
+              },
+              "2312": {
+                "pet": "SOUMIK GHOSAL"
+              },
+              "2313": {
+                "pet": "SOUMIK GHOSAL"
+              },
+              "2314": {
+                "pet": "MUKESH KUMAR"
+              },
+              "2316": {
+                "pet": "PASHUPATHI NATH RAZDAN"
+              },
+              "2318": {
+                "pet": "ANUVRAT SHARMA"
+              },
+              "2319": {
+                "pet": "SAURAV KUMAR"
+              },
+              "2320": {
+                "pet": "RHISHABH JETLEY"
+              },
+              "2321": {
+                "pet": "ADEEL AHMED"
+              },
+              "2322": {
+                "pet": "PRANAV SARTHI"
+              },
+              "2323": {
+                "pet": "ABHINAV GARG"
+              },
+              "2324": {
+                "pet": "SHIVENDRA SINGH"
+              },
+              "2325": {
+                "pet": "DEVVRAT"
+              },
+              "2326": {
+                "pet": "NIKILESH RAMACHANDRAN"
+              },
+              "2327": {
+                "pet": "NIKHIL JAIN"
+              },
+              "2328": {
+                "pet": "SOUMIK GHOSAL"
+              },
+              "2329": {
+                "pet": "SOUMIK GHOSAL"
+              },
+              "2330": {
+                "pet": "PATEL MEDHA PRAMOD",
+                "resp": "SUBODH S. PATIL"
+              },
+              "2331": {
+                "pet": "PASHUPATHI NATH RAZDAN",
+                "resp": "SANJANA SADDY"
+              },
+              "2332": {
+                "pet": "SUDARSHAN LAMBA",
+                "resp": "ANMOL ANAND"
+              },
+              "2333": {
+                "pet": "K. SARADA DEVI"
+              },
+              "2334": {
+                "pet": "RAJAN K. CHOURASIA"
+              },
+              "2335": {
+                "pet": "ANKUR S. KULKARNI"
+              },
+              "2336": {
+                "pet": "ANKUR S. KULKARNI"
+              },
+              "2337": {
+                "pet": "ANKUR S. KULKARNI"
+              },
+              "2338": {
+                "pet": "ANKUR S. KULKARNI"
+              },
+              "2339": {
+                "pet": "STHAVI ASTHANA"
+              },
+              "2340": {
+                "pet": "NAVEEN KUMAR"
+              },
+              "2341": {
+                "pet": "MADHUMITA"
+              },
+              "2342": {
+                "pet": "CHRISTI JAIN"
+              },
+              "2343": {
+                "pet": "ARUP BANERJEE"
+              },
+              "2344": {
+                "pet": "ANSHUMAN ASHOK"
+              },
+              "2345": {
+                "pet": "S. GOWTHAMAN"
+              },
+              "2346": {
+                "pet": "PARMINDER SINGH"
+              },
+              "2347": {
+                "pet": "SATYA VEER SINGH"
+              },
+              "2348": {
+                "pet": "KANHAIYA SINGHAL"
+              },
+              "2349": {
+                "pet": "HARSH PARASHAR",
+                "resp": "DEVASHISH TIWARI"
+              },
+              "2350": {
+                "pet": "SHUVODEEP ROY"
+              },
+              "2351": {
+                "pet": "DESHPANDE CHINMAY"
+              },
+              "2352": {
+                "pet": "KAWALJIT SINGH BHATIA"
+              },
+              "2353": {
+                "pet": "A. LAKSHMINARAYANAN"
+              },
+              "2354": {
+                "pet": "SHREEKANT NEELAPPA"
+              },
+              "2355": {
+                "pet": "P. SRINIVASAN"
+              },
+              "2356": {
+                "pet": "KRISHNAMOHAN K"
+              },
+              "2357": {
+                "pet": "RAVINDRA S. GARIA"
+              },
+              "2358": {
+                "pet": "VISHWA PAL SINGH",
+                "resp": "NISHANT KUMAR"
+              },
+              "2359": {
+                "pet": "SAKET GOGIA"
+              },
+              "2360": {
+                "pet": "NULI & NULI",
+                "resp": "NISHANT"
+              },
+              "2361": {
+                "pet": "ANKUR S. KULKARNI"
+              },
+              "2362": {
+                "pet": "ANKUR S. KULKARNI"
+              },
+              "2363": {
+                "pet": "PANKAJ BHAGAT"
+              },
+              "2364": {
+                "pet": "RAJESH SINGH",
+                "resp": "SANDEEP SUDHAKAR DESHMUKH"
+              },
+              "2365": {
+                "pet": "SUBASH CHANDRAN &"
+              },
+              "2366": {
+                "pet": "ANKIT ACHARYA"
+              },
+              "2367": {
+                "pet": "SWATI VAIBHAV"
+              },
+              "2368": {
+                "pet": "PRASANNA S"
+              },
+              "2369": {
+                "pet": "MOHINI PRIYA",
+                "resp": "SIDDHARTH SANGAL"
+              },
+              "2370": {
+                "pet": "MOHINI PRIYA",
+                "resp": "SIDDHARTH SANGAL"
+              },
+              "2371": {
+                "pet": "B. KARUNAKARAN"
+              },
+              "2372": {
+                "pet": "MOHINI PRIYA"
+              },
+              "2373": {
+                "pet": "VAIRAWAN A.S"
+              },
+              "2374": {
+                "pet": "PASHUPATHI NATH RAZDAN"
+              },
+              "2375": {
+                "pet": "G. INDIRA"
+              },
+              "2376": {
+                "pet": "PASHUPATHI NATH RAZDAN"
+              },
+              "2377": {
+                "pet": "VISHAL ARUN MISHRA"
+              },
+              "2378": {
+                "pet": "RAMESHWAR PRASAD"
+              },
+              "2379": {
+                "pet": "TANYA AGARWAL"
+              },
+              "2380": {
+                "pet": "VEDANT PRADHAN"
+              },
+              "2381": {
+                "pet": "GAUTAM JHA"
+              },
+              "2382": {
+                "pet": "R. SUDHAKARAN"
+              },
+              "2383": {
+                "pet": "RITIKA GAMBHIR KOHLI"
+              },
+              "2384": {
+                "pet": "A. LAKSHMINARAYANAN"
+              },
+              "2385": {
+                "pet": "RAHUL GUPTA"
+              },
+              "2386": {
+                "pet": "ASHISH PANDEY"
+              },
+              "2387": {
+                "pet": "DEVENDRA KUMAR SHUKLA"
+              },
+              "2388": {
+                "pet": "SIDDHARTH GAUTAM"
+              },
+              "2389": {
+                "pet": "SHAGUFA SALIM"
+              },
+              "2390": {
+                "pet": "AVIRAL KASHYAP"
+              },
+              "2391": {
+                "pet": "ASHISH PANDEY"
+              },
+              "2392": {
+                "pet": "ASHISH PANDEY"
+              },
+              "2393": {
+                "pet": "ASHISH PANDEY"
+              },
+              "2394": {
+                "pet": "PASHUPATHI NATH RAZDAN",
+                "resp": "ANSHUMAN ASHOK"
+              },
+              "2395": {
+                "pet": "RAHUL SHYAM BHANDARI"
+              },
+              "2396": {
+                "pet": "GAUTAM JHA"
+              }
+            },
+            "main": 697,
+            "supp": 0
+          },
+          "11": {
+            "coram": "HON'BLE MR. JUSTICE VIPUL M. PANCHOLI",
+            "total": "20",
+            "fresh": "",
+            "items": {
+              "1701": "Diary No. 19071-2026 SEETHAI @ SEETHAIYAMMA VERSUS RAMAIAH AND ORS.",
+              "1702": "Diary No. 50196-2026 PARDEEP KUMAR VERSUS STATE (NCT OF DELHI) AND ANR.",
+              "1703": "Diary No. 52456-2026 S. PANNEERSELVAM AND ORS. VERSUS THE STATE REP. BY THE DEPUTY SUPERINTENDENT",
+              "1704": "Diary No. 53252-2026 KUSUM RAJ VERSUS KHEM CHAND AND ORS.",
+              "1705": "Diary No. 54234-2026 M.K ASOKAN VERSUS STATE OF KERALA",
+              "1706": "Diary No. 49563-2025 RAJ KUMAR AND ORS. VERSUS STATE OF HARYANA AND ORS.",
+              "1707": "Diary No. 68014-2025 GAURAV KOHLI AND ORS. VERSUS STATE OF HARYANA AND ORS.",
+              "1708": "Diary No. 13445-2026 PRANTIYA RAJYA PARIVAHAN KARAMCHARI SANGH VERSUS SHAIN BALA ANJANA MARTIN AND ANR.",
+              "1709": "Diary No. 51878-2026 APPLICATION OF MR. ANURAG KULHARIA AOR FOR",
+              "1710": "Diary No. 51880-2026 APPLICATION OF MR. MISHRA RAJ SHEKHAR AOR",
+              "1711": "Diary No. 51881-2026 APPLICATION OF MR. PRASHANT KUMAR AOR FOR",
+              "1712": "Diary No. 54339-2026 APPLICATION OF MR. KORADA PRAMOD KUMAR AOR",
+              "1713": "Diary No. 54341-2026 APPLICATION OF MS. SINGH BONITA MEHAR AOR",
+              "1714": "Diary No. 54346-2026 APPLICATION OF MS. HARSHIKA VERMA AOR FOR",
+              "1715": "SLP(Crl) No. THE STATE OF MADHYA PRADESH(NOW VERSUS SOSAN MINZ ETC.",
+              "1716": "Diary No. 22124-2026 N.R. ANURADHA DEVI VERSUS N.MURUGANANDAM",
+              "1717": "Diary No. 39840-2026 P. PRAKASH VERSUS STATE OF TAMIL NADU",
+              "1718": "Diary No. 45106-2026 RAJENDRA PRASAD VERSUS STATE OF U.P.",
+              "1719": "Diary No. 38617-2023 PANDURANG SHIVAJI SURYAWANSHI AND ORS. VERSUS SHIVAJI SAHBRAO SURYAWANSHI AND ORS.",
+              "1720": "T.P.(C) No. 1191/2026 PREETI KAUR VERSUS RAJEEV SINGH"
+            },
+            "advocates": {
+              "1701": {
+                "pet": "RUCHI GUPTA"
+              },
+              "1702": {
+                "pet": "SHRUTANJAYA BHARDWAJ"
+              },
+              "1703": {
+                "pet": "M.P. PARTHIBAN"
+              },
+              "1704": {
+                "pet": "LAKSHMEESH S. KAMATH"
+              },
+              "1705": {
+                "pet": "SHISHIR PINAKI"
+              },
+              "1706": {
+                "pet": "ALPANA SHARMA"
+              },
+              "1707": {
+                "pet": "TATINI BASU"
+              },
+              "1708": {
+                "pet": "SATYA VEER SINGH"
+              },
+              "1715": {
+                "pet": "SHREEKANT NEELAPPA",
+                "resp": "DIVYESH PRATAP SINGH"
+              },
+              "1716": {
+                "pet": "S. GOWTHAMAN"
+              },
+              "1717": {
+                "pet": "K. V. MUTHU KUMAR",
+                "resp": "B. KARUNAKARAN"
+              },
+              "1718": {
+                "pet": "ANIKET VIJAY SETH"
+              },
+              "1719": {
+                "pet": "JURISTRUST LAW OFFICES",
+                "resp": "DILIP ANNASAHEB TAUR"
+              },
+              "1720": {
+                "pet": "KAUSAR RAZA FARIDI"
+              }
+            },
+            "main": 20,
+            "supp": 0
+          },
+          "14": {
+            "coram": "HON'BLE MR. JUSTICE ATUL S. CHANDURKAR",
+            "total": "20",
+            "fresh": "",
+            "items": {
+              "1701": "SLP(C) No. 11960/2025 DAYA BANSAL AND ANR. VERSUS LACHHMAN ALIAS LAXMI NARAIN (DEAD) THROUGH LRS. AN",
+              "1702": "Diary No. 26431-2026 JAGDISH BHAT VERSUS STATE OF RAJASTHAN",
+              "1703": "Diary No. 36011-2026 KARUNAKARAN VERSUS THE STATE OF TAMIL NADU",
+              "1704": "Diary No. 37158-2026 UMEND BANJARE VERSUS THE STATE OF CHHATTISGARH",
+              "1705": "Diary No. 38221-2026 TRIBHUVAN RAMPATISINGH VERSUS THE STATE OF MAHARASHTRA",
+              "1706": "C.A. No. 6221/2014 ROSY SINGH VERSUS AJAY PAL SINGH",
+              "1707": "C.A. No. 396/2015 ASSOCIATION OF CORPORATIONS AND APEX SOCIETIES OF VERSUS ASSISTANT DIRECTOR OF INCOME TAX (E)",
+              "1708": "SLP(C) No. 11926/2020 TILOKCHAND JAIN HIGHER SECONDARY SCHOOL VERSUS COMMISSIONER, SECRETARIAT, PUBLIC EDUCATION",
+              "1708.1": "SLP(C) No. 12461-12477/2025 HIGHER SECONDRY SCHOOL THE PRESIDENT MANAG VERSUS STATE OF CHHATTISGARH AND ORS.",
+              "1709": "SLP(C) No. 20881/2022 TARA DEVI (SINCE DECEASED) THROUGH HER LEGAL HEI VERSUS CHAJJU SINGH AND ORS.",
+              "1710": "SLP(C) No. 28238/2023 THE COMMISSIONER OF COMMERCIAL TAXES, ODISHA AND VERSUS M/S JINDAL INDIA THERMAL POWER LTD.",
+              "1710.1": "SLP(C) No. 28256/2023 STATE OF ODISHA AND ORS. VERSUS M/S. OCL INDIA LIMITED AND ANR.",
+              "1710.2": "SLP(C) No. 28241/2023 STATE OF ODISHA AND ORS. VERSUS M/S. OCL INDIA LIMITED AND ANR.",
+              "1711": "Diary No. 35412-2024 STATE BANK OF INDIA VERSUS P PITCHUMANI AND ORS.",
+              "1712": "SLP(C) No. 12362-12366/2025 THE MANAGEMENT RK 10, VIRUDHUNAGAAR DISTRI VERSUS THE AUTHORITY UNDER THE PAYMENT OF GRATUITY ACT AN",
+              "1712.1": "SLP(C) No. 17562-17574/2025 OPERATIVE BANK LIMITED THE MANAGEMENT COIM VERSUS JOINT COMMISSIONER OF LABOUR / APPELLATE AUTHORITY",
+              "1713": "Diary No. 27151-2025 PRINCIPAL CHIEF COMMISSIONER OF INCOME TAX VERSUS BHUPENDRA CHAMPAKLAL DALAL",
+              "1714": "Diary No. 27329-2025 PRINCIPAL COMMISSIONER OF INCOME TAX DELHI 10 AND VERSUS PUNEET DHANDA",
+              "1715": "SLP(C) No. 28803-28805/2025 RAVINDER NATH SHARMA AND ORS. VERSUS STATE OF PUNJAB AND ORS.",
+              "1716": "Diary No. 45084-2025 SAPNA AND ORS. VERSUS ORIENTAL INSURANCE COMPANY LIMITED AND ORS.",
+              "1717": "Diary No. 45770-2025 ALLA BAKSHA AND ORS. VERSUS NABISAB AND ORS.",
+              "1718": "SLP(C) No. 34555/2025 BALJINDER SINGH AND ANR. VERSUS MAYA KAUR AND ORS.",
+              "1719": "Diary No. 8993-2026 SUNIL UPADHYAY VERSUS RITU UPADHYAY",
+              "1720": "Diary No. 9552-2026 COMMISSIONER OF INCOME TAX (INTERNATIONAL TAXATION VERSUS INTELSAT US LLC"
+            },
+            "advocates": {
+              "1701": {
+                "pet": "APOORVA SINGHAL",
+                "resp": "RAMESHWAR PRASAD GOYAL"
+              },
+              "1702": {
+                "pet": "S. GOWTHAMAN"
+              },
+              "1703": {
+                "pet": "K. K. MANI"
+              },
+              "1704": {
+                "pet": "MANISH KUMAR GUPTA"
+              },
+              "1705": {
+                "pet": "CHANDRA BHUSHAN PRASAD"
+              },
+              "1706": {
+                "pet": "R. C. KAUSHIK"
+              },
+              "1707": {
+                "resp": "SUDARSHAN LAMBA"
+              },
+              "1708": {
+                "pet": "KAUSTUBH SHUKLA",
+                "resp": "PASHUPATHI NATH RAZDAN"
+              },
+              "1709": {
+                "pet": "HIMANSHU SHARMA"
+              },
+              "1710": {
+                "pet": "PRASENJEET MOHAPATRA",
+                "resp": "PAWANSHREE AGRAWAL"
+              },
+              "1711": {
+                "pet": "ANIL KUMAR"
+              },
+              "1712": {
+                "pet": "M.P. PARTHIBAN",
+                "resp": "SAJAL JAIN"
+              },
+              "1713": {
+                "pet": "SUDARSHAN LAMBA"
+              },
+              "1714": {
+                "pet": "SUDARSHAN LAMBA"
+              },
+              "1715": {
+                "pet": "CHARU MATHUR",
+                "resp": "BAANI KHANNA"
+              },
+              "1716": {
+                "pet": "KISALAYA SHUKLA",
+                "resp": "CHANDRASHEKHAR A. CHAKALABBI"
+              },
+              "1717": {
+                "pet": "ADITYA SAMADDAR",
+                "resp": "SUPREETA SHARANAGOUDA"
+              },
+              "1718": {
+                "pet": "VANYA GUPTA",
+                "resp": "SOMANATHA PADHAN"
+              },
+              "1719": {
+                "pet": "RAJEEV SINGH , B. VIJAYALAKSHMI"
+              },
+              "1720": {
+                "pet": "SUDARSHAN LAMBA"
+              }
+            },
+            "main": 20,
+            "supp": 0
+          }
+        }
+      }
     }
   },
   "sources": {
@@ -13732,10 +16400,13 @@
       "M_CC_1": 522659
     },
     "2026-09-18": {
-      "M_J_1": 837937,
-      "M_C_1": 559053,
+      "M_J_1": 820325,
+      "M_C_1": 547254,
       "M_S_1": 531381,
       "M_R_1": 524682
+    },
+    "2026-09-21": {
+      "M_C_1": 651648
     }
   },
   "note": "Per-court bench + per-item case line from the SC published lists. Drafting aid only — the court's published list is authoritative."
