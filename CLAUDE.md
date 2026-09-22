@@ -280,8 +280,8 @@ UI and rules).
 
 ## Deployment state (as of handover)
 
-- **Live app:** https://sdentertainmentservices1234.github.io/SD-Chamber/
-- **Repo:** `SD-Chamber` under GitHub user `sdentertainmentservices1234`
+- **Live app:** https://courtreach.github.io/SD-Chamber/
+- **Repo:** `SD-Chamber` under GitHub user `courtreach`
 - **Firebase project:** `sd-chamber-1aa78` (Auth email/password ON, Firestore
   in `asia-south1`, rules published — current version below)
 - **firebaseConfig is baked into index.html** (public by design; security is
