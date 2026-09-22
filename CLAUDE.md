@@ -8,6 +8,41 @@ file as `CLAUDE.md` in the repository root — Claude Code reads it automaticall
 A work-allocation and cause-list tool **between the clerk and the juniors**.
 The senior advocate is deliberately NOT a user (role removed by owner decision).
 
+## Notes from court + Senior's calendar (Sep 2026)
+
+- **Notes from court** (`courtNoteForm` / `courtNotesPanel` / `wireCourtNotes`, block
+  `NOTES FROM COURT`): the owner's two Staff split the job — one is in court all day and
+  hears which briefs have come in (but never touches a computer), the other sits in the
+  office with the computer and time but hears nothing. Cases went unentered. The
+  court-side Staff taps **Note for office** (Calendar topbar + Day-sheet topbar, phone-
+  first: day defaulting to tomorrow, court, item, counsel, free text — nothing mandatory
+  but the day), the office-side Staff sees it at once (Calendar home panel "From court —
+  N to enter (all days)", a `cal-chip.note` "N to enter" on the day cell, and that day's
+  sheet), and **Enter this matter** opens the ordinary `dsForm(null, preset)` pre-filled;
+  the note is struck ONLY when the listing is really saved (`preset.onSaved`), so closing
+  the form leaves it waiting. **Done** strikes without entering; delete is author/admin.
+  A note may be sent for a Senior-away day (that IS how the office learns a brief came
+  in) — the form warns, the panel labels it, and "Enter this matter" is withheld because
+  `f_save` would refuse the listing anyway. Stored as `notes[]` on the day's own
+  `daysheets/{date}` doc (same canManage() rule — **no rules change**); done notes are
+  kept, not deleted. Staff-facing only (`canManage()`); juniors never see them.
+  `pushNotif` to the other Staff/admin on send. Both a DEMO-verified end-to-end (send →
+  chip → Enter → prefilled → save → struck) and phone-width layout.
+- **Senior's calendar** (`seniorCalendarForm` / `seniorAwayRanges` /
+  `printSeniorCalendar`, block `SENIOR'S CALENDAR`): Calendar topbar → **Senior's
+  calendar** (canManage). A RANGE form — From/To, Reason (`SENIOR_REASONS`: Out of
+  station / In another court / Personal / Unwell / Conference-event / Vacation / Other) +
+  Details — writes `config/senioravail` for each day as the ONE STRING every reader
+  already expects, `"Reason — details"` (same doc, same rule, no rules change; day
+  detail, day-sheet notice, calendar cell, `seniorOff()` gate and CourtReach's sync all
+  untouched). Below it, upcoming marked days grouped into ranges with a Remove (writes
+  null per day, the existing tombstone convention). **Print** opens the same print-window
+  pattern as `printCauseList`: A4 portrait, 2-column month grids for the next 3/6/12
+  months or a whole calendar year, SC holidays (imported `holidays`) tinted, vacation
+  (`isPartial`) tinted, weekends grey, Senior-away days hatched red with the day struck
+  and the reason clamped to 3 lines, per-month "N days away", legend + printed-on foot.
+  The per-day toggle in `dayDetail` stays for one-offs. sw.js `chamber-shell-v26→v27`.
+
 ## Review-pass changes (Jul 2026, most recent)
 
 - **Roster includes not-yet-signed-in members equally** (`rosterQueue`): a
@@ -131,211 +166,25 @@ clerk only does day-to-day operational input.**
   `briefs`/`dsAll`/`leaves` optimistically before the Firestore echo, so the panel
   clears at once instead of lingering a round-trip (owner: "still flashing").
 
-## Display board — Regular list is numbered 101+ (board.html)
+## Display board — MOVED to its own repo (Aug 2026)
 
-Regular-list matters are numbered in the **101+ series**; a court finishes its
-whole Misc list (main + supp) before starting Regular. In `classify()` for a
-`listType=Regular` matter still behind Misc: `gap = miscLeft + (regRank − 1)` where
-`regRank = itemNo − 100` (item 101 = the 1st Regular matter, so it's `miscLeft`
-away, NOT `miscLeft + 101`). `miscLeft` = causelist Misc total (`miscTotalFor`,
-main+supp) or the live sequence position. **Important (owner Jul 2026): Misc runs
-1…200+ and CAN reach into the 101 range, so item size alone can't tell Misc from
-Regular.** `onRegularList()` therefore detects Regular two ways: current item `>
-miscTotal` (Misc < 101 days), OR the item **resetting** from ≈ the end of Misc back
-down into the 101 series (`itemHi` per-court high vs a big drop; Misc ≥ 101 days).
-Then it uses normal within-Regular proximity. The badge says **"N away"** (owner:
-not "Reg N"); the detail label still reads "Regular — ~N away · Misc: K to go".
-**Reserved item series = court PHASE, not a queue position (owner Jul 2026):** a
-current board item in the **800s = mentioning**, the **1500s = judgement
-pronouncement** — classify returns "mentioning is on" / "pronouncement is on" with
-NO gap (our matter just waits). jsc-verified: small/large-Misc, 800→mentioning,
-1500→pronouncement, "N away" not "Reg N".
+`board.html` and everything exclusive to it (`board-dev/`, `board-sw.js`,
+`board-manifest.json`, `pace-collector.html`, `PUSH-SETUP.md`,
+`make-board-test.py`) were split out into their own repo, **`DisplayBoard`**
+(owner: "protect the app since it is being distributed on large scale"), with
+full git history preserved via `git filter-repo`. See
+`../DisplayBoard/CLAUDE.md` for the display-board documentation (Regular-101+
+handling, passover logic, chat, full-screen approach flash, closed-phone push,
+alerts, the pace collector, etc.) — it is NOT duplicated here anymore, to avoid
+the two copies drifting out of sync.
 
-**Passover-aware "N away" (owner Jul 2026):** the normal-proximity gap now folds in
-passovers, not just OVER items. `passoverItemsFor(court)` gathers every passed-over
-item (remark column `isPassOver` + shared `config/live.po` marks + board-observed
-`boardPO`), and `poAdjust(court,cur,ours,seq,passIdx)` returns a net delta to the
-items-ahead count: **−1** for each item passed over ahead of us that is recalled
-AFTER us (deferred behind us → no longer ahead), **+1** for each passed-over matter
-recalled BEFORE us (pulled in ahead → adds to the wait). Recall point = the mark's
-own "after N" hint, else the sequence's declared passover slot (`seqInfo().passIdx`),
-else end-of-board. Works in sequence space when the bench declares a sequence, else
-in item-number space (where passIdx is ignored — it's a seq index). Applied right
-after the existing `overAhead` discount; the detail label gains "· N passed over
-ahead" / "· N recalled first". jsc-verified 8 cases (deferred-to-end, recalled-
-before-us via passIdx, behind-us-recalled-ahead, our-item-already-passed, none).
-
-**Sequence-order "N away" (owner fix Jul 2026):** the gap is now the distance in the
-court's TRUE call order, not raw item numbers. `orderPos(seq,item)` returns an item's
-index in the full expected order = the declared sequence in its given order, THEN
-every other item ascending ("…then the rest of the matters"). So for "1-17, 21, 30,
-52-54, passover, rest", when the board reaches 21 items 18/19/20 are NOT shown over —
-they wait in the rest (18 = 5 away: 30,52,53,54,then 18). `classify` uses
-`orderPos(ours)−orderPos(cur)` whenever a sequence is declared, and only falls back to
-numeric subtraction when there is NO sequence. The OLD bug: `proximity` returned
-gap=null for any item not literally in the sequence list, so classify hit the numeric
-fallback and reported a "rest" item as over. jsc-verified on the owner's exact example
-(cur21→ours18/19/20 = 5/6/7 away; both-in-rest; already-passed).
-
-**Our-matter passed over, NO sequence declared (owner Aug 2026):** when OUR matter is
-passed over and the court has NOT published a sequence, don't show a bare "recall"
-badge — assume the court takes passovers at the **END of the board** and compute a real
-distance. In `classify`'s passover branch: gap = `(miscTotalFor(court) − currentItem)`
-(matters still to be called before the board finishes) `+ passoversBeforeOurs(court,ours)`
-(other passed-over matters with a lower item number, recalled before ours). Falls back to
-"passed over" (no number, still never the word "recall") only when no causelist total is
-fetched. An explicit "recall after item N" mark with no sequence is honoured in
-item-number space (`N − cur + 1`). The sequence case is unchanged in number (recall at
-the `passIdx` slot, else sequence end) but relabelled from "recall" → "passed over".
-New helper `passoversBeforeOurs`. jsc-verified against the real functions: no-seq
-25-total/cur-3 → 22 away; +2 passovers before → 24; past-end → NEXT; no-total → "passed
-over"; after-item-20 → 18 away.
-
-**Cancelling "over"/PO now actually clears it (owner fix Jul 2026):** `clearDone` /
-`clearPO` wrote the marks map back with `db.set(...,{merge:true})` after `delete`-ing
-the key — but prod Firestore DEEP-merges nested maps, so a removed key PERSISTS: the
-strike-through stayed and the court stayed untracked. Fixed by writing a **null
-tombstone** for the key instead of deleting (`doneOf`/`poFor` already read null as
-absent); clears correctly under both the demo shallow-merge and Firestore deep-merge.
-Simulated-deep-merge test reproduces the bug with the old delete and confirms the null
-fix. board-sw cache `sdboard-v11→v12`.
-
-## Display-board chat — fresh every day (board.html, Jul 2026)
-
-Owner: "Every day should be a fresh chat window, no past messages; old chats
-deleted." The chat now shows ONLY today's messages (`todayMsgs()` filters
-`messages` by `msgDay(m)===todayISO()`), so nothing from a past day ever renders.
-`purgeOldChat()` (once/session, best-effort) deletes messages older than today —
-the rules let a member delete their OWN and let Staff/PA/admin delete anyone's, so
-a manager opening the board clears the shared history fully, a colleague clears
-their own; either way the day-filter already hides the rest. `sendChat` stamps
-`day:todayISO()`. Interface reworked to best-practice: a sticky "Today · Wed 20 Jul"
-day pill, WhatsApp-style bubbles (mine right / others left, sender name on others
-only), consecutive same-sender messages grouped (`.grp`, 4-min window), IST clock
-times (HH:MM, not jittery "Xm ago"). The messages watcher now calls **`paintChatList()`**
-(rewrites only `#chatList`) instead of `renderChat()` — an incoming message can no
-longer wipe what a colleague is typing or steal focus; the view stays pinned to the
-newest message unless the reader scrolled up. `board-sw.js` cache `sdboard-v10→v11`.
-jsc-verified (day filter + purge selection) + live (render, grouping, send keeps
-composer focused, no errors).
-
-**Keyboard-aware chat (owner fix Jul 2026):** on a phone the soft keyboard used to
-cover half the chat and the box scrolled/resized. `fitChat()` now pins `#chatWrap`
-to `window.visualViewport` — `body.chat-vv` makes it `position:fixed` with JS-set
-`--chat-top`(header bottom)/`--chat-h`(`vv.height − header − nav`), so the composer
-always sits just above the keyboard and ONLY `#chatList` scrolls; the box never
-grows. When the keyboard is up (`innerHeight−vv.height>120`) the bottom nav hides
-(`body.kb-open`) and the nav-height reserve drops to 0. Re-fits on
-`visualViewport` resize/scroll, window resize, and input focus/blur; the tab-switch
-handler and `renderChat` call it (leaving chat clears the classes). Falls back to the
-flex layout where `visualViewport` is absent. Verified live (fixed box, list is the
-only scroller, composer pinned, leaving clears) — the keyboard-shrink path itself
-needs a real device to see, but is the standard visualViewport pattern.
-
-## Display-board FULL-SCREEN approach flash (board.html, Jul 2026)
-
-Any of our matters **≤2 away** triggers a blinking full-screen overlay (`runFlash`
-→ `showFlash`, called from `fetchBoard` after `runAlerts`). `reachingMatters()`
-collects our matters with `0≤gap≤2` (skipping mentioning/over/done), one per court
-(closest). The overlay **divides into one panel per reaching court** (`#flashHost.nN`
-grid, capped 6); each panel shows, big and bold: **COURT n**, the distance
-(`ON NOW`/`NEXT`/`N AWAY`), **ON** = item now on, **OURS** = our item. It blinks
-red↔navy (`@keyframes flashpulse`), auto-clears after **3 s** (or tap) back to the
-board. De-duped per court+item (`_flash.set`) so it fires once per approach and
-skipped when `document.hidden`. Live-verified in the demo (two-court split =
-Court 5/6 NEXT, and a single-court "2 AWAY" with ON/OURS). `board-sw` `v12→v13`.
-**PERSISTENT (owner Jul 2026):** no more 3s auto-dismiss — the flash stays until the
-screen is TOUCHED or the case is OVER (leaves the ≤2 set: called / marked over /
-receded). `runFlash` re-renders the current reaching set live each poll; a tap adds
-the shown court+item to `_flash.dismissed` (re-armed when they leave the ≤2 set), and
-the flash hides when nothing is actively reaching.
-
-**Route rail replaces the directive balloon (owner Jul 2026):** the old "where do I
-go now" card (`.directive`/`renderRoute`) is removed. `#paneTop` now holds a
-**`.route-rail`** (`renderRail`) — a horizontal strip of small court "stops" in the
-order to visit them: our actionable matters, soonest-to-reach first (`reachMinsFor`,
-sequence-aware gap + live pace), one stop per court (closest matter). Each stop shows
-Court, distance (NOW/NEXT/N away/PO/WATCH), and `our <item> · on <cur> · ~Nm [est]`;
-between stops a chevron with the **walk time** (`walkMin`, court distance). Tap a stop
-→ `openCourtModal`. Live-verified (stops ordered Ct6/5 NEXT → Ct3 PO → Ct2 far →
-Ct1 watch, 1m connectors). Senior location still shows as the grid `senpin`.
-**Colour (owner Jul 2026): polite-but-urgent AMBER, not alarm red** — pulses
-`#c68a24↔#8a6112` (`flashpulse`, 1.1s ease-in-out breathe), white/cream text; the
-red version read as an emergency. On-brand with the chamber gold.
-
-**Chat tweaks (owner Jul 2026):** (a) **No pinch-resize** — the viewport meta now
-sets `maximum-scale=1, user-scalable=no` (messaging-app behaviour) AND `fitChat`
-early-returns when `visualViewport.scale ≠ 1`, so a pinch never grows/shrinks the
-fixed chat box; only the keyboard resizes it. (b) **Unread badge survives refresh**
-— `lastSeenChat` is now persisted to `localStorage.boardChatSeen` (init from it on
-load) and advanced by `markChatSeen()` (called from `renderChat` and `paintChatList`
-while on the chat tab) to the newest seen message's ts. Previously it reset to 0 each
-reload, so every refresh re-flagged already-read messages as new. Live-verified:
-badge clears on open, stays cleared across a reload (`boardChatSeen` persisted).
-
-## Display-board CLOSED-PHONE PUSH (board.html + worker, Jul 2026 — see PUSH-SETUP.md)
-
-Web Push (VAPID / aes128gcm) via the existing Cloudflare board worker — pops on a
-phone even when the app is closed, for **chat** messages and **court ≤4 away**. NOT
-Firebase; reuses `board-dev/worker.js`. **Inert until `VAPID_PUBLIC` is set in
-board.html AND the worker has the KV binding `SUBS` + secrets `VAPID_PUBLIC/PRIVATE/
-SUBJECT`** (setup steps in `PUSH-SETUP.md`). iOS 16.4+ requires the app be **installed
-to the Home Screen** — no Safari-tab push.
-- **Client (board.html):** the 🔔 bell → `syncPushSub()` subscribes via
-  `pushManager.subscribe(applicationServerKey=VAPID_PUBLIC)` and POSTs the sub to the
-  worker `/push-subscribe` (keyed by uid); bell-off → `dropPushSub()`. `relayPush()`
-  POSTs `/push-send`. `sendChat` relays `{kind:"chat"}`; `fireCourtAlert` relays
-  `{kind:"court", toUids:e.juniorUids, level, …}`. All no-op if `VAPID_PUBLIC===""`.
-  `board-sw.js` gained a `push` handler (`sdboard-v15`).
-- **Worker (`board-dev/worker.js`):** `export default {fetch(req,env)}` now also
-  handles POST `/push-subscribe|/push-unsubscribe|/push-send`. Subs live in KV
-  (`SUBS`, key `sub:<uid>:<hash>`); `/push-send` de-dups per event
-  (`dd:court:… | dd:chat:<id>`, 600s TTL) so many open instances = one push, resolves
-  recipients (court→toUids, chat→all subs minus sender), and sends Web Push
-  (`vapidAuth` ES256 JWT + `encryptPayload` ECDH/HKDF/AES-128-GCM per RFC 8291); 404/
-  410 prunes the sub.
-- **Model = RELAY, not autonomous:** court pushes need SOME open board (bell on) to
-  detect the crossing — keep the war-room display open during court hours; chat fires
-  from the sender's open device. Fully-autonomous (worker cron polling the board, no
-  open instance) is a future upgrade needing the proximity engine ported into the
-  worker. **UNVERIFIED end-to-end** — the crypto/delivery can't be tested without a
-  real installed PWA + deployed worker + VAPID keys; syntax-checked + demo loads clean
-  (inert). Confirm on a device, iterate.
-
-## Display-board alerts (board.html, Jul 2026 — Phase 1, no backend)
-
-So nobody has to stare at the board. A **bell toggle** in the header
-(`btnNotify`/`toggleNotify`, persisted in `localStorage.boardNotify`) requests
-Notification permission and turns on alerts. On every poll, `runAlerts()` classifies
-each of our matters and, when one crosses into **"get ready"** (tier soon → level 1)
-then **"head now"** (tier now → level 2), fires a system notification via
-`registration.showNotification` (+ vibration), deduped per court+item (`_alerted`,
-re-arms if the matter recedes; skips mentioning). Messages: "⚖️ Head to Court 6 —
-your item 4 is next" / "Get ready — Court 3 — item 6 approaching · ~3 min".
-`board-sw.js` gained a `notificationclick` handler (focus/open the app); cache
-bumped `sdboard-v4→v5`. A **screen wake lock** (`acquireWake`, re-acquired on
-visibilitychange) keeps the app awake so it keeps polling. **Reliable only while the
-app is open/awake** — fully-closed-phone push needs a server (Phase 2: VAPID + a
-Cloudflare-cron/Function poller that reads the chamber's matters and sends Web Push;
-the project's long-standing "FCM push = v2"). jsc-verified level transitions + live
-(enabling fired "Head to Court 6 / Get ready — Court 3/5", no errors).
-
-## Court-pace study — SEPARATE collector (`pace-collector.html`, Jul 2026)
-
-Goal: learn each court's real disposal speed over ~a week, then replace the flat
-`MIN_PER_ITEM=1.1` default in `reachMinsFor` with a per-court, time-of-day pace.
-Owner's call: keep the display app (board.html) UNBURDENED — do the collection in a
-**standalone page**. `pace-collector.html` is self-contained (no Firebase/auth):
-polls the board relay every 60s, reuses the same `parseBoard`/`seqInfo`/`posOf`, and
-whenever a court moves to a new item appends `[t, seqPos, item, phase]` to a
-per-court, per-day movement log in **localStorage** (`scPaceData_v1`). phase: 0
-hearing · 1 idle · 2 mentioning(800s) · 3 pronouncement(1500s) — analysis ignores
-1/2/3. UI: live status + per-court moves/≈items-per-hr + **Download / Copy** (owner
-pastes the JSON back into chat). Served at `…/pace-collector.html`; leave it open
-during court hours. **Analysis + calibration are done HERE from the pasted data**,
-then only the resulting timing logic goes into board.html — the collector never
-ships to the display app. jsc-verified (parse real sample, phase codes, movement
-dedup) + live (fetched the live board, recorded 19 courts, no errors).
+**What's still shared between the two repos:** the Firestore DATA
+(`sd-chamber-1aa78`) — board.html reads the SAME `daysheets/{date}` this app
+(index.html) writes, which is the whole point of the live sync. The cause-list
+fetcher (`fetch_causelist.py` + `.github/workflows/causelist.yml`) and
+`court-updates.json` stay HERE too (this app's day-sheet auto-fill still needs
+them) — DisplayBoard has its own independent copy, lightly rebranded, not a
+dependency on this repo.
 
 ## Conference credit + credit register (index.html, Jul 2026)
 
@@ -442,7 +291,7 @@ UI and rules).
 |---|---|
 | `index.html` | Production app. `const DEMO = false;` + real firebaseConfig. |
 | `demo.html` / `app.html` | Same code with `DEMO = true` — in-memory mock, seeded sample chamber, amber "View as" role switcher. No login. |
-| `sw.js` | Service worker (Jul 2026): the app **HTML is NETWORK-FIRST** so a deployed change is live on the next open (cache is only the offline fallback); the heavy immutable libs — **Firebase SDK + fonts + Tabler icons are CACHE-FIRST** so mobile stays fast. NEVER caches Firestore/Auth/`court-updates.json` (live data). Registered from index.html head. `CACHE` now `chamber-shell-v9`. `board-sw.js` = same pattern for the war room (`sdboard-v3`). NOTE: the previous stale-while-revalidate version made HTML one-open-behind (owner: "change is not live") — hence network-first HTML. |
+| `sw.js` | Service worker (Jul 2026): the app **HTML is NETWORK-FIRST** so a deployed change is live on the next open (cache is only the offline fallback); the heavy immutable libs — **Firebase SDK + fonts + Tabler icons are CACHE-FIRST** so mobile stays fast. NEVER caches Firestore/Auth/`court-updates.json` (live data). Registered from index.html head. `CACHE` now `chamber-shell-v9`. (`board-sw.js` — same pattern for the war room — now lives in the `DisplayBoard` repo.) NOTE: the previous stale-while-revalidate version made HTML one-open-behind (owner: "change is not live") — hence network-first HTML. |
 | `manifest.json` | PWA manifest (navy #101418, maskable icons). Linked from index.html head. |
 | `icon-192.png` / `icon-512.png` / `apple-touch-icon.png` | App icon: gold "SD" monogram in Fraunces on the sidebar-navy. Regenerate with `python3 make-icon.py` (Pillow + Fraunces TTF, self-downloading); never hand-transcribe base64. |
 | `firestore.rules` | Security rules — **git-ignored by owner's decision (Jul 2026), kept only locally / in the Firebase console**, NOT hosted on GitHub. Recover the last committed copy with `git show f2073ff:firestore.rules`. Still the source of truth for what the console rules must be. |

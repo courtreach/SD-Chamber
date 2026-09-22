@@ -287,6 +287,21 @@ label{display:block;font-size:11.5px;font-weight:500;color:var(--ink-2);letter-s
 .cal-cell.sen-away{background:#fbecea;border-color:transparent;box-shadow:inset 3px 0 0 #c0392b}
 .cal-cell.sen-away.today{box-shadow:inset 3px 0 0 #c0392b,0 0 0 1.5px var(--accent)}
 .cal-cell.sen-away .cal-sen{color:#c0392b}
+/* notes from court (owner Sep 2026): the court-side staff drops a chit; the office-side
+   staff enters it. Amber = "waiting on somebody", the same family as the awaiting-list chip. */
+.cal-chip.note{background:#fbefd6;color:#8a5a12}
+.cnotes{background:var(--surface);border:1px solid var(--line-2);border-radius:var(--r-lg);margin-bottom:14px;overflow:hidden}
+.cnotes-head{display:flex;align-items:center;gap:8px;padding:10px 16px;font-size:12.5px;font-weight:600;color:var(--ink-2);background:#fbefd6;border-bottom:1px solid #f1dfb8}
+.cnotes-head .ti{color:#8a5a12;font-size:16px}
+.cnote{display:flex;gap:12px;padding:12px 16px;border-bottom:1px solid var(--line);align-items:flex-start;flex-wrap:wrap}
+.cnote:last-child{border-bottom:none}
+.cnote-main{flex:1;min-width:200px}
+.cnote-when{font-size:11.5px;font-weight:600;color:var(--ink-2);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.cnote-when .mono{font-size:12px}
+.cnote-text{font-size:13.5px;color:var(--ink);margin-top:3px;white-space:pre-wrap;overflow-wrap:anywhere}
+.cnote-by{font-size:11px;color:var(--ink-3);margin-top:4px}
+.cnote-act{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.cnote.done{opacity:.55}
 .cal-load{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;color:var(--ink-2);background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:2px 9px 2px 7px;box-shadow:var(--sh-1)}
 .ld{width:7px;height:7px;border-radius:50%;display:inline-block;flex-shrink:0}
 .ld.lg{background:#4e7a5e}.ld.ly{background:#c99a2e}.ld.lr{background:#b4472e}
@@ -1120,7 +1135,11 @@ function seedDemo(db){
   db.set("config/roster",{order:JR.slice(),pointer:0});
   // calendar samples: a holiday and a senior-away day
   db.set("config/holidays",{[rel(6)]:"Court holiday (sample)"});
-  db.set("config/senioravail",{[rel(2)]:"Travelling — out of Delhi (sample)"});
+  db.set("config/senioravail",{[rel(2)]:"Travelling — out of Delhi (sample)",[rel(9)]:"In another court — Bombay HC, part-heard",[rel(10)]:"In another court — Bombay HC, part-heard"});
+  // two chits from the court-side staff, waiting for the office to enter
+  db.set("daysheets/"+rel(1),{date:rel(1),updatedAt:n(),updatedBy:"u_clerk",entries:[],conferences:[],notes:[
+    {id:"nt1",court:"5",item:"12",counsel:"Karanjawala & Co.",text:"Fresh SLP, we are for the petitioner. Conference 5pm today.",by:"u_clerk",byName:"Ramesh Kumar",at:{_t:Date.now()-3600000},done:false},
+    {id:"nt2",court:"",item:"",counsel:"",text:"Sharma matter (Delhi HC contempt) is listed — check the supplementary list",by:"u_clerk",byName:"Ramesh Kumar",at:{_t:Date.now()-1200000},done:false}]});
 
   const T=MATTER_TYPES;
   // parties pool to synthesise plausible matters
@@ -2493,7 +2512,10 @@ const seniorOff=iso=>seniorAvail[iso]!=null;
 const isPartial=iso=>{ for(const r of (vacation.ranges||[])){ if(iso>=r[0]&&iso<=(r[1]||r[0])) return r[2]||"Partial court working"; } return null; };
 
 function renderCal(){
-  $("topbarAction").innerHTML = canAdmin()? `<button class="btn ghost sm" id="calImport"><span class="ic ti ti-calendar-plus"></span>Import SC calendar</button> <button class="btn ghost sm" id="calRange"><span class="ic ti ti-beach"></span>Mark holidays</button>`:"";
+  // Staff (both of them) get the two things they actually feed here: a note from the
+  // court, and the Senior's own diary. Admin keeps the once-a-year calendar tools.
+  $("topbarAction").innerHTML = (canManage()? `<button class="btn ghost sm" id="calNote"><span class="ic ti ti-message-2-share"></span>Note for office</button> <button class="btn ghost sm" id="calSenior"><span class="ic ti ti-user-off"></span>Senior's calendar</button> `:"")
+    + (canAdmin()? `<button class="btn ghost sm" id="calImport"><span class="ic ti ti-calendar-plus"></span>Import SC calendar</button> <button class="btn ghost sm" id="calRange"><span class="ic ti ti-beach"></span>Mark holidays</button>`:"");
   const [y,m]=calMonth.split("-").map(Number);
   const first=new Date(y,m-1,1);
   const startDow=(first.getDay()+6)%7;           // Monday-first grid
@@ -2524,6 +2546,7 @@ function renderCal(){
     // one calm neutral mute for any non-working day; a thin left accent marks WHICH kind.
     const kind=hol?'day-hol':part?'day-vac':wknd?'day-off':'';
     const senOff=seniorOff(iso);
+    const toEnter=canManage()?openNotesOn(iso).length:0;   // chits from court still to be entered
     cells.push(`<button class="cal-cell ${senOff?'sen-away':kind} ${iso===today?'today':''}" data-cald="${iso}">
       <div class="cal-top"><span class="cal-num">${d}</span>${senOff?`<span class="cal-sen ti ti-user-off" title="Senior not available${seniorAvail[iso]?' — '+esc(seniorAvail[iso]):''}"></span>`:''}</div>
       ${senOff?`<div class="cal-tag t-sen" title="Senior not available${seniorAvail[iso]?' — '+esc(seniorAvail[iso]):''}">Senior away</div>`:hol?`<div class="cal-tag t-hol" title="${esc(holidays[iso])}">${esc(holidays[iso])}</div>`:part?`<div class="cal-tag t-vac" title="${esc(part)}">Vacation</div>`:''}
@@ -2531,11 +2554,12 @@ function renderCal(){
         ${load?`<span class="cal-load"><span class="ld ${loadCls}"></span>${load}</span>`:''}
         ${me.role==="junior"&&mine?`<span class="cal-chip mine">${mine} mine</span>`:''}
         ${conf?`<span class="cal-chip conf">${conf}</span>`:''}
+        ${toEnter?`<span class="cal-chip note" title="From court — still to be entered">${toEnter} to enter</span>`:''}
       </div>
     </button>`);
   }
   const monthName=first.toLocaleDateString('en-IN',{month:'long',year:'numeric'});
-  $("tab-cal").innerHTML=`<div class="cal-toolbar">
+  $("tab-cal").innerHTML=(canManage()?courtNotesPanel(null):"")+`<div class="cal-toolbar">
       <div class="row" style="gap:6px;align-items:center">
         <button class="tbtn icon-only" id="calPrev" aria-label="Previous month"><span class="ic ti ti-chevron-left"></span></button>
         <div class="cal-month">${monthName}</div>
@@ -2551,6 +2575,9 @@ function renderCal(){
   $("calToday").onclick=()=>{calMonth=todayISO().slice(0,7);renderCal();};
   if($("calRange"))$("calRange").onclick=holidayRangeForm;
   if($("calImport"))$("calImport").onclick=importCalForm;
+  if($("calNote"))$("calNote").onclick=()=>courtNoteForm();
+  if($("calSenior"))$("calSenior").onclick=seniorCalendarForm;
+  wireCourtNotes($("tab-cal"));
   document.querySelectorAll("[data-cald]").forEach(x=>x.onclick=()=>dayDetail(x.dataset.cald));
 }
 
@@ -3093,6 +3120,9 @@ function renderToday(){
   // No Add / Import when the senior is unavailable (owner's rule) — nothing may be
   // listed for a day he isn't sitting.
   $("topbarAction").innerHTML = (canManage()&&!senOff)? `${WORD_IMPORT?`<button class="btn ghost sm" id="tbWordImport" title="Import the clerk's Word causelist"><span class="ic ti ti-file-type-docx"></span>Import Word list</button> `:''}<button class="btn ghost sm" id="tbImport"><span class="ic ti ti-file-import"></span>Import cause list</button> <button class="btn" id="tbAddDs"><span class="ic ti ti-plus"></span>Add matter</button>`:"";
+  // A note can be sent for ANY day, senior-away included — that is how the office finds out
+  // a brief has come in; the listing itself is still refused by the form on such a day.
+  if(canManage()) $("topbarAction").innerHTML = `<button class="btn ghost sm" id="tbNote"><span class="ic ti ti-message-2-share"></span>Note for office</button> `+$("topbarAction").innerHTML;
 
   const clDay=courtUpdates?.by_date?.[dsDate];
   const clStatus = clDay
@@ -3178,9 +3208,11 @@ function renderToday(){
     ${canManage()?`<div style="margin-top:12px"><button class="tbtn" id="tbAddConf"><span class="ic ti ti-plus"></span>Add conference</button></div>`:''}`;
 
   const senNotice=senOff?`<div class="notice warn" style="margin-bottom:12px"><span class="ti ti-user-off"></span><div><b>Senior not available on ${fmtDateY(dsDate)}</b>${seniorAvail[dsDate]?` — ${esc(seniorAvail[dsDate])}`:''}. No matter can be listed for this day.</div></div>`:"";
-  $("tab-today").innerHTML=senNotice+toolbar+table+rail+confSec;
+  $("tab-today").innerHTML=senNotice+toolbar+(canManage()?courtNotesPanel(dsDate):"")+table+rail+confSec;
   $("dsDateInp").onchange=e=>{ dsDate=e.target.value||todayISO(); watchDaysheet(); renderToday(); };
   if($("tbAddDs"))$("tbAddDs").onclick=()=>dsForm();
+  if($("tbNote"))$("tbNote").onclick=()=>courtNoteForm(dsDate);
+  wireCourtNotes($("tab-today"));
   if($("tbImport"))$("tbImport").onclick=importCauseList;
   if($("tbWordImport"))$("tbWordImport").onclick=wordImportForm;
   if($("tbShare"))$("tbShare").onclick=shareDaySheet;
@@ -3445,8 +3477,10 @@ async function shareCauselistPdf(iso){
   toast("PDF saved — attach it in WhatsApp or email","ti-file-text");
 }
 
-function dsForm(idx=null){
-  const e=idx!==null?daysheet.entries[idx]:{};
+function dsForm(idx=null, preset=null){
+  // preset: a court note being turned into a listing — pre-fills the form and is told when
+  // the listing has actually been saved (so the note is struck only on a real save).
+  const e=idx!==null?daysheet.entries[idx]:(preset||{});
   const opts=Object.values(briefs).filter(b=>b.status!=="disposed").map(b=>`<option value="${b.id}" ${e.briefId===b.id?'selected':''}>${esc(labelOf(b))}${b.diaryNo?` — Dy. ${esc(b.diaryNo)}`:''}</option>`).join("");
   openSheet(`<div class="sheet-head"><div><h3>${idx!==null?'Edit':'Add'} day-sheet matter</h3></div><button class="x-btn"><span class="ti ti-x"></span></button></div>
     <div class="sheet-body">
@@ -3462,7 +3496,7 @@ function dsForm(idx=null){
         <div class="muted" style="font-size:11.5px;margin:8px 0 4px">Re-listing a matter already tracked? Pick it here — only the <b>name</b> comes from the file. Enter this hearing's date, court &amp; item below and the <b>bench and main/supp totals are fetched fresh</b> from that day's SC list.</div>
       </div>
       <input type="hidden" id="f_brief" value="${esc(e.briefId||'')}">
-      <div class="grid2"><div><label>Date of listing <span class="muted" style="font-weight:400">(required)</span></label><input type="date" id="f_date" value="${esc(dsDate)}"></div>
+      <div class="grid2"><div><label>Date of listing <span class="muted" style="font-weight:400">(required)</span></label><input type="date" id="f_date" value="${esc((idx===null&&preset&&preset.date)||dsDate)}"></div>
         <div><label>Time</label><input type="time" id="f_time" value="${esc(toClock(e.time??'10.30'))}"></div></div>
       <label>Causelist type <span class="muted" style="font-weight:400">(which SC list to look the item up in)</span></label>
       <select id="f_listtype"><option value="">— select —</option>${CAUSELIST_TYPES.map(t=>`<option ${e.listType===t?'selected':''}>${t}</option>`).join("")}</select>
@@ -3692,6 +3726,7 @@ function dsForm(idx=null){
     }
     if(fAutoPicked && !fAutoPicked.forced) await advancePointer();   // auto-assign consumes a roster turn
     closeSheet();
+    if(idx===null && preset && preset.onSaved){ try{ await preset.onSaved(entry, listDate); }catch(_){ } }
     toast(fAutoPicked?`Saved — auto-assigned to ${nameOf(fAutoPicked.uid)}`:`Saved to ${fmtDateY(listDate)}`,
       fAutoPicked?"ti-user-check":"ti-check");
     renderActive();
@@ -3701,6 +3736,251 @@ function dsForm(idx=null){
     // straight to the share composer so the colleague(s) can be informed at once
     if(juniorUids.length && notifyBrief) notifyForm(notifyBrief.id, {...notifyBrief, assignedTo:juniorUids});
   };
+}
+
+
+/* ============================================================
+   NOTES FROM COURT  (owner Sep 2026)
+   Two office staff, one problem: the one in court hears which briefs have come in and
+   for which day, but is on his feet and never at a computer; the one in the office has the
+   computer and the time but never hears. So cases went unentered. This is the paper chit
+   between them, done on the phone: the court-side staff taps "Note for office", picks the
+   day, and types court + item and whatever else he knows — thirty seconds, no more than a
+   WhatsApp message. The office-side staff sees it the moment he opens the app (Calendar
+   home panel, a "to enter" chip on the day, and on that day's sheet), presses "Enter this
+   matter", and the ordinary Add-matter form opens already filled in. Saving the listing
+   strikes the note. Nothing is entered twice and nothing is forgotten.
+
+   Stored as `notes[]` on the day's OWN daysheets/{date} document — the same document, the
+   same canManage() write rule, no rules change (a console paste the owner has to do by
+   hand). A note is never deleted on completion, only marked done, so the record of who
+   asked for what survives.
+   ============================================================ */
+const noteTime = at => { const t=at?._t ?? (at?.toDate?at.toDate().getTime():null); return t? new Date(t).toLocaleTimeString('en-IN',{hour:'numeric',minute:'2-digit'}) : ""; };
+function notesOn(iso){ return ((dsAll[iso]?.notes)||((iso===dsDate)?(daysheet?.notes||[]):[])); }
+function openNotesOn(iso){ return notesOn(iso).filter(n=>n&&!n.done); }
+// every open note, any date — soonest day first, then the order they were sent
+function openNotesAll(){
+  const out=[];
+  Object.keys(dsAll).sort().forEach(iso=>openNotesOn(iso).forEach(n=>out.push({...n, date:iso})));
+  return out;
+}
+async function writeNotes(iso, notes){
+  await db.set("daysheets/"+iso,{date:iso, notes, updatedAt:db.now(), updatedBy:me.uid},true);
+}
+// ---- the chit itself (phone-first: four boxes, nothing mandatory but the day) ----
+function courtNoteForm(iso){
+  const tmr=(()=>{const x=new Date();x.setDate(x.getDate()+1);return x.toLocaleDateString('en-CA');})();
+  const date=iso||tmr;
+  openSheet(`<div class="sheet-head"><div><h3>Note for the office</h3><div class="sub">Tell the office what has come in — they will enter it</div></div><button class="x-btn"><span class="ti ti-x"></span></button></div>
+    <div class="sheet-body">
+      <label>Which day is it listed for?</label><input type="date" id="cn_date" value="${esc(date)}">
+      <div id="cn_senwarn"></div>
+      <div class="grid2"><div><label>Court no.</label><input id="cn_court" class="mono" inputmode="numeric" placeholder="e.g. 5"></div>
+        <div><label>Item no.</label><input id="cn_item" class="mono" placeholder="e.g. 12"></div></div>
+      <label>Briefing counsel <span class="muted" style="font-weight:400">(if known)</span></label>
+      <input id="cn_counsel" list="lawfirms_cn" placeholder="e.g. Karanjawala & Co.">
+      <datalist id="lawfirms_cn">${LAW_FIRMS.map(f=>`<option value="${esc(f)}"></option>`).join("")}</datalist>
+      <label>Anything else</label>
+      <textarea id="cn_text" rows="3" placeholder="Party name, which side we are for, conference time, urgent — whatever you know"></textarea>
+      <div style="margin-top:18px"><button class="btn" id="cn_send"><span class="ic ti ti-send"></span>Send to office</button></div>
+      <div class="muted" style="font-size:11.5px;margin-top:10px">The office sees this at once on the Calendar and on that day's sheet, and enters the matter from it.</div>
+    </div>`);
+  const warn=()=>{ const d=$("cn_date").value; $("cn_senwarn").innerHTML = (d&&seniorOff(d))
+    ? `<div class="notice warn" style="margin:8px 0 4px"><span class="ti ti-user-off"></span><div><b>Senior is not available on ${fmtDateY(d)}</b>${seniorAvail[d]?` — ${esc(seniorAvail[d])}`:''}. The office cannot list a matter for that day — send the note anyway so they know it has come in.</div></div>` : ""; };
+  $("cn_date").onchange=warn; warn();
+  $("cn_send").onclick=async()=>{
+    const d=$("cn_date").value; if(!d){ toast("Pick the day","ti-alert-triangle"); return; }
+    const court=$("cn_court").value.trim(), item=$("cn_item").value.trim(), counsel=$("cn_counsel").value.trim(), text=$("cn_text").value.trim();
+    if(!(court||item||counsel||text)){ toast("Give the office something to go on — court & item, or a note","ti-alert-triangle"); return; }
+    const note={ id:"n"+Date.now().toString(36)+Math.random().toString(36).slice(2,6), court, item, counsel, text, by:me.uid, byName:me.name||"", at:db.now(), done:false };
+    $("cn_send").disabled=true;
+    try{ await writeNotes(d,[...notesOn(d), note]); }
+    catch(e){ toast("Couldn't send — check your connection","ti-alert-triangle"); $("cn_send").disabled=false; return; }
+    closeSheet(); toast(`Sent to the office for ${fmtDateY(d)}`,"ti-send"); renderActive();
+    // the office-side staff sees it live; the sender is told in-app too, so both know it went
+    const others=Object.values(users).filter(u=>u.id!==me.uid && u.active!==false && ["clerk","pa","admin"].includes(u.role)).map(u=>u.id);
+    if(others.length) try{ pushNotif(others, `From court — ${[court?`Ct ${court}`:"", item?`item ${item}`:"", counsel].filter(Boolean).join(" ")||"a matter"} for ${fmtDateY(d)}: ${text||"to be entered"}`, "note", null); }catch(_){}
+  };
+}
+// ---- the office's inbox: one date's notes, or every open one across dates (iso=null) ----
+function courtNotesPanel(iso){
+  const list = iso ? openNotesOn(iso).map(n=>({...n,date:iso})) : openNotesAll();
+  if(!list.length) return "";
+  const row=n=>`<div class="cnote" data-cnote="${esc(n.date)}|${esc(n.id)}">
+    <div class="cnote-main">
+      <div class="cnote-when">${iso?"":`<span>${esc(fmtDateY(n.date))}</span>`}${(n.court||n.item)?`<span class="mono">Ct-${esc(n.court||"?")}#${esc(n.item||"?")}</span>`:""}${n.counsel?`<span>${esc(n.counsel)}</span>`:""}${seniorOff(n.date)?`<span class="chip av-leave" style="font-size:10px"><span class="dot"></span>Senior away that day</span>`:""}</div>
+      ${n.text?`<div class="cnote-text">${esc(n.text)}</div>`:""}
+      <div class="cnote-by">${esc(n.byName||nameOf(n.by)||"")}${noteTime(n.at)?` · ${esc(noteTime(n.at))}`:""}</div>
+    </div>
+    <div class="cnote-act">
+      ${seniorOff(n.date)?"":`<button class="btn sm" data-cnenter><span class="ic ti ti-plus"></span>Enter this matter</button>`}
+      <button class="tbtn" data-cndone title="Already entered / nothing to enter"><span class="ic ti ti-check"></span>Done</button>
+      ${(n.by===me.uid||canAdmin())?`<button class="tbtn icon-only" data-cndel aria-label="Delete note"><span class="ic ti ti-trash"></span></button>`:""}
+    </div></div>`;
+  return `<div class="cnotes"><div class="cnotes-head"><span class="ti ti-message-2"></span>From court — ${list.length} to enter${iso?"":" (all days)"}</div>${list.map(row).join("")}</div>`;
+}
+function wireCourtNotes(root){
+  if(!root) return;
+  root.querySelectorAll("[data-cnote]").forEach(el=>{
+    const [date,id]=el.dataset.cnote.split("|");
+    const find=()=>notesOn(date).find(n=>n&&n.id===id);
+    const strike=async()=>{ const arr=notesOn(date).map(n=>(n&&n.id===id)?{...n,done:true,doneBy:me.uid,doneAt:db.now()}:n); await writeNotes(date,arr); renderActive(); };
+    const enter=el.querySelector("[data-cnenter]");
+    if(enter) enter.onclick=()=>{ const n=find(); if(!n) return;
+      // straight into the real Add-matter form, filled from the chit; the note is struck
+      // only once the listing is genuinely saved — closing the form leaves it waiting.
+      dsForm(null,{ date, courtNo:n.court||"", itemNo:n.item||"", counsel:n.counsel||"", remarks:"",
+        onSaved:async()=>{ await strike(); } }); };
+    const done=el.querySelector("[data-cndone]");
+    if(done) done.onclick=async()=>{ await strike(); toast("Marked done","ti-check"); };
+    const del=el.querySelector("[data-cndel]");
+    if(del) del.onclick=()=>confirmAsk({title:"Delete this note?", body:"The office will no longer see it.", confirmLabel:"Delete", danger:true,
+      onYes:async()=>{ await writeNotes(date, notesOn(date).filter(n=>!(n&&n.id===id))); toast("Note deleted"); renderActive(); }});
+  });
+}
+
+/* ============================================================
+   SENIOR'S CALENDAR  (owner Sep 2026)
+   The office-side staff is the only person who knows when the Senior will not be
+   sitting, and why. The per-day toggle in the day detail stays (a one-off), but a
+   diary is kept in ranges, so this is a range form with a reason, plus a list of what is
+   already marked, plus a PRINT of the Supreme Court calendar with those days blocked
+   out and the reason written on each — the sheet that goes on the wall.
+
+   The value stored per day is still the ONE STRING every other reader already expects
+   (`config/senioravail` {date: "reason — details"}) — same document, same canManage()
+   rule, no rules change, and the day detail, day sheet, calendar cell and CourtReach's
+   sync all keep working untouched. The reason category leads the string so the print
+   can show it in brief.
+   ============================================================ */
+const SENIOR_REASONS=["Out of station","In another court","Personal","Unwell","Conference / event","Vacation","Other"];
+// Group consecutive marked days that carry the same text into ranges, for the list + print.
+function seniorAwayRanges(fromISO){
+  const days=Object.keys(seniorAvail).filter(d=>/^\d{4}-\d{2}-\d{2}$/.test(d) && seniorAvail[d]!=null && (!fromISO||d>=fromISO)).sort();
+  const out=[]; const next=iso=>{const x=new Date(iso+"T00:00");x.setDate(x.getDate()+1);return x.toLocaleDateString('en-CA');};
+  for(const d of days){ const last=out[out.length-1];
+    if(last && next(last.to)===d && last.text===(seniorAvail[d]||"")) last.to=d; else out.push({from:d,to:d,text:seniorAvail[d]||""}); }
+  return out;
+}
+function seniorCalendarForm(){
+  const today=todayISO();
+  const ranges=seniorAwayRanges(today);
+  const fmtR=r=>r.from===r.to?fmtDateY(r.from):`${fmtDateY(r.from)} – ${fmtDateY(r.to)}`;
+  openSheet(`<div class="sheet-head"><div><h3>Senior's calendar</h3><div class="sub">Days ${esc(CHAMBER.seniorName)} will not be available — and why</div></div><button class="x-btn"><span class="ti ti-x"></span></button></div>
+    <div class="sheet-body">
+      <div class="section-label">Mark days away</div>
+      <div class="grid2"><div><label>From</label><input type="date" id="sa_from" value="${today}"></div>
+        <div><label>To <span class="muted" style="font-weight:400">(same day if blank)</span></label><input type="date" id="sa_to"></div></div>
+      <label>Reason</label>
+      <select id="sa_reason">${SENIOR_REASONS.map(r=>`<option>${r}</option>`).join("")}</select>
+      <label>Details <span class="muted" style="font-weight:400">(where / what — printed on the calendar)</span></label>
+      <input id="sa_detail" placeholder="e.g. Bombay High Court, part-heard · Singapore arbitration · family function">
+      <div style="margin-top:14px"><button class="btn" id="sa_save"><span class="ic ti ti-calendar-off"></span>Mark on calendar</button></div>
+      <div class="muted" style="font-size:11.5px;margin-top:8px">No matter can be listed for a marked day — the Add-matter form refuses it and the day shows "Senior away" to everyone.</div>
+
+      <div class="section-label" style="margin-top:22px">Marked from today</div>
+      ${ranges.length?`<div class="reg">${ranges.map((r,i)=>`<div class="reg-row static" style="align-items:center">
+          <span class="reg-main"><span class="reg-line1"><b>${esc(fmtR(r))}</b></span><span class="reg-line2">${esc(r.text||"No reason given")}</span></span>
+          <button class="tbtn icon-only" data-sadel="${i}" title="Remove — Senior available again"><span class="ic ti ti-trash"></span></button>
+        </div>`).join("")}</div>`:`<div class="muted" style="font-size:13px">Nothing marked ahead. Days marked earlier than today are kept but not listed here.</div>`}
+
+      <div class="section-label" style="margin-top:22px">Print the calendar</div>
+      <div class="row" style="gap:8px;align-items:center;flex-wrap:wrap">
+        <select id="sa_span" style="flex:1;min-width:180px">
+          <option value="3">Next 3 months</option>
+          <option value="6">Next 6 months</option>
+          <option value="12">Next 12 months</option>
+          <option value="y${today.slice(0,4)}">Whole of ${today.slice(0,4)}</option>
+          <option value="y${+today.slice(0,4)+1}">Whole of ${+today.slice(0,4)+1}</option>
+        </select>
+        <button class="btn ghost" id="sa_print"><span class="ic ti ti-printer"></span>Print</button>
+      </div>
+      <div class="muted" style="font-size:11.5px;margin-top:8px">Supreme Court holidays and vacation from the imported calendar; the Senior's days blocked out in red with the reason.</div>
+    </div>`);
+  $("sa_save").onclick=async()=>{
+    const from=$("sa_from").value, to=$("sa_to").value||from;
+    if(!from||to<from){ toast("Check the dates","ti-alert-triangle"); return; }
+    const reason=$("sa_reason").value, detail=$("sa_detail").value.trim();
+    const text=detail?`${reason} — ${detail}`:reason;
+    const patch={}; let n=0; eachDate(from,to,iso=>{ patch[iso]=text; n++; });
+    if(n>370){ toast("That is more than a year — mark it in smaller pieces","ti-alert-triangle"); return; }
+    await db.set("config/senioravail",patch,true);
+    toast(`Marked ${n} day${n>1?"s":""} — ${text}`,"ti-calendar-off"); seniorCalendarForm();
+  };
+  document.querySelectorAll("[data-sadel]").forEach(b=>b.onclick=()=>{ const r=ranges[+b.dataset.sadel]; if(!r) return;
+    confirmAsk({title:"Senior available again?", body:`${fmtR(r)} — ${r.text||"no reason given"}. Matters can be listed for these days once removed.`, confirmLabel:"Remove", danger:true,
+      onYes:async()=>{ const patch={}; eachDate(r.from,r.to,iso=>patch[iso]=null); await db.set("config/senioravail",patch,true); toast("Removed"); seniorCalendarForm(); }}); });
+  $("sa_print").onclick=()=>{ const v=$("sa_span").value;
+    if(v[0]==="y") printSeniorCalendar(v.slice(1)+"-01", 12); else printSeniorCalendar(today.slice(0,7)+"-01", +v); };
+}
+// The wall sheet: month grids, court holidays and vacation from the imported SC calendar,
+// the Senior's days blocked in red with the reason in brief. Same print-window pattern as
+// the cause list.
+function printSeniorCalendar(fromISO, months){
+  const q=s=>String(s??"").replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+  const [fy,fm]=fromISO.split("-").map(Number);
+  const grids=[];
+  for(let k=0;k<months;k++){
+    const first=new Date(fy,fm-1+k,1), y=first.getFullYear(), m=first.getMonth()+1;
+    const dim=new Date(y,m,0).getDate(), startDow=(first.getDay()+6)%7;
+    const cells=[]; for(let i=0;i<startDow;i++) cells.push('<td class="blank"></td>');
+    for(let d=1;d<=dim;d++){
+      const iso=`${y}-${String(m).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
+      const dow=new Date(y,m-1,d).getDay(), wknd=dow===0||dow===6;
+      const away=seniorOff(iso), hol=isHol(iso), vac=(!hol&&!wknd)?isPartial(iso):null;
+      const cls=away?"away":hol?"hol":vac?"vac":wknd?"wknd":"";
+      const tag=away?q(seniorAvail[iso]||"Not available"):hol?q(holidays[iso]):vac?q(vac):"";
+      cells.push(`<td class="${cls}"><div class="n">${d}</div>${tag?`<div class="t">${tag}</div>`:""}</td>`);
+    }
+    while(cells.length%7) cells.push('<td class="blank"></td>');
+    const rows=[]; for(let i=0;i<cells.length;i+=7) rows.push(`<tr>${cells.slice(i,i+7).join("")}</tr>`);
+    const awayN=Object.keys(seniorAvail).filter(x=>x.startsWith(`${y}-${String(m).padStart(2,"0")}-`)&&seniorAvail[x]!=null).length;
+    grids.push(`<div class="month"><div class="mh"><span>${first.toLocaleDateString('en-IN',{month:'long',year:'numeric'})}</span>${awayN?`<span class="mc">${awayN} day${awayN>1?"s":""} away</span>`:""}</div>
+      <table><thead><tr>${["Mon","Tue","Wed","Thu","Fri","Sat","Sun"].map(x=>`<th>${x}</th>`).join("")}</tr></thead><tbody>${rows.join("")}</tbody></table></div>`);
+  }
+  const printed=new Date().toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
+  const html=`<!doctype html><html><head><meta charset="utf-8"><title>${q(CHAMBER.seniorName)} — calendar</title>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@500;700&display=swap" rel="stylesheet">
+<style>
+@page{size:A4 portrait;margin:9mm 10mm 10mm}
+body{margin:0;font-family:"EB Garamond",Garamond,Georgia,serif;color:#111;font-weight:500}
+.head{text-align:center;margin-bottom:8px}
+.name{font-size:20px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.role{font-size:12px;font-style:italic}
+.title{font-size:13px;margin-top:4px;text-decoration:underline}
+.legend{display:flex;justify-content:center;gap:16px;font-size:10.5px;margin:6px 0 10px}
+.legend span i{display:inline-block;width:11px;height:11px;border:1px solid #999;vertical-align:-2px;margin-right:4px}
+.months{display:grid;grid-template-columns:1fr 1fr;gap:10px 14px}
+.month{break-inside:avoid;page-break-inside:avoid}
+.mh{display:flex;justify-content:space-between;align-items:baseline;font-weight:700;font-size:13px;margin-bottom:3px}
+.mc{font-size:10.5px;font-weight:500;color:#8f1d12}
+table{width:100%;border-collapse:collapse;table-layout:fixed}
+th{font-size:9.5px;font-weight:700;border:1px solid #999;padding:2px 0;background:#f0f0ec}
+td{border:1px solid #999;height:36px;vertical-align:top;padding:2px 3px;font-size:9.5px;line-height:1.15}
+td .n{font-weight:700;font-size:10px}
+td .t{font-size:8.5px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical}
+td.blank{background:#fff;border-color:#ddd}
+td.wknd{background:#f3f3ef;color:#666}
+td.hol{background:#ece7f5}
+td.vac{background:#f6ecdc}
+td.away{background:#f6d5d0;color:#6b120b;background-image:repeating-linear-gradient(135deg,transparent 0 5px,rgba(139,29,18,.14) 5px 6px)}
+td.away .n{text-decoration:line-through}
+.foot{margin-top:8px;font-size:9.5px;color:#555;text-align:right}
+${months>6?"td{height:31px}.months{gap:8px 12px}":""}
+</style></head><body>
+<div class="head"><div class="name">${q(CHAMBER.seniorName)}</div><div class="role">${q(CHAMBER.designation)}</div>
+<div class="title">${q(CHAMBER.court)} — calendar with the Senior's availability</div></div>
+<div class="legend"><span><i style="background:#f6d5d0"></i>Senior not available</span><span><i style="background:#ece7f5"></i>Court holiday</span><span><i style="background:#f6ecdc"></i>Vacation / partial court</span><span><i style="background:#f3f3ef"></i>Weekend</span></div>
+<div class="months">${grids.join("")}</div>
+<div class="foot">Printed ${q(printed)} · ${q(CHAMBER.seniorName)}'s chamber</div>
+</body></html>`;
+  const w=window.open("","_blank");
+  if(!w){ toast("Allow pop-ups to print the calendar","ti-alert-triangle"); return; }
+  w.document.open(); w.document.write(html); w.document.close(); w.focus();
+  const doPrint=()=>{ try{ w.print(); }catch(e){} };
+  try{ (w.document.fonts&&w.document.fonts.ready?w.document.fonts.ready:Promise.resolve()).then(()=>setTimeout(doPrint,250)); }
+  catch(e){ setTimeout(doPrint,600); }
 }
 
 /* ============================================================
