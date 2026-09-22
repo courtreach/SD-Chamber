@@ -41,6 +41,17 @@ The senior advocate is deliberately NOT a user (role removed by owner decision).
   months or a whole calendar year, SC holidays (imported `holidays`) tinted, vacation
   (`isPartial`) tinted, weekends grey, Senior-away days hatched red with the day struck
   and the reason clamped to 3 lines, per-month "N days away", legend + printed-on foot.
+  **Sep 2026 redesign (owner: "professional calender printout with proper colour
+  presentation")**: `print-color-adjust:exact` so the colours actually print; branded
+  head (SD seal, name, "Availability calendar", period, prepared-on); navy/gold weekday
+  band; filled colour blocks with a coloured top bar per kind (red away / purple holiday /
+  amber vacation / grey weekend), the away day's number in a red disc; a red "N days not
+  available" pill per month; layout follows the span (≤3 months → one per page, ≤6 → two,
+  a year → 2×2 with the reason category alone in the small cells); a closing **register**
+  table of every away range (dates · days · reason · details); confidential foot.
+  Verified headlessly (jsc with stubs) + rendered on a service-worker-free port — the
+  SD-Chamber SW serves the app shell for ANY path on its origin, so preview files must
+  be served elsewhere.
   The per-day toggle in `dayDetail` stays for one-offs. sw.js `chamber-shell-v26→v27`.
 
 ## Review-pass changes (Jul 2026, most recent)
