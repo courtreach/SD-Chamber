@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-29T19:03:23.622941Z",
+  "generated_at": "2026-09-29T22:45:23.631608Z",
   "parser_version": 8,
   "window": [
     "2026-09-30",
@@ -3779,7 +3779,6 @@
       "lists_found": [
         "Miscellaneous (main)",
         "Chamber (main)",
-        "Single Judge (main)",
         "Registrar (main)"
       ],
       "lists": {
@@ -5859,195 +5858,6 @@
             "supp": 0
           }
         },
-        "Single Judge": {
-          "7": {
-            "coram": "HON'BLE MR. JUSTICE SANJEEV SACHDEVA",
-            "total": "26",
-            "fresh": "",
-            "items": {
-              "1601": "T.P.(C) No. 2789/2026 JAYASHREE DEY VERSUS NAMAN SHARMA",
-              "1602": "T.P.(C) No. 2786/2026 BDR PHARMACEUTICALS INTERNATIONAL PRIVATE VERSUS ABB VIE MANUFACTURING MANAGEMENT",
-              "1603": "T.P.(C) No. 2806/2026 MANAS DEY VERSUS MANIDEEPA DAS",
-              "1604": "T.P.(C) No. 2791/2026 ANURADHA NAGAR VERSUS AMBRISH NAGAR",
-              "1605": "T.P.(C) No. 2841/2026 PRIYANKA SHARMA VERSUS NITESH KUMAR SHARMA",
-              "1606": "T.P.(C) No. 2825/2026 SNEHA BHARTI VERSUS GOUTAM KUMAR",
-              "1607": "T.P.(C) No. 2877/2026 MALLIKA WADHWA VERSUS LOKESH WADHWA",
-              "1608": "T.P.(C) No. 2871/2026 LT. COL. (RETD.) GAYATRI KHARBANDA VERSUS COL. VIKRAM SINGH AND ORS.",
-              "1609": "Diary No. 43266-2026 SONALI RAJPUT VERSUS SATYAM RAJPUT AND ORS.",
-              "1610": "T.P.(Crl.) No. RAJEEV GUPTA AND ANR. VERSUS SOUTH INDIAN BANK LTD.",
-              "1611": "T.P.(C) No. 1119/2026 SURAJ KUMARI MAURYA VERSUS UMASHANKAR MAURYA",
-              "1612": "T.P.(C) No. 1217/2026 KANAK VERSUS DARPAN CHAWLA",
-              "1613": "T.P.(C) No. 1241/2026 GARIMA VERSUS ROHIT",
-              "1614": "T.P.(C) No. 2036/2026 SHAILENDRA KUMAR SINGH VERSUS MAMTA SINGH",
-              "1615": "Diary No. 32821-2026 SHEELA NAIR VERSUS RAJEEV PILLAI",
-              "1616": "T.P.(Crl.) No. 898/2026 POONAM SETHI AND ORS. VERSUS GAURAV KHANDUJA",
-              "1617": "T.P.(Crl.) No. 748/2026 NITIN KASHYAP AND ORS. VERSUS SAVITA KASHYAP",
-              "1618": "T.P.(Crl.) No. 862/2026 SURENDRA NATH SHARMA VERSUS SANSKRITI SHARMA",
-              "1619": "T.P.(Crl.) No. NAFEES MALIK VERSUS M/S. INTEGRA DATATECH PRIVATE LIMITED",
-              "1620": "T.P.(Crl.) No. 841/2026 ABDUL SALAM ABDUL KALAM KHAN AND ORS. VERSUS STATE OF WEST BENGAL AND ANR.",
-              "1621": "T.P.(C) No. 2281/2026 SONI KUMARI VERSUS RAKESH SINGH ALIAS SHAILENDRA SINGH",
-              "1622": "T.P.(Crl.) No. 827/2026 AISHWARYA RAMTEKE VERSUS JYOTI RAMTEKE",
-              "1623": "T.P.(C) No. 2282/2026 NIVEDITA PRAJAPATI VERSUS SANJEEV KUMAR PRAJAPATI",
-              "1624": "T.P.(C) No. 2269/2026 NEETHU MERIN JOY VERSUS NIDHIN VARGHESE",
-              "1625": "T.P.(C) No. 2413/2026 NEETU VERSUS AJAY KUMAR AND ANR.",
-              "1626": "T.P.(Crl.) No. 1011/2026 PRAGATI UPADHYAYA VERSUS THE STATE OF MAHARASHTRA AND ORS."
-            },
-            "advocates": {
-              "1601": {
-                "pet": "YASHASWI S.K. CHOCKSEY"
-              },
-              "1602": {
-                "pet": "VIKRANT NARAYAN"
-              },
-              "1603": {
-                "pet": "K. V. BHARATHI"
-              },
-              "1606": {
-                "pet": "DHURVA SHANKAR MISHRA"
-              },
-              "1623": {
-                "pet": "ABHINAV SHRIVASTAVA"
-              }
-            },
-            "main": 26,
-            "supp": 0
-          },
-          "12": {
-            "coram": "HON'BLE MR. JUSTICE ARUN PALLI",
-            "total": "26",
-            "fresh": "",
-            "items": {
-              "1601": "Diary No. 22813-2026 SHILPI MISHRA VERSUS GOVIND KUMAR MISHRA",
-              "1602": "Diary No. 29825-2026 SAKSHI DUBEY VERSUS NAVIN KUMAR DUBEY",
-              "1603": "Diary No. 45889-2026 SHIPRA SATYARTHI VERSUS HARSH KUMAR GAUTAM",
-              "1604": "T.P.(C) No. 2811/2026 MANOJ DEVI VERSUS AJEET SINGH YADAV",
-              "1605": "T.P.(C) No. 2867/2026 SWETAL VERSUS DUSHYANT SHARMA",
-              "1606": "T.P.(C) No. 2915/2026 SRUTHI SARIDE VERSUS R. LOKESH",
-              "1607": "T.P.(C) No. 2876/2026 ASTIKAR AKSHATA VERSUS GANORE RAHUL",
-              "1608": "T.P.(C) No. 2879/2026 REEMA VERMA VERSUS VIDYA SAGAR",
-              "1609": "T.P.(C) No. 2892/2026 KOMAL AKASH KAGDA VERSUS AKASH DHARMENDRA KAGDA",
-              "1610": "T.P.(C) No. 2865/2026 NATASHA VERSUS ASHISH CHANDEL",
-              "1611": "T.P.(C) No. 2860/2026 BHAWNA SHARMA VERSUS ASHUTOSH KASHYAP",
-              "1612": "T.P.(C) No. 2884/2026 ADITI ANAND VERSUS TUSHAR ANAND",
-              "1613": "T.P.(C) No. 2914/2026 ROKHSAR PARWEEN VERSUS AFTAB",
-              "1614": "T.P.(C) No. 2886/2026 REMYA SREE R VERSUS RAJESH C",
-              "1615": "T.P.(C) No. 2906/2026 KHUSHI MURALIDHARAN ALIAS KOKILA SHARMA VERSUS MURALIDHARAN BALASUBRAMANYAM",
-              "1616": "T.P.(C) No. 2917/2026 PRITI KUMARI VERSUS CHANDNA KUMAR JHA",
-              "1617": "T.P.(C) No. 2878/2026 RUBY PRASAD VERSUS RAM LAL RAM",
-              "1618": "T.P.(C) No. 2909/2026 AASHI JAISWAL VERSUS SATISH KUMAR",
-              "1619": "T.P.(C) No. 2885/2026 MEENU TRIVEDI VERSUS SANJEEV TRIVEDI",
-              "1620": "T.P.(C) No. 2924/2026 KAJAL VERSUS ROHIT",
-              "1621": "T.P.(C) No. 2897/2026 DIMPLE VERSUS BHAVESH",
-              "1622": "Diary No. 47466-2026 PAWAN GUPTA VERSUS SHO JOGINDER NAGAR AND ORS.",
-              "1623": "T.P.(Crl.) No. MOHAMMAD ANAS AND ORS. VERSUS STATE OF UTTAR PRADESH AND ANR.",
-              "1624": "T.P.(Crl.) No. FARIHA SALMAN @ FARIHA ABDUL SHAHID VERSUS FAHAD SALMAN",
-              "1625": "T.P.(Crl.) No. SARITA DEVI VERSUS DEEPAK GUPTA",
-              "1626": "T.P.(Crl.) No. DASTAGIRSAB AND ANR. VERSUS THE STATE OF KARNATAKA AND ORS."
-            },
-            "advocates": {
-              "1602": {
-                "pet": "SANJEET KUMAR TRIVEDI"
-              },
-              "1603": {
-                "pet": "RAJESH SINGH CHAUHAN"
-              },
-              "1611": {
-                "pet": "HARSIMRAN KAUR RAI"
-              },
-              "1612": {
-                "pet": "ANIRUDH SANGANERIA"
-              },
-              "1613": {
-                "pet": "PARMINDER SINGH"
-              },
-              "1617": {
-                "pet": "DUSHYANT PARASHAR"
-              },
-              "1619": {
-                "pet": "RANDHIR KUMAR OJHA"
-              },
-              "1625": {
-                "pet": "VISHAL ARUN MISHRA"
-              },
-              "1626": {
-                "pet": "OMKAR JAYANT"
-              }
-            },
-            "main": 26,
-            "supp": 0
-          },
-          "17": {
-            "coram": "HON'BLE MRS. JUSTICE V. MOHANA",
-            "total": "21",
-            "fresh": "",
-            "items": {
-              "1606": "T.P.(C) No. 2890/2026 SWETABEN DHAWAL VYAS VERSUS DHAWAL MANOJ VYAS",
-              "1607": "T.P.(C) No. 2880/2026 SARAH SIDDIQUI VERSUS JUNAID AZHAR SK",
-              "1608": "T.P.(C) No. 2873/2026 ROSHAN ABRAHAM ROY VERSUS DHANU ROY",
-              "1609": "T.P.(C) No. 2910/2026 M/S ALTIUS GROUP VERSUS M/S SWITCHER INDIA LLP",
-              "1610": "T.P.(C) No. 2896/2026 SHIVANI VERSUS AMAN YADAV AND ANR.",
-              "1611": "T.P.(C) No. 2919/2026 KAUMUDI SARANG VERSUS RAHUL KUMAR",
-              "1612": "T.P.(C) No. 2868/2026 SEEMA SHARMA VERSUS RAHUL SHARMA",
-              "1613": "T.P.(C) No. 2874/2026 RAVI WADHWANI VERSUS RANJEETA P. CHHABRIA",
-              "1614": "T.P.(C) No. 2863/2026 PRABHA SAHU VERSUS VIJAY KUMAR SAHU",
-              "1615": "T.P.(C) No. 2891/2026 RASHI KHATRI VERSUS AVISH PAUL",
-              "1616": "T.P.(C) No. 2921/2026 AAFREEN CHISTI VERSUS SAHIL MANSURI",
-              "1617": "T.P.(C) No. 2922/2026 HONEY HARIDAS VERSUS SAJIN JAMES",
-              "1618": "Diary No. 23593-2026 M/S SETHJII TRADING AND ANR. VERSUS HERO FINCORP LTD.",
-              "1619": "Diary No. 34301-2026 HARPRASAD AHIRWAR AND ORS. VERSUS HARI CHAND",
-              "1620": "T.P.(Crl.) No. 824/2026 NIGAM SHIVENDRA PRATAP SINGH ALIAS RINA VERSUS SHIVENDRA PRATAP SINGH DHYANENDRA PRATAP",
-              "1621": "T.P.(Crl.) No. GULSHAN JAISWAL VERSUS EXCLUSIVE LEASING AND FINANCE PRIVATE",
-              "1622": "T.P.(Crl.) No. M/S SHARMA ASSOCIATES AND ANR. VERSUS DUSHYANT KUMAR AGRAWAL AND ANR.",
-              "1623": "T.P.(Crl.) No. X VERSUS STATE OF UTTAR PRADESH AND ANR.",
-              "1624": "T.P.(Crl.) No. HEMRAJ VERSUS GEETABEN",
-              "1625": "T.P.(Crl.) No. JECKY KUMAR AGARWAL AND ORS. VERSUS SARIKA AGARWALA",
-              "1626": "T.P.(C) No. 2126/2026 MS SHREE SHYAM FOODS VERSUS ISHAN SNCKS AND NAMKIN PVT LTD AND ANR."
-            },
-            "advocates": {
-              "1609": {
-                "pet": "BRAJESH PANDEY &"
-              },
-              "1611": {
-                "pet": "RAMESHWAR PRASAD"
-              },
-              "1615": {
-                "pet": "SRIHARSH NAHUSH"
-              },
-              "1617": {
-                "pet": "DESHPANDE CHINMAY"
-              },
-              "1618": {
-                "pet": "VISHAL ARUN MISHRA"
-              },
-              "1622": {
-                "pet": "SUPREETA"
-              },
-              "1623": {
-                "pet": "V. MAHESHWARI & CO"
-              },
-              "1624": {
-                "pet": "YOGESH AHIRRAO &"
-              }
-            },
-            "main": 21,
-            "supp": 0
-          },
-          "1": {
-            "coram": "",
-            "total": "5",
-            "fresh": "",
-            "items": {
-              "1601": "Diary No. 45777-2026 DIMPLE AND ORS. VERSUS PRAKASH KUMAR SUTHAR",
-              "1602": "Diary No. 46696-2026 GUNACHITHRA S AND ANR. VERSUS HARAN PRASAD. V",
-              "1603": "T.P.(C) No. 2908/2026 GANNENA APARNA VERSUS CHITTURI NITHIN KUMAR",
-              "1604": "T.P.(C) No. 2888/2026 SANGEETA T. PRAJAPATI VERSUS ARJUN ALIAS ARJUN KUMAR",
-              "1605": "T.P.(C) No. 2935/2026 SONU KUMARI VERSUS FALVINDER SINGH"
-            },
-            "advocates": {},
-            "main": 5,
-            "supp": 0
-          }
-        },
         "Registrar": {
           "1": {
             "coram": "SH. APOORV SINGH, REGISTRAR",
@@ -6246,7 +6056,6 @@
     "2026-10-01": {
       "M_J_1": 836788,
       "M_C_1": 544202,
-      "M_S_1": 528245,
       "M_R_1": 531344
     }
   },
