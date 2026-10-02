@@ -1,8 +1,7 @@
 {
-  "generated_at": "2026-10-01T19:07:46.569982Z",
+  "generated_at": "2026-10-02T22:41:55.910847Z",
   "parser_version": 8,
   "window": [
-    "2026-10-02",
     "2026-10-05",
     "2026-10-06",
     "2026-10-07",
@@ -13,15 +12,15 @@
     "2026-10-14",
     "2026-10-15",
     "2026-10-16",
-    "2026-10-19"
+    "2026-10-19",
+    "2026-10-20"
   ],
   "by_date": {
     "2026-10-05": {
       "lists_found": [
         "Miscellaneous (main)",
         "Chamber (main)",
-        "Single Judge (main)",
-        "Registrar (main)"
+        "Single Judge (main)"
       ],
       "lists": {
         "Miscellaneous": {
@@ -2646,134 +2645,6 @@
               }
             },
             "main": 21,
-            "supp": 0
-          }
-        },
-        "Registrar": {
-          "1": {
-            "coram": "SH. APOORV SINGH, REGISTRAR",
-            "total": "30",
-            "fresh": "",
-            "items": {
-              "1": "Diary No. 59046-2026 MANI AND ANR. VERSUS UNION TERRITORY OF PUDUCHEERY",
-              "2": "Diary No. 49036-2026 ROYAL ENTERPRISES PARTNER AND ORS. VERSUS STATE OF KARNATAKA AND ORS.",
-              "3": "Diary No. 38123-2026 GOLDEN FOOD PRODUCTS INDIA VERSUS NAND KISHORE KALAL AND ANR.",
-              "4": "Diary No. 50316-2026 KONARK AQUATICS AND EXPORTS PVT. LTD VERSUS ANCHAM STUDIOS (P) LTD",
-              "5": "SLP(C) No. 21196/2019 C. JEYACHANDRA VERSUS THE BRANCH MANAGER SYNDICATE BANK AND",
-              "6": "SLP(C) No. 21147/2023 CHINNAPPAIAH VERSUS JAYARAMAREDDY S AND ORS.",
-              "7": "Crl.A. No. U.N. KURREY VERSUS SAVITRI TRIPATHI AND ORS.",
-              "8": "C.A. No. 5843/2023 DIWAKAR SHARMA VERSUS ANAND SONBHADRA AND ANR.",
-              "9": "Diary No. 46688-2023 RAM NIHOR AND ORS. VERSUS VISHWANATH AND ORS.",
-              "10": "SLP(C) No. 36386/2025 RAMGIRI @ CHOTI DEVI AND ORS. VERSUS GHAMANDI LAL (DEAD) THOUGH LRS. AND ANR.",
-              "11": "T.P.(C) No. 1624/2024 SHRUTI ASHUTOSH JHA VERSUS ASHUTOSH UDAY KANT JHA",
-              "12": "SLP(C) No. THE UNION OF INDIA AND ORS. VERSUS K. GOPALARAJU AND ORS.",
-              "13": "Crl.A. No. 1779/2026 PHOOL SINGH VERSUS STATE OF U.P.",
-              "14": "Diary No. 27055-2025 U. BALASUBRAMANIYAM VERSUS N VENKATESAN AND ORS.",
-              "15": "SLP(C) No. 30020/2025 RAJAN SINGH AND ANR. VERSUS BIMLA DEVI AND ORS.",
-              "16": "T.P.(C) No. 3663/2025 SHEETAL VERSUS VIKRANT",
-              "17": "T.P.(C) No. 3556/2025 ARCHANA VERSUS RAMPREET",
-              "18": "T.P.(C) No. 216/2026 MANISHA AHIRWAR VERSUS MUKESH SINGH",
-              "19": "T.P.(C) No. 57/2026 JAMMULA ANJALI VERSUS PARISAPOGU ALEXANDER",
-              "20": "Diary No. 74482-2025 UMESH SIDDAPPA PUTANI VERSUS THE STATE OF KARNATAKA AND ORS.",
-              "21": "SLP(Crl) No. 1740/2026 LAL CHATRANI AND ORS. VERSUS MAYA @ BHARTI CHATRANI AND ORS.",
-              "22": "T.P.(C) No. 571/2026 SHALINI JACOB VERSUS JACOB MATHEW",
-              "22.1": "Connected JACOB MATTHEW VERSUS SHALINI JACOB",
-              "23": "SLP(Crl) No. 8089/2026 SURENDRA KUMAR VERSUS STATE OF UTTAR PRADESH AND ANR.",
-              "24": "C.A. No. 8440/2026 UMA DEVI AND ORS. VERSUS PRAHLAD SINGH AND ORS.",
-              "25": "T.P.(C) No. 2408/2026 PRIYANKA NIDHI VERSUS ANKIT KUMAR",
-              "26": "T.P.(C) No. 1661/2026 ASHA DEVI VERSUS AMAN KUMAR",
-              "27": "SLP(C) No. 21729/2026 VIVEK YADAV VERSUS THE STATE OF U.P AND ORS.",
-              "27.1": "Connected STATE OF U.P. AND ORS. VERSUS M/S SHIV GIRI TRADERS",
-              "27.2": "Connected STATE OF U.P AND ORS. VERSUS M/S SHRI NANAK MINERALS PVT. LTD.",
-              "28": "T.P.(C) No. 2665/2026 SHIVANGI DIWAN VERSUS BIKASH SHARMA",
-              "29": "T.P.(C) No. 2667/2026 MAMTHA CHANDRA PRAKASH VERSUS AMIT KUMAR SONI",
-              "30": "SLP(Crl) No. ANURAG PAL VERSUS STATE OF CHHATTISGARH"
-            },
-            "advocates": {
-              "1": {
-                "pet": "SESHATALPA SAI BANDARU"
-              },
-              "5": {
-                "resp": "BRIJESH KUMAR TAMBER"
-              },
-              "11": {
-                "pet": "ABHISHEK KUMAR SINGH"
-              },
-              "12": {
-                "pet": "SHREEKANT NEELAPPA"
-              },
-              "14": {
-                "pet": "SARATH S JANARDANAN"
-              },
-              "19": {
-                "pet": "ANKOLEKAR GURUDATTA"
-              }
-            },
-            "main": 30,
-            "supp": 0
-          },
-          "2": {
-            "coram": "MS. GRACY L. BAWITLUNG, REGISTRAR",
-            "total": "30",
-            "fresh": "",
-            "items": {
-              "1": "Diary No. 54703-2026 ABHISHEK SHUKLA VERSUS NOOTAN ABHISHEK SHUKLA",
-              "2": "Diary No. 41821-2026 DIRECTORATE OF ENFORCEMENT VERSUS M/S ZO PRIVATE LIMITED",
-              "3": "SLP(C) No. 16608/2018 H.M. RAJU AND ORS. VERSUS H.M. KARI GOWDER (DECEASED) THROUGH LRS",
-              "3.1": "Connected H M RAJU AND ORS. VERSUS H M KARI GOWDER(DECEASED THROUGH LR.S.)",
-              "4": "C.A. No. 5347/2019 M.P. NALLATHAMBI VERSUS KARUNAKARAN AND ANR.",
-              "5": "SLP(C) No. 19774/2019 RAMAIAH (DEAD) THROUGH LRS VERSUS LAXMANA AND ANR.",
-              "6": "Crl.A. No. KATHIR VERSUS THE STATE REPRESENTED BY THE INSPECTOR OF",
-              "7": "SLP(C) No. 18009/2023 KARABASAMMA VERSUS SHABBIR AHMAMED (DEAD) THROUGH LR. AND",
-              "8": "SLP(C) No. 14545/2023 PRINCIPAL COMMISSIONER OF INCOME TAX 1 VERSUS M/S POSCO INDIA PVT LTD.",
-              "9": "SLP(C) No. K.T. KRISHNAKANTH AND ORS. VERSUS VADDAPALLI SRIRAM (DEAD) AND ANR.",
-              "10": "SLP(C) No. 13860/2025 S. MANICKAM VERSUS C.R. RANGAIAH AND ORS.",
-              "10.1": "Connected C.R. RANGAIAH VERSUS THE STATE OF TAMIL NADU AND ORS. JAYASREE NARASIMH",
-              "11": "SLP(C) No. 15985/2025 AXIS BANK LTD. VERSUS RAMINDER SINGH WADHWA AND ORS.",
-              "12": "SLP(C) No. 18396/2025 SEETHA LAKSHMI VERSUS ACKO GENERAL INSURANCE COMPANY LIMITED",
-              "13": "SLP(C) No. 22286/2025 CHETABEN VERSUS ASHWINBHAI MAGANLAL VASA",
-              "14": "SLP(C) No. 28310/2025 PRITI GUPTA VERSUS KRISHNA KUMAR GUPTA",
-              "15": "T.P.(C) No. 1138/2026 RANU CHAURASIYA VERSUS AMAR CHAURASIYA AND ANR.",
-              "16": "T.P.(Crl.) No. 910/2025 SHIVAM SINGH VERSUS PROTIUM FINANCE LIMITED AND ANR.",
-              "17": "T.P.(C) No. 2969/2025 NARALA ASWANI VERSUS HEMANTH KUMAR BATTULA",
-              "18": "SLP(C) No. 33609/2025 DIPESH HIRACHAND SHAH VERSUS DAYABHAI NENSHIBHAI SHAH AND ANR.",
-              "19": "T.P.(C) No. 3418/2025 MAYURIBEN VERSUS VISHAL ASHOKBHAI CHAUDHARI",
-              "20": "Diary No. 71148-2025 RAJESH MUKHIYAN VERSUS CENTRAL BUREAU OF INVESTIGATION AND ORS.",
-              "21": "T.P.(C) No. 828/2026 MANCY BHATT VERSUS AMIT BANSAL AND ANR.",
-              "22": "Crl.A. No. 2251/2026 KUMAR VERSUS STATE OF TAMIL NADU",
-              "23": "SLP(C) No. 16214/2026 BAABJI IRON INDUSTRIES VERSUS THE STATE OF RAJASTHAN AND ANR.",
-              "24": "SLP(C) No. 17632/2026 K SARADA DEVI VERSUS MUNICIPAL CORPORATION OF DELHI AND ANR.",
-              "25": "SLP(Crl) No. MOHIT VERSUS STATE OF U.P. AND ORS.",
-              "26": "T.P.(C) No. 1752/2026 EKTA MANISHBHAI SHARMA VERSUS MANISH SURESHKUMAR SHARMA",
-              "27": "SLP(C) No. 24862/2026 WANGKHEM RANJAN AND ANR. VERSUS MANIPUR UNIVERSITY AND ORS.",
-              "28": "T.P.(C) No. 2353/2026 DEEKSHA AGRAWAL VERSUS SURAJ NATHANI",
-              "29": "T.P.(C) No. 2309/2026 SUREKHA S. VERSUS T. CHANDRASEGARAN",
-              "30": "SLP(Crl) No. SIDHARTH SIKKA VERSUS STATE OF CHHATTISGARH"
-            },
-            "advocates": {
-              "1": {
-                "pet": "DEVENDRA KUMAR"
-              },
-              "3.1": {
-                "resp": "SHOBHA RAMAMOORTHY"
-              },
-              "5": {
-                "pet": "PURUSHOTTAM SHARMA"
-              },
-              "18": {
-                "pet": "JURISTRUST LAW OFFICES"
-              },
-              "21": {
-                "pet": "PRASHANT SHRIKANT"
-              },
-              "28": {
-                "pet": "JASWANT SINGH RAWAT"
-              },
-              "29": {
-                "pet": "ANANTA PRASAD MISHRA"
-              }
-            },
-            "main": 30,
             "supp": 0
           }
         }
@@ -5607,8 +5478,7 @@
     "2026-10-05": {
       "M_J_1": 959849,
       "M_C_1": 555117,
-      "M_S_1": 531990,
-      "M_R_1": 521454
+      "M_S_1": 531990
     },
     "2026-10-06": {
       "M_J_1": 1168660,
