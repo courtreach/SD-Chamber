@@ -47,6 +47,34 @@ Dropbox is reachable, enforced by Dropbox itself) and **one folder per brief**.
   `sd-chamber-files` with KV + both secrets, and connected from the app. Verified from
   outside: home page, 401 without sign-in, CORS for the app origin, KV-backed callback guard.
 
+## My work rebuilt · Sort by on every register · conference Word files (Oct 2026)
+
+- **My work** (`renderMyWork`, colleagues): navy hero (greeting, date, 4 tiles — need your
+  answer / active cases / hearings next 7 days / open directions, roster standing), "Needs your
+  answer" (`.act-card`: takeover accept/decline, acknowledge/object, Files), "Coming up — next
+  7 days" (`.up-row` date block + Ct/Item + Files; from `activeListings` + live nextDates),
+  directions, and **My cases** = the SAME `briefListHTML(list,{edit:false})` as the Brief
+  register with search, Live/Concluded/All chips and Sort by (default next hearing).
+- **`briefListHTML`** — the register's table + cards extracted so both screens share them.
+- **Sort by** (`sortSel(key,options,def)` / `sortVal` / `wireSort`, remembered per person in
+  localStorage `sd-sort:<key>`): Brief register + My work (`BRIEF_SORTS`, `sortBriefs`: serial
+  ↓/↑, title A–Z/Z–A, next hearing (`nextHearingOf`), date came in ↓/↑), Files screen
+  ("papers": by number = grouped/islands; name/newest/oldest/largest = flat list), Saved cause
+  lists ("causelists": by the date IN the name, newest/oldest), Leave register ("leave": date
+  ↓/↑ by month, or one block per colleague), credit register ("credit": date ↓/↑, matter A–Z,
+  credit ↓).
+- **Conference → New Word file** (`newConferenceNote(key, kind)`): on a conference tied to a
+  case (`c.briefId`) and editable by the person, "Dictation" / "Instructions" create
+  `N<serial>[.n] <Short title> - Dictated Note|Instruction Note - DD.MM.YYYY.docx` in the case
+  folder (ensureCaseFolder first; ASD .1/.2 rule via planNumber), built in-browser by
+  `makeNoteDocx` (stored ZIP with real CRC32; Garamond 14 via styles docDefaults, A4 pgSz,
+  heading/serial/numbers/KIND/conference line, numbered paragraphs = the conference's notes so
+  far), then `editInWordForm` (Open in Word / Download / Replace with edited version).
+- Tested in demo: My work (hero, sections, Files buttons, sort/filters, remembered sort),
+  register name/hearing sorts, leave + credit sorts, a listing with a 6 pm conference → the
+  card's Dictation → N001 … Dictated Note … in "Wipro Ltd. v ITO (001)", rendered by
+  docx-preview with the note carried in.
+
 ## Deleting a wrong entry + closing serial gaps (Oct 2026)
 
 Owner: "Make provision for a wrong entry and deletion option … the app should automatically shift

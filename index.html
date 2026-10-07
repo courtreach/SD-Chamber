@@ -411,10 +411,45 @@ label{display:block;font-size:11.5px;font-weight:500;color:var(--ink-2);letter-s
 .rg-warn{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:0 0 12px}
 .rg-warn .chip{background:var(--warn-bg);color:var(--warn);cursor:pointer;border:none;font-family:inherit}
 .rg-tools{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+/* My work (rebuilt) */
+.mw-hero{background:linear-gradient(135deg,var(--sidebar) 0%,#1d2630 100%);color:#fff;border-radius:var(--r-lg);padding:18px 20px 16px;box-shadow:var(--sh-2)}
+.mw-hello{font-family:var(--serif);font-size:24px;font-weight:450;letter-spacing:-.01em}
+.mw-date{font-size:12.5px;color:var(--sidebar-ink);margin-top:2px}
+.mw-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:14px}
+.mw-stat{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.09);border-radius:11px;padding:10px 12px}
+.mw-stat .v{font-family:var(--serif);font-size:26px;line-height:1.1}
+.mw-stat .l{font-size:11.5px;color:var(--sidebar-ink);margin-top:2px}
+.mw-stat.flag{border-color:#cbb682}.mw-stat.flag .v{color:#cbb682}
+.mw-standing2{font-size:12px;color:var(--sidebar-ink);margin-top:12px}
+.mw-standing2 b{color:#cbb682}
+@media (max-width:640px){ .mw-stats{grid-template-columns:repeat(2,minmax(0,1fr))} .mw-hello{font-size:21px} }
+.mw-sec{margin-top:22px}
+.mw-sec-h{display:flex;align-items:baseline;gap:8px;font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3);font-weight:700;margin-bottom:9px}
+.mw-sec-h span{color:var(--accent-ink)}
+.act-card{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:11px 13px;margin-bottom:9px;box-shadow:var(--sh-1)}
+.act-main{display:block;width:100%;text-align:left;background:none;border:none;padding:0;cursor:pointer;font-family:inherit}
+.act-t{font-family:var(--serif);font-size:15.5px;color:var(--ink)}
+.act-s{font-size:12.5px;color:var(--ink-2);margin-top:3px}
+.act-btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.up-row{display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:9px 12px;margin-bottom:8px;box-shadow:var(--sh-1)}
+.up-date{flex:none;width:60px;text-align:center;border-radius:10px;background:var(--accent-soft);color:var(--accent-ink);padding:5px 0;line-height:1.15}
+.up-date .d{font-family:var(--serif);font-size:21px}
+.up-date .m{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+.up-date.today{background:var(--urgent);color:#fff}
+.conf-docs{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:10px 0;padding:9px 10px;border:1px dashed var(--line-2);border-radius:10px;background:var(--surface)}
+.conf-docs-h{font-size:12px;font-weight:600;color:var(--ink-2);margin-right:auto;display:inline-flex;align-items:center;gap:5px}.up-date.tom{background:var(--warn-bg);color:var(--warn)}
+.up-main{flex:1;min-width:0;cursor:pointer;background:none;border:none;text-align:left;padding:0;font-family:inherit}
+.up-t{font-family:var(--serif);font-size:15px;color:var(--ink);line-height:1.3}
+.up-s{font-size:12px;color:var(--ink-2);margin-top:3px}
+@media (max-width:600px){ .up-row{flex-wrap:wrap} .up-row .btn-files{margin-left:72px} }
+
 .rg-search{flex:1;min-width:220px;position:relative}
 .rg-search input{width:100%;padding:10px 12px 10px 34px;border:1px solid var(--line-2);border-radius:10px;background:var(--surface);font-size:14px}
 .rg-search .ti{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--ink-3);font-size:16px}
 .rg-chips{display:flex;gap:6px;flex-wrap:wrap}
+.sortsel{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line-2);background:var(--surface);border-radius:10px;padding:0 4px 0 10px;color:var(--ink-3);flex:none}
+.sortsel select{border:none;background:transparent;width:auto;padding:8px 6px;font-size:13px;color:var(--ink);cursor:pointer}
+.sortsel select:focus{box-shadow:none;outline:none}
 .rg-chip{border:1px solid var(--line-2);background:var(--surface);color:var(--ink-2);border-radius:20px;padding:5px 11px;font-size:12.5px;cursor:pointer;white-space:nowrap;font-family:inherit}
 .rg-chip b{font-weight:600;margin-left:4px;color:var(--ink-3)}
 .rg-chip.on{background:var(--ink);border-color:var(--ink);color:#fff}
@@ -2507,6 +2542,8 @@ function renderNow(){
   stopConfTimer();   // re-established below if a conference is running
   $("tab-now").innerHTML=`<div class="now-wrap">${confSectionHtml()}</div>`;
   wireConf();
+  document.querySelectorAll("#tab-now [data-confdoc]").forEach(x=>x.onclick=e=>{ e.stopPropagation(); const v=x.dataset.confdoc, i=v.lastIndexOf("|"); newConferenceNote(v.slice(0,i), v.slice(i+1)); });
+  wireFilesBtns($("tab-now"));
   if(document.querySelector("#tab-now [data-since]")) _confTimerId=setInterval(_tickConfTimers,1000);
 }
 function confSectionHtml(){
@@ -2566,6 +2603,9 @@ function confSectionHtml(){
           <div class="conf-updates-h">${canEdit?"Post an update or estimate":"Ask for a status"}</div>
           <div class="conf-inrow">${canEdit?`<input type="text" placeholder="e.g. ~20 min more" data-statusin="${esc(c.key)}"><button class="tbtn sm go" data-statusbtn="${esc(c.key)}">Post</button>`:`<input type="text" placeholder="Ask the attending colleague…" data-askin="${esc(c.key)}"><button class="tbtn sm" data-askbtn="${esc(c.key)}">Ask</button>`}</div>
         </div>
+        ${(c.briefId&&canEdit)?`<div class="conf-docs"><span class="conf-docs-h"><span class="ic ti ti-file-type-doc"></span>New Word file in the case folder</span>
+          <button class="tbtn sm" data-confdoc="${esc(c.key)}|Dictated Note"><span class="ic ti ti-microphone"></span>Dictation</button>
+          <button class="tbtn sm" data-confdoc="${esc(c.key)}|Instruction Note"><span class="ic ti ti-list-check"></span>Instructions</button>${filesBtn(c.briefId)}</div>`:""}
         <div class="conf-notes">
           <div class="conf-notes-h"><span>Notes from the conference${c.briefId?`<span class="conf-savedhint">saved to the brief</span>`:""}</span>${notes.length?`<button class="tbtn sm" data-noteexport="${esc(c.key)}"><span class="ic ti ti-file-type-doc"></span>Export to Word</button>`:""}</div>
           <div class="cnote-list">${noteList}</div>
@@ -2915,69 +2955,77 @@ function holidayRangeForm(){
 // A chamber colleague's personal home — their matters, hearings, the
 // acknowledgments they owe, a one-tap availability set, and roster standing.
 // Shown on the Work-board tab for juniors (the distribution board is for Staff).
+/* ===== MY WORK — a colleague's home, rebuilt on the register (owner, Oct 2026) =====
+   "Rework the my work tab. It is so basic and crude. See our other registers and include files
+   button there." Greeting + four tiles, what needs action now, the next seven days of hearings,
+   directions, and the colleague's own cases as a proper register (the SAME table/cards as the
+   Brief register, with search, Live/Concluded/All, Sort by and a Files button on every case). */
+let _mwFilter="live", _mwSearch="";
+const _addDaysISO=(iso,n)=>{ const d=new Date(iso+"T00:00"); d.setDate(d.getDate()+n); return d.toLocaleDateString("en-CA"); };
 function renderMyWork(){
-  $("pageTitle").textContent="My work"; $("pageSub").textContent="Your matters, hearings and availability";
+  $("pageTitle").textContent="My work"; $("pageSub").textContent="Your cases, hearings and directions";
   $("topbarAction").innerHTML="";
-  const mine=Object.values(briefs).filter(b=>b.status!=="disposed"&&idIn(b.assignedTo,me.uid));
-  const unacked=mine.filter(needsMyAck);
-  const soon=mine.filter(isImminent);
-  const withDate=mine.filter(b=>b.nextDate).sort((a,b)=>a.nextDate.localeCompare(b.nextDate));
-  const list=[...withDate, ...mine.filter(b=>!b.nextDate)];
-  const myListings=activeListings(me.uid).sort((a,b)=>a.date.localeCompare(b.date));   // causelist matters
-  const soonListings=myListings.filter(x=>_imminentDate(x.date));
-  const tasks=myTasks(me.uid);   // open directions from the Senior, with due dates
+  const today=todayISO(), wk=_addDaysISO(today,7), tom=_addDaysISO(today,1);
+  const mineAll=Object.values(briefs).filter(b=>isCaseBrief(b)&&idIn(b.assignedTo,me.uid));
+  const live=mineAll.filter(b=>b.status!=="disposed"), done=mineAll.filter(b=>b.status==="disposed");
+  const unacked=live.filter(needsMyAck);
+  const rreqs=Object.values(briefs).filter(b=>b.status!=="disposed"&&b.reassignReq&&idIn(b.reassignReq.to,me.uid));
+  const tasks=myTasks(me.uid), overdue=tasks.filter(({d})=>d.dueDate&&_dueClass(d.dueDate)==="overdue").length;
+  // the next seven days: my day-sheet listings, plus my cases' next dates, one row each
+  const up=[], seen=new Set();
+  activeListings(me.uid).forEach(x=>{ if(x.date<=wk){ const b=x.e.briefId&&briefs[x.e.briefId]; up.push({date:x.date,b,e:x.e}); seen.add((x.e.briefId||"")+"|"+x.date); } });
+  live.forEach(b=>{ if(b.nextDate&&b.nextDate>=today&&b.nextDate<=wk&&!seen.has(b.id+"|"+b.nextDate)) up.push({date:b.nextDate,b}); });
+  up.sort((a,z)=>a.date.localeCompare(z.date));
   const ros=effectiveRoster(), pos=ros.indexOf(me.uid), nextUpIdx=ros.length?roster.pointer%ros.length:0;
   const turns=pos>=0?((pos-nextUpIdx+ros.length)%ros.length):null;
-  const metrics=`<div class="board-metrics">
-    <div class="metric ${unacked.length?'flag':''}"><div class="lab">To acknowledge</div><div class="val">${unacked.length}</div></div>
-    <div class="metric"><div class="lab">My active matters</div><div class="val">${mine.length+myListings.length}</div></div>
-    <div class="metric ${(soon.length+soonListings.length)?'flag':''}"><div class="lab">Coming up ≤4d</div><div class="val">${soon.length+soonListings.length}</div></div>
-    <div class="metric"><div class="lab">Roster</div><div class="val">${pos<0?'—':turns===0?'Next':'#'+(pos+1)}</div></div>
-  </div>`;
-  // takeover requests from colleagues — accept moves the matter to me
-  const rreqs=Object.values(briefs).filter(b=>b.status!=="disposed"&&b.reassignReq&&idIn(b.reassignReq.to,me.uid));
-  const rreqSec=rreqs.length?`<div class="section-label" style="margin-top:22px">Takeover requests</div>
-    ${rreqs.map(b=>`<div class="mw-card new"><button class="mw-open" data-brief="${b.id}"><div class="mw-title">${esc(labelOf(b))}</div>
-      <div class="mw-meta"><span class="ti ti-arrows-exchange" style="color:var(--accent-ink)"></span> ${esc(nameOf(b.reassignReq.from))} asks you to take this over${b.nextDate?` · next ${fmtDate(b.nextDate)}`:''}</div></button>
-      <div class="row" style="gap:6px;margin-top:8px"><button class="btn sm" data-rraccept="${b.id}"><span class="ic ti ti-check"></span>Accept — take it over</button><button class="btn ghost sm" data-rrdecline="${b.id}">Decline</button></div></div>`).join("")}`:"";
-  const unackedSec=unacked.length?`<div class="section-label" style="margin-top:22px">New — please acknowledge</div>
-    ${unacked.map(b=>`<div class="mw-card new"><button class="mw-open" data-brief="${b.id}"><div class="mw-title">${esc(labelOf(b))}</div><div class="mw-meta">${esc(b.caseNo||b.diaryNo||b.matterType)}${b.nextDate?` · next ${fmtDate(b.nextDate)}`:''}</div></button>
-      <div class="row" style="gap:6px;margin-top:8px"><button class="btn sm" data-ackm="${b.id}"><span class="ic ti ti-check"></span>Acknowledge</button><button class="btn ghost sm" data-objm="${b.id}">Object</button></div></div>`).join("")}`:"";
-  // register of THIS colleague's cases — live (currently theirs) and old
-  // (concluded), each numbered serially under its own heading.
-  const myOld=Object.values(briefs).filter(b=>b.status==="disposed"&&idIn(b.assignedTo,me.uid))
-    .sort((a,b)=>(b.nextDate||"").localeCompare(a.nextDate||"")||(a.caseTitle||"").localeCompare(b.caseTitle||""));
-  const regRow=(b,i)=>{const st=STATUS[b.status];return `<button class="mw-card" data-brief="${b.id}">
-      <div class="mw-title"><span class="mw-sn">${i+1}</span>${b.priority?'<span class="ti ti-flag-3" style="color:var(--urgent);font-size:13px"></span> ':''}${b.chamberNo?`<span class="file-badge">#${esc(b.chamberNo)}</span> `:''}${esc(labelOf(b))}${needsMyAck(b)?'<span class="new-chip">new</span>':''}</div>
-      <div class="mw-meta"><span class="chip ${st.cls}"><span class="dot"></span>${st.label}</span>${b.nextDate?`<span class="${isImminent(b)&&b.status!=='disposed'?'mw-imm':'muted'}">${isImminent(b)&&b.status!=='disposed'?'<span class="ti ti-flame"></span> ':''}${fmtDateY(b.nextDate)}</span>`:'<span class="muted">no date</span>'}${b.caseNo||b.diaryNo?`<span class="mono muted" style="font-size:11px">${esc(b.caseNo||('Dy. '+b.diaryNo))}</span>`:''}</div>
-    </button>`;};
-  const matters= list.length?`<div class="section-label" style="margin-top:22px">My cases — live <span class="muted" style="font-weight:400">${list.length}</span></div>
-    ${list.map(regRow).join("")}`:"";
-  const oldSec= myOld.length?`<div class="section-label" style="margin-top:22px">My cases — concluded <span class="muted" style="font-weight:400">${myOld.length}</span></div>
-    ${myOld.map(regRow).join("")}`:"";
-  // causelist matters the clerk has listed me on (distinct from the register)
-  const listedSec= myListings.length?`<div class="section-label" style="margin-top:22px">Listed for hearing <span class="muted" style="font-weight:400">${myListings.length}</span></div>
-    ${myListings.map(x=>{const R=resolveEntry(x.e,x.date); const imm=_imminentDate(x.date); return `<button class="mw-card" data-goday="${x.date}">
-      <div class="mw-title">${esc(R.title)}</div>
-      <div class="mw-meta"><span class="chip st-received"><span class="dot"></span>Court ${esc(x.e.courtNo||'—')} · Item ${esc(x.e.itemNo||'—')}</span><span class="${imm?'mw-imm':'muted'}">${imm?'<span class="ti ti-flame"></span> ':''}${fmtDateY(x.date)}</span>${x.e.time?`<span class="mono muted" style="font-size:11px">${esc(x.e.time)}</span>`:''}</div>
-    </button>`;}).join("")}`:"";
-  // WORK TABLE — every open direction (from the Senior or self-noted), dated
-  // ones flagged as they near; tap opens the matter to tick it done.
-  const tasksSec=tasks.length?`<div class="section-label" style="margin-top:22px">My work — directions &amp; notes <span class="muted" style="font-weight:400">${tasks.length}</span></div>
-    ${tasks.map(({b,d})=>{const dc=d.dueDate?_dueClass(d.dueDate):'';return `<button class="task-card ${dc}" data-brief="${b.id}">
-      <span class="ti ti-clipboard-text" style="font-size:16px;color:var(--accent-ink);margin-top:1px"></span>
-      <div><div class="task-t">${esc(d.text)}</div><div class="task-m">${esc(labelOf(b))}${d.dueDate?` · Due ${fmtDateY(d.dueDate)}`:' · no date'}${dc==='overdue'?' · <b style="color:var(--danger)">overdue</b>':dc==='soon'?' · <b style="color:var(--warn)">due soon</b>':''}</div></div>
-    </button>`;}).join("")}`:"";
-  const emptyState=(!mine.length&&!myListings.length&&!myOld.length)?`<div class="muted" style="font-size:13px;margin-top:22px">No matters assigned or listed for you yet.</div>`:"";
-  const standing=`<div class="mw-standing muted">You're ${pos<0?'not in the roster':turns===0?'<b>next up</b>':'#'+(pos+1)+' in the rotation'+(turns!=null&&turns>0?` · next up in ${turns} turn${turns>1?'s':''}`:'')} · ${activeCount(me.uid)} active · ${fmtPts(lifetimeCount(me.uid))} lifetime</div>`;
-  $("tab-board").innerHTML=metrics+rreqSec+unackedSec+tasksSec+matters+oldSec+listedSec+emptyState+standing;
+  const hr=new Date().getHours(), hello=hr<12?"Good morning":hr<17?"Good afternoon":"Good evening";
+  const first=String(me.name||"").split(" ")[0];
+  const tile=(v,l,flag)=>`<div class="mw-stat${flag?" flag":""}"><div class="v">${v}</div><div class="l">${l}</div></div>`;
+  const hero=`<div class="mw-hero"><div class="mw-hello">${hello}${first?", "+esc(first):""}</div>
+      <div class="mw-date">${new Date().toLocaleDateString("en-IN",{weekday:"long",day:"numeric",month:"long",year:"numeric"})}</div>
+      <div class="mw-stats">${tile(unacked.length+rreqs.length,"Need your answer",unacked.length+rreqs.length)}${tile(live.length,"Active cases")}${tile(up.length,"Hearings · next 7 days",up.some(u=>u.date<=tom))}${tile(tasks.length,overdue?`Directions · ${overdue} overdue`:"Open directions",overdue)}</div>
+      <div class="mw-standing2">You're ${pos<0?"not in the roster":turns===0?"<b>next up</b>":"#"+(pos+1)+" in the rotation"+(turns!=null&&turns>0?` · next up in ${turns} turn${turns>1?"s":""}`:"")} · ${activeCount(me.uid)} active · ${fmtPts(lifetimeCount(me.uid))} lifetime</div></div>`;
+  const sec=(t,n,body)=>`<div class="mw-sec"><div class="mw-sec-h">${t}${n!=null?` <span>${n}</span>`:""}</div>${body}</div>`;
+  const serialChip=b=>b&&serialNum(b)!=null?`<span class="fv-num">${pad3(serialNum(b))}</span> `:"";
+  const actions=(rreqs.length||unacked.length)?sec("Needs your answer",rreqs.length+unacked.length,
+    rreqs.map(b=>`<div class="act-card"><button class="act-main" data-brief="${b.id}"><div class="act-t">${serialChip(b)}${esc(labelOf(b))}</div>
+      <div class="act-s"><span class="ti ti-arrows-exchange"></span> ${esc(nameOf(b.reassignReq.from))} asks you to take this over${b.nextDate?` · next ${fmtDateY(b.nextDate)}`:""}</div></button>
+      <div class="act-btns"><button class="btn sm" data-rraccept="${b.id}"><span class="ic ti ti-check"></span>Take it over</button><button class="btn ghost sm" data-rrdecline="${b.id}">Decline</button>${filesBtn(b.id)}</div></div>`).join("")+
+    unacked.map(b=>`<div class="act-card"><button class="act-main" data-brief="${b.id}"><div class="act-t">${serialChip(b)}${esc(labelOf(b))}</div>
+      <div class="act-s"><span class="ti ti-bell"></span> Newly assigned to you${b.caseNo||b.diaryNo?` · ${esc(b.caseNo||("Dy. "+b.diaryNo))}`:""}${b.nextDate?` · next ${fmtDateY(b.nextDate)}`:""}</div></button>
+      <div class="act-btns"><button class="btn sm" data-ackm="${b.id}"><span class="ic ti ti-check"></span>Acknowledge</button><button class="btn ghost sm" data-objm="${b.id}">Object</button>${filesBtn(b.id)}</div></div>`).join("")):"";
+  const dayChip=iso=>{ const d=new Date(iso+"T00:00"); const cls=iso===today?"today":iso===tom?"tom":"";
+    return `<div class="up-date ${cls}"><div class="m">${iso===today?"Today":iso===tom?"Tomorrow":d.toLocaleDateString("en-IN",{weekday:"short"})}</div><div class="d">${d.getDate()}</div><div class="m">${d.toLocaleDateString("en-IN",{month:"short"})}</div></div>`; };
+  const upcoming=up.length?sec("Coming up — next 7 days",up.length,up.map(u=>{ const R=u.e?resolveEntry(u.e,u.date):null; const t=R?R.title:labelOf(u.b);
+      return `<div class="up-row">${dayChip(u.date)}<button class="up-main" ${u.b?`data-brief="${u.b.id}"`:`data-goday="${u.date}"`}>
+        <div class="up-t">${serialChip(u.b)}${esc(t)}</div>
+        <div class="up-s">${u.e?`Court ${esc(u.e.courtNo||"—")} · Item ${esc(u.e.itemNo||"—")}${u.e.time?" · "+esc(u.e.time):""}${u.e.counsel?" · "+esc(u.e.counsel):""}`:"Next date"}${R&&R.bench?` · ${esc(shortBench(R.bench))}`:""}</div></button>
+        ${filesBtn(u.b?u.b.id:"")}</div>`; }).join("")):"";
+  const dirs=tasks.length?sec("Directions &amp; tasks",tasks.length,tasks.map(({b,d})=>{ const dc=d.dueDate?_dueClass(d.dueDate):"";
+      return `<button class="task-card ${dc}" data-brief="${b.id}"><span class="ti ti-clipboard-text" style="font-size:16px;color:var(--accent-ink);margin-top:1px"></span>
+        <div><div class="task-t">${esc(d.text)}</div><div class="task-m">${serialChip(b)}${esc(labelOf(b))}${d.dueDate?` · due ${fmtDateY(d.dueDate)}`:" · no date"}${dc==="overdue"?' · <b style="color:var(--danger)">overdue</b>':dc==="soon"?' · <b style="color:var(--warn)">due soon</b>':""}</div></div></button>`; }).join("")):"";
+  // my cases — the register itself
+  const counts={live:live.length, done:done.length, all:mineAll.length};
+  let list=_mwFilter==="done"?done:_mwFilter==="all"?mineAll:live;
+  const q=_mwSearch.trim().toLowerCase();
+  if(q) list=list.filter(b=>{ const n=serialNum(b); return (n!=null&&(String(n)===q||pad3(n)===q))||labelOf(b).toLowerCase().includes(q)||(b.caseNo||"").toLowerCase().includes(q)||(b.diaryNo||"").includes(q)||(b.aor||"").toLowerCase().includes(q); });
+  list=sortBriefs(list, sortVal("mywork","hearing"));
+  const cases=sec("My cases",null,`<div class="rg-tools"><div class="rg-search"><span class="ti ti-search"></span><input id="mwSearch" placeholder="Search serial, title, case no., AoR" value="${esc(_mwSearch)}" autocomplete="off"></div>
+      ${sortSel("mywork",BRIEF_SORTS,"hearing")}
+      <div class="rg-chips">${[["live","Live"],["done","Concluded"],["all","All"]].map(([k,l])=>`<button class="rg-chip ${_mwFilter===k?"on":""}" data-mwf="${k}">${l}<b>${counts[k]}</b></button>`).join("")}</div></div>
+    ${list.length?briefListHTML(list,{edit:false}):`<div class="empty"><span class="ic ti ti-folder-open"></span>${mineAll.length?"No cases match this view.":"No cases assigned to you yet."}</div>`}`);
+  $("tab-board").innerHTML=hero+actions+upcoming+dirs+cases;
   document.querySelectorAll("[data-rraccept]").forEach(x=>x.onclick=async e=>{e.stopPropagation();await acceptReassign(x.dataset.rraccept);});
   document.querySelectorAll("[data-rrdecline]").forEach(x=>x.onclick=async e=>{e.stopPropagation();await declineReassign(x.dataset.rrdecline);});
-  document.querySelectorAll("[data-goday]").forEach(x=>x.onclick=()=>{ dsDate=x.dataset.goday; watchDaysheet(); selectTab("today"); });
+  document.querySelectorAll("#tab-board [data-goday]").forEach(x=>x.onclick=()=>{ dsDate=x.dataset.goday; watchDaysheet(); selectTab("today"); });
   document.querySelectorAll("[data-ackm]").forEach(x=>x.onclick=async e=>{e.stopPropagation();await acknowledge(x.dataset.ackm);});
   document.querySelectorAll("[data-objm]").forEach(x=>x.onclick=e=>{e.stopPropagation();objectForm(x.dataset.objm);});
+  document.querySelectorAll("[data-mwf]").forEach(x=>x.onclick=()=>{ _mwFilter=x.dataset.mwf; renderMyWork(); });
+  $("mwSearch").oninput=e=>{ _mwSearch=e.target.value; renderMyWork(); const el=$("mwSearch"); el.focus(); el.setSelectionRange(el.value.length,el.value.length); };
+  wireSort($("tab-board"), renderMyWork);
   bindClicks($("tab-board"));
 }
+
 function renderBoard(){
   if(me.role==="junior") return renderMyWork();
   const active=Object.values(briefs).filter(b=>b.status!=="disposed");
@@ -4975,6 +5023,63 @@ function closeGapsForm(intro){
     catch(e){ if($("cgMsg")) $("cgMsg").textContent="Stopped: "+e.message; $("cgNo").disabled=false; } };
 }
 
+/* ---------------- a new Word file for a conference (owner, Oct 2026) ----------------
+   "The conference tab should have an option to open a new word file in the case folder either
+   for dictation or instruction which will be autonamed in the case folder."
+   Named the owner's way for notes: N<serial>[.n] <Short title> - Dictated Note - DD.MM.YYYY.docx
+   (or "Instruction Note"), in his note style — Garamond 14, A4, numbered paragraphs — with the
+   case heading, and any notes already taken in the conference carried in. It is saved into the
+   case's folder (folder and serial made first if the case has none), then opens in Word. */
+const _crcT=(()=>{ const t=new Uint32Array(256); for(let n=0;n<256;n++){ let c=n; for(let k=0;k<8;k++) c=c&1?0xEDB88320^(c>>>1):c>>>1; t[n]=c>>>0; } return t; })();
+const _crc32=b=>{ let x=0xFFFFFFFF; for(let i=0;i<b.length;i++) x=_crcT[(x^b[i])&0xFF]^(x>>>8); return (x^0xFFFFFFFF)>>>0; };
+function _zipStored(entries){                       // a valid ZIP (stored) — all a .docx needs
+  const enc=new TextEncoder(), parts=[], central=[]; let off=0;
+  for(const [name,text] of entries){ const nb=enc.encode(name), data=enc.encode(text), crc=_crc32(data);
+    const lh=new Uint8Array(30+nb.length), lv=new DataView(lh.buffer);
+    lv.setUint32(0,0x04034b50,true); lv.setUint16(4,20,true); lv.setUint32(14,crc,true); lv.setUint32(18,data.length,true); lv.setUint32(22,data.length,true); lv.setUint16(26,nb.length,true); lh.set(nb,30);
+    const ch=new Uint8Array(46+nb.length), cv=new DataView(ch.buffer);
+    cv.setUint32(0,0x02014b50,true); cv.setUint16(4,20,true); cv.setUint16(6,20,true); cv.setUint32(16,crc,true); cv.setUint32(20,data.length,true); cv.setUint32(24,data.length,true); cv.setUint16(28,nb.length,true); cv.setUint32(42,off,true); ch.set(nb,46);
+    parts.push(lh,data); central.push(ch); off+=lh.length+data.length; }
+  const cd=central.reduce((a,c)=>a+c.length,0), eo=new Uint8Array(22), ev=new DataView(eo.buffer);
+  ev.setUint32(0,0x06054b50,true); ev.setUint16(8,entries.length,true); ev.setUint16(10,entries.length,true); ev.setUint32(12,cd,true); ev.setUint32(16,off,true);
+  return new Blob([...parts,...central,eo],{type:"application/vnd.openxmlformats-officedocument.wordprocessingml.document"});
+}
+const _x=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function makeNoteDocx({heading, sub, kind, meta, paras}){
+  const P=(t,{b,c,u,sz,after}={})=>`<w:p><w:pPr>${c?'<w:jc w:val="center"/>':""}<w:spacing w:after="${after??160}"/></w:pPr><w:r><w:rPr>${b?"<w:b/>":""}${u?'<w:u w:val="single"/>':""}${sz?`<w:sz w:val="${sz}"/>`:""}</w:rPr><w:t xml:space="preserve">${_x(t)}</w:t></w:r></w:p>`;
+  const body=[P(heading,{b:1,c:1,sz:30,after:60}), sub?P(sub,{c:1,after:200}):"", P(kind.toUpperCase(),{b:1,c:1,u:1,after:120}), meta?P(meta,{c:1,after:320}):"",
+    ...(paras.length?paras:[""]).map((t,i)=>P(`${i+1}.\t${t}`,{after:200}))].join("");
+  const doc=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>${body}<w:sectPr><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="1440" w:right="1440" w:bottom="1440" w:left="1440" w:header="708" w:footer="708" w:gutter="0"/></w:sectPr></w:body></w:document>`;
+  const styles=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:docDefaults><w:rPrDefault><w:rPr><w:rFonts w:ascii="Garamond" w:hAnsi="Garamond" w:cs="Garamond" w:eastAsia="Garamond"/><w:sz w:val="28"/><w:szCs w:val="28"/><w:lang w:val="en-IN"/></w:rPr></w:rPrDefault><w:pPrDefault><w:pPr><w:spacing w:line="300" w:lineRule="auto"/></w:pPr></w:pPrDefault></w:docDefaults><w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/><w:qFormat/></w:style></w:styles>`;
+  return _zipStored([
+    ["[Content_Types].xml",`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/></Types>`],
+    ["_rels/.rels",`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>`],
+    ["word/_rels/document.xml.rels",`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>`],
+    ["word/document.xml",doc], ["word/styles.xml",styles] ]);
+}
+async function newConferenceNote(confKeyStr, kind){
+  const c=conferencesOn(todayISO()).find(x=>x.key===confKeyStr);
+  if(!c||!c.briefId||!briefs[c.briefId]){ toast("This conference isn't tied to a case — add it from the day sheet against its matter","ti-alert-triangle"); return; }
+  const st=await filesStatus(true);
+  if(!canEditPapers(st)){ toast(st.unreachable?"Files aren't reachable right now":"Dropbox isn't connected yet","ti-alert-triangle"); return; }
+  toast(`Creating the ${kind.toLowerCase()}…`,"ti-file-plus");
+  try{
+    const b=await ensureCaseFolder(c.briefId), folder=b.dropboxFolder;
+    const files=(await filesApi("list",{folder})).files||[];
+    const plan=planNumber(b,files,"N");
+    if(plan.rename) await filesApi("move",{folder,name:plan.rename.from,toName:plan.rename.to});
+    const name=paperName(b,"N",plan.sub,`${kind} - ${ddmmyyyy()}`,".docx");
+    const notes=((confStatus[c.key]||{}).notes||[]).map(n=>n.text).filter(Boolean);
+    const blob=makeNoteDocx({ heading:labelOf(b),
+      sub:[`Serial ${pad3(serialNum(b))}`, b.caseNo, b.diaryNo?"Diary No. "+b.diaryNo:""].filter(Boolean).join("  ·  "),
+      kind, meta:[(c.counsel&&c.counsel!=="—")?`Conference with ${c.counsel}`:"Conference", fmtDateY(todayISO()), fmtConfTime(c.time)].filter(Boolean).join("  ·  "),
+      paras:notes });
+    await filesApi("upload",null,{folder,name,file:new File([blob],name,{type:blob.type})});
+    toast(`${name.split(" ")[0]} created in the case folder`,"ti-file-check");
+    editInWordForm(b.id, folder, "", {name, size:blob.size});
+  }catch(e){ toast(/permission|insufficient/i.test(e.message)?_rulesMsg:e.message,"ti-alert-triangle"); }
+}
+
 // The next day-sheet listing of a brief, today or later (court/item come from the sheet).
 function nextListingOf(id){
   const t=todayISO(); let best=null;
@@ -4987,6 +5092,50 @@ function nextListingOf(id){
    "files button on all the briefs whether they have or does not have one"); a table on
    desktop, one card per brief on phones; warnings for briefs without a serial and for a
    serial used twice; the admin imports the serial list (privately) from here. */
+/* ===== the register's table + cards, shared by the Brief register and My work ===== */
+function briefListHTML(list, opts){
+  opts=opts||{}; const canEd=opts.edit!==false&&canManage();
+  const serialCell=b=>{ const n=serialNum(b); return n!=null?`<button class="rg-serial" data-brief="${b.id}">${pad3(n)}</button>`:`<span class="rg-serial none">no serial</span>`; };
+  const tag=b=>b.legalAid?`<span class="rg-tag">Legal aid</span>`:b.confCredit?`<span class="rg-tag">Conference</span>`:b.fromSerialList?`<span class="rg-tag">from the list</span>`:"";
+  const nums=b=>[b.caseNo, b.diaryNo?"Dy. "+b.diaryNo:""].filter(Boolean).join(" · ");
+  const when=b=>{ const L=nextListingOf(b.id);
+    if(L) return `<div class="rg-when">${fmtDateY(L.date)}</div><span class="rg-listed">Listed${L.court?` · Ct ${esc(L.court)}`:""}${L.item?` · Item ${esc(L.item)}`:""}</span>`;
+    if(b.nextDate) return `<div class="rg-when">${fmtDateY(b.nextDate)}</div>`;
+    return `<span class="muted" style="font-size:12px">—</span>`; };
+  const team=b=>(b.assignedTo||[]).map(u=>`<span class="mini-ava" title="${esc(nameOf(u))}">${esc(initials(nameOf(u)))}</span>`).join("")||`<span class="muted" style="font-size:12px">unassigned</span>`;
+  const status=b=>{ const st=STATUS[b.status]||STATUS.received; return `<span class="chip ${st.cls}"><span class="dot"></span>${st.label}</span>${b.priority?' <span class="ti ti-flag-3" style="color:var(--urgent)" title="Urgent"></span>':''}${needsMyAck(b)?' <span class="new-chip">new</span>':''}`; };
+  const table=list.length?`<table class="rg-table"><thead><tr><th style="width:74px">Serial</th><th>Matter</th><th style="width:150px">Next hearing</th><th style="width:110px">Colleagues</th><th style="width:120px">Status</th><th style="width:150px;text-align:right">Papers</th></tr></thead><tbody>
+    ${list.map(b=>`<tr class="rg-row ${b.status==='disposed'?'dim':''}">
+      <td>${serialCell(b)}</td>
+      <td><button class="rg-name" data-brief="${b.id}">${esc(labelOf(b))}</button>${tag(b)}${nums(b)?`<div class="rg-nums">${esc(nums(b))}</div>`:""}${b.aor?`<div class="rg-meta">AoR ${esc(b.aor)}</div>`:""}</td>
+      <td>${when(b)}</td><td><div class="rg-team">${team(b)}</div></td><td>${status(b)}</td>
+      <td><div class="rg-acts">${isCaseBrief(b)?filesBtn(b.id):""}${canEd?`<button class="tbtn icon-only" data-editbrief="${b.id}" title="Edit"><span class="ic ti ti-pencil"></span></button>`:""}</div></td></tr>`).join("")}
+    </tbody></table>`:"";
+  const cards=list.length?`<div class="rg-cards">${list.map(b=>`<div class="rg-card ${b.status==='disposed'?'dim':''}">
+      <div class="top">${serialCell(b)}${status(b)}${tag(b)}</div>
+      <button class="rg-name" data-brief="${b.id}" style="font-size:16px">${esc(labelOf(b))}</button>
+      ${nums(b)?`<div class="rg-nums">${esc(nums(b))}</div>`:""}
+      <div class="row" style="gap:10px;align-items:center;margin-top:6px;flex-wrap:wrap">${when(b)}<div class="rg-team">${team(b)}</div></div>
+      <div class="acts">${isCaseBrief(b)?filesBtn(b.id):"<span></span>"}<button class="btn ghost" data-brief="${b.id}"><span class="ic ti ti-folder-open"></span>Open</button></div>
+    </div>`).join("")}</div>`:"";
+  return table+cards;
+}
+/* ===== Sort by — on every register; each person's choice is remembered ===== */
+const _sortPref={};
+function sortVal(key, def){ if(_sortPref[key]) return _sortPref[key]; try{ const v=localStorage.getItem("sd-sort:"+key); if(v) return (_sortPref[key]=v); }catch(e){} return def; }
+function sortSel(key, options, def){ const v=sortVal(key,def);
+  return `<label class="sortsel" title="Sort by"><span class="ti ti-arrows-sort"></span><select data-sortkey="${key}">${options.map(([k,l])=>`<option value="${k}" ${v===k?"selected":""}>${esc(l)}</option>`).join("")}</select></label>`; }
+function wireSort(root, rerender){ (root||document).querySelectorAll("[data-sortkey]").forEach(sel=>sel.onchange=()=>{ _sortPref[sel.dataset.sortkey]=sel.value; try{ localStorage.setItem("sd-sort:"+sel.dataset.sortkey, sel.value); }catch(e){} rerender(); }); }
+const BRIEF_SORTS=[["serial_desc","Serial — newest first"],["serial_asc","Serial — oldest first"],["name_az","Cause title A–Z"],["name_za","Cause title Z–A"],["hearing","Next hearing — soonest"],["came_new","Date came in — newest"],["came_old","Date came in — oldest"]];
+function nextHearingOf(b){ const L=nextListingOf(b.id); const t=todayISO(); const d=[L&&L.date, b.nextDate&&b.nextDate>=t?b.nextDate:null].filter(Boolean).sort()[0]; return d||null; }
+function sortBriefs(list, mode){
+  const nm=(a,z)=>labelOf(a).localeCompare(labelOf(z),undefined,{sensitivity:"base"});
+  const ser=(a,z,dir)=>{ const x=serialNum(a), y=serialNum(z); if(x==null&&y==null) return nm(a,z); if(x==null) return 1; if(y==null) return -1; return dir*(x-y); };
+  const cmp={ serial_desc:(a,z)=>ser(a,z,-1), serial_asc:(a,z)=>ser(a,z,1), name_az:nm, name_za:(a,z)=>nm(z,a),
+    hearing:(a,z)=>{ const x=nextHearingOf(a), y=nextHearingOf(z); if(x&&y) return x.localeCompare(y)||nm(a,z); if(x) return -1; if(y) return 1; return ser(a,z,-1); },
+    came_new:(a,z)=>caseCameOn(z)-caseCameOn(a)||nm(a,z), came_old:(a,z)=>caseCameOn(a)-caseCameOn(z)||nm(a,z) }[mode]||((a,z)=>ser(a,z,-1));
+  return list.slice().sort(cmp);
+}
 function renderBriefs(){
   $("topbarAction").innerHTML = canManage()? `<button class="btn ghost sm" id="tbLegalAid" title="Record a legal-aid opinion given to a colleague"><span class="ic ti ti-scale"></span>Legal aid</button> <button class="btn ghost sm" id="tbSyncReg" title="Add any listed matter that isn't in the register yet"><span class="ic ti ti-refresh"></span>Sync listings</button> <button class="btn" id="tbNewBrief2"><span class="ic ti ti-plus"></span>New brief</button>`:"";
   const all=Object.values(briefs);
@@ -5018,8 +5167,7 @@ function renderBriefs(){
     if(n!=null&&(String(n)===q||pad3(n)===q)) return true;
     return (labelOf(b).toLowerCase().includes(q))||(b.aor||"").toLowerCase().includes(q)||(b.caseNo||"").toLowerCase().includes(q)
       ||(qd.length>=3&&((b.diaryNo||"").replace(/\D/g,"").includes(qd)||(b.caseNo||"").replace(/\D/g,"").includes(qd))); });
-  // newest serial first (as in ASD); briefs without a serial at the end, newest of them first
-  list.sort((a,z)=>{ const x=serialNum(a), y=serialNum(z); if(x==null&&y==null) return labelOf(a).localeCompare(labelOf(z)); if(x==null) return 1; if(y==null) return -1; return y-x; });
+  list=sortBriefs(list, sortVal("briefs","serial_desc"));
   const myUnacked=all.filter(needsMyAck);
   const notice=(!canManage()&&!isSenior()&&myUnacked.length)?`<div class="notice"><span class="ti ti-bell"></span><div><b>${myUnacked.length} new assignment${myUnacked.length>1?'s':''}</b> awaiting your acknowledgment — open and acknowledge.</div></div>`:"";
   const head=`<div class="rg-head"><div><div class="rg-title">Brief register</div>
@@ -5028,30 +5176,9 @@ function renderBriefs(){
     ${isAdmin()&&noSerial.length?`<div class="rg-steps"><span class="ti ti-list-numbers"></span>To number the old cases: <b>1</b> Find duplicates → <b>2</b> Number old cases by date. New cases are numbered when their Files are first opened.</div>`:""}
     ${(noSerial.length||clashes.length||(canManage()&&gapPlan().length))?`<div class="rg-warn">${canManage()&&gapPlan().length?`<button class="chip" id="rgGaps"><span class="ti ti-arrows-sort"></span>Numbering has gaps — close them</button>`:""}${noSerial.length?`<button class="chip" data-bf="noserial"><span class="ti ti-hash"></span>${noSerial.length} without a serial</button>`:""}${clashes.map(c=>`<span class="chip"><span class="ti ti-alert-triangle"></span>${pad3(c.n)} used ${c.ids.length}×: ${c.ids.map(id=>esc(labelOf(briefs[id]))).join(" / ")}</span>`).join("")}</div>`:""}`;
   const tools=`<div class="rg-tools"><div class="rg-search"><span class="ti ti-search"></span><input id="bSearch" placeholder="Search serial, title, diary or case no., AoR" value="${esc(briefSearch)}" autocomplete="off"></div>
+    ${sortSel("briefs",BRIEF_SORTS,"serial_desc")}
     <div class="rg-chips">${filters.map(([k,l])=>`<button class="rg-chip ${briefFilter===k?'on':''}" data-bf="${k}">${l}<b>${counts[k]}</b></button>`).join("")}</div></div>`;
-  const serialCell=b=>{ const n=serialNum(b); return n!=null?`<button class="rg-serial" data-brief="${b.id}">${pad3(n)}</button>`:`<span class="rg-serial none">no serial</span>`; };
-  const tag=b=>b.legalAid?`<span class="rg-tag">Legal aid</span>`:b.confCredit?`<span class="rg-tag">Conference</span>`:b.fromSerialList?`<span class="rg-tag">from the list</span>`:"";
-  const nums=b=>[b.caseNo, b.diaryNo?"Dy. "+b.diaryNo:""].filter(Boolean).join(" · ");
-  const when=b=>{ const L=nextListingOf(b.id);
-    if(L) return `<div class="rg-when">${fmtDateY(L.date)}</div><span class="rg-listed">Listed${L.court?` · Ct ${esc(L.court)}`:""}${L.item?` · Item ${esc(L.item)}`:""}</span>`;
-    if(b.nextDate) return `<div class="rg-when">${fmtDateY(b.nextDate)}</div>`;
-    return `<span class="muted" style="font-size:12px">—</span>`; };
-  const team=b=>(b.assignedTo||[]).map(u=>`<span class="mini-ava" title="${esc(nameOf(u))}">${esc(initials(nameOf(u)))}</span>`).join("")||`<span class="muted" style="font-size:12px">unassigned</span>`;
-  const status=b=>{ const st=STATUS[b.status]||STATUS.received; return `<span class="chip ${st.cls}"><span class="dot"></span>${st.label}</span>${b.priority?' <span class="ti ti-flag-3" style="color:var(--urgent)" title="Urgent"></span>':''}${needsMyAck(b)?' <span class="new-chip">new</span>':''}`; };
-  const table=list.length?`<table class="rg-table"><thead><tr><th style="width:74px">Serial</th><th>Matter</th><th style="width:150px">Next hearing</th><th style="width:110px">Colleagues</th><th style="width:120px">Status</th><th style="width:150px;text-align:right">Papers</th></tr></thead><tbody>
-    ${list.map(b=>`<tr class="rg-row ${b.status==='disposed'?'dim':''}">
-      <td>${serialCell(b)}</td>
-      <td><button class="rg-name" data-brief="${b.id}">${esc(labelOf(b))}</button>${tag(b)}${nums(b)?`<div class="rg-nums">${esc(nums(b))}</div>`:""}${b.aor?`<div class="rg-meta">AoR ${esc(b.aor)}</div>`:""}</td>
-      <td>${when(b)}</td><td><div class="rg-team">${team(b)}</div></td><td>${status(b)}</td>
-      <td><div class="rg-acts">${isCaseBrief(b)?filesBtn(b.id):""}${canManage()?`<button class="tbtn icon-only" data-editbrief="${b.id}" title="Edit"><span class="ic ti ti-pencil"></span></button>`:""}</div></td></tr>`).join("")}
-    </tbody></table>`:"";
-  const cards=list.length?`<div class="rg-cards">${list.map(b=>`<div class="rg-card ${b.status==='disposed'?'dim':''}">
-      <div class="top">${serialCell(b)}${status(b)}${tag(b)}</div>
-      <button class="rg-name" data-brief="${b.id}" style="font-size:16px">${esc(labelOf(b))}</button>
-      ${nums(b)?`<div class="rg-nums">${esc(nums(b))}</div>`:""}
-      <div class="row" style="gap:10px;align-items:center;margin-top:6px;flex-wrap:wrap">${when(b)}<div class="rg-team">${team(b)}</div></div>
-      <div class="acts">${isCaseBrief(b)?filesBtn(b.id):"<span></span>"}<button class="btn ghost" data-brief="${b.id}"><span class="ic ti ti-folder-open"></span>Open</button></div>
-    </div>`).join("")}</div>`:"";
+  const table=briefListHTML(list), cards="";
   const empty=list.length?"":`<div class="empty"><span class="ic ti ti-folder-open"></span>No briefs match this view.</div>`;
   $("tab-briefs").innerHTML=notice+head+tools+table+cards+empty;
   $("bSearch").oninput=e=>{briefSearch=e.target.value; renderBriefs(); $("bSearch").focus(); const v=$("bSearch").value;$("bSearch").setSelectionRange(v.length,v.length);};
@@ -5063,6 +5190,7 @@ function renderBriefs(){
   if($("tbNewBrief2"))$("tbNewBrief2").onclick=()=>briefForm();
   if($("tbLegalAid"))$("tbLegalAid").onclick=()=>legalAidForm();
   if($("tbSyncReg"))$("tbSyncReg").onclick=async()=>{ $("tbSyncReg").disabled=true; await syncRegister(true); toast("Register synced with the listings","ti-check"); renderBriefs(); };
+  wireSort($("tab-briefs"), renderBriefs);
   bindClicks($("tab-briefs"));
 }
 
@@ -5511,6 +5639,7 @@ function renderFilesSheet(){
       ${notes}
       <div class="fv-tools">
         <input class="fv-search" id="fvQ" placeholder="Search papers — name, number, date" value="${esc(_fv.q)}" autocomplete="off">
+        ${virt?sortSel("causelists",[["new","Newest first"],["old","Oldest first"]],"new"):sortSel("papers",[["number","By number"],["name","Name A–Z"],["new","Newest first"],["old","Oldest first"],["big","Largest first"]],"number")}
         ${_fv.sub?`<button class="btn ghost sm" id="fv_up"><span class="ic ti ti-arrow-up"></span>Up</button>`:""}
         <button class="btn ghost sm" id="fv_refresh" title="Refresh"><span class="ic ti ti-refresh"></span></button>
         ${canAdd?`<label class="btn sm" style="cursor:pointer"><span class="ic ti ti-upload"></span>Add papers<input type="file" id="fv_add" multiple hidden></label>`:""}
@@ -5523,6 +5652,7 @@ function renderFilesSheet(){
   if(!_fv.loading) fvRenderList();
   const id=_fv.id;
   $("fvQ").oninput=e=>{ _fv.q=e.target.value; fvRenderList(); };
+  wireSort(document.querySelector("#modalRoot .sheet"), ()=>fvRenderList());
   $("fv_back").onclick=()=>virt?closeSheet():openBrief(id);
   $("fv_refresh").onclick=()=>{ _filesStatus=null; openFiles(id,_fv.sub); };
   if($("fv_up")) $("fv_up").onclick=()=>openFiles(id,_fv.sub.split("/").slice(0,-1).join("/"));
@@ -5566,9 +5696,18 @@ function fvRenderList(){
   const drow=d=>`<div class="fv-row"><div class="fv-ic dir"><span class="ti ti-folder"></span></div><div class="fv-main" data-fvdir="${esc(d.name)}"><div class="fv-name">${_hl(d.name,q)}</div><div class="fv-meta"><span>older folder, kept as it was</span></div></div><div class="fv-acts"><button data-fvdir="${esc(d.name)}">Open</button></div></div>`;
   const idx=new Map(files.map((x,i)=>[x,i]));
   let h="";
+  // a dated name ("Causelist 07.10.2026 …") sorts by its date, not alphabetically
+  const dkey=x=>{ const m=String(x.name).match(/(\d{2})\.(\d{2})\.(\d{4})/); return m?m[3]+m[2]+m[1]:String(x.modified||""); };
+  const ps=sortVal(virt?"causelists":"papers", virt?"new":"number");
+  const flatSort=(a,z)=>ps==="name"?String(a._label).localeCompare(String(z._label),undefined,{numeric:true,sensitivity:"base"})
+    :ps==="old"?String(a.modified||"").localeCompare(String(z.modified||"")):ps==="big"?(z.size||0)-(a.size||0):String(z.modified||"").localeCompare(String(a.modified||""));
   if(virt){
-    const fl=files.filter(x=>match(x)).sort((a,z)=>String(z.name).localeCompare(String(a.name),undefined,{numeric:true}));
+    const fl=files.filter(x=>match(x)).sort((a,z)=>ps==="old"?dkey(a).localeCompare(dkey(z)):dkey(z).localeCompare(dkey(a)));
     h=fl.length?`<div class="fv-group">${esc(b.caseTitle)} · ${fl.length}</div>`+fl.map(x=>row(x,idx.get(x))).join(""):`<div class="fv-empty">${q?`Nothing matches “${esc(_fv.q)}”.`:"Nothing saved yet — use “Save to Dropbox” on the day sheet."}</div>`;
+  } else if(ps!=="number"){
+    const fl=files.filter(x=>inType(x)&&match(x)).sort(flatSort), dl=dirs.filter(d=>(t==="all"||t==="dir")&&match({_label:d.name,name:d.name}));
+    h=fl.map(x=>row(x,idx.get(x))).join("")+(dl.length?`<div class="fv-group">${PAPER_GROUP.dir} · ${dl.length}</div>`+dl.map(drow).join(""):"");
+    if(!h) h=`<div class="fv-empty">${q?`Nothing matches “${esc(_fv.q)}”.`:"No papers here yet."}</div>`;
   } else if(t==="all"&&!q){
     if(!files.length&&!dirs.length){
       h=`<div class="fv-empty">${!b.dropboxFolder?"No papers yet — this brief's folder is created when the first paper is added.":"The folder is empty."}</div>`;
@@ -5870,12 +6009,15 @@ function renderLeave(){
   const reg=Object.values(leaves).filter(l=>!l.deleted).sort((a,b)=>(a.from||"").localeCompare(b.from||"")||((a.at?._t??a.at??0)-(b.at?._t??b.at??0)));
   reg.forEach((l,i)=>l._sno=i+1);
   const byMonth={}; reg.forEach(l=>{ const mk=(l.from||"0000-00").slice(0,7); (byMonth[mk]=byMonth[mk]||[]).push(l); });
-  const monthName=mk=>{ try{ return new Date(mk+"-01T00:00").toLocaleDateString("en-IN",{month:"long",year:"numeric"}); }catch(e){ return mk; } };
-  const months=Object.keys(byMonth).sort().reverse();
+  const monthName=mk=>{ if(mk[0]==="~") return mk.slice(1); try{ return new Date(mk+"-01T00:00").toLocaleDateString("en-IN",{month:"long",year:"numeric"}); }catch(e){ return mk; } };
+  const _lvSort=sortVal("leave","new"), _lvOld=_lvSort==="old";
+  // "by colleague": one block per person (A–Z) instead of one per month
+  if(_lvSort==="name"){ Object.keys(byMonth).forEach(k=>delete byMonth[k]); reg.forEach(l=>{ const k="~"+nameOf(l.uid); (byMonth[k]=byMonth[k]||[]).push(l); }); }
+  const months=_lvSort==="name"?Object.keys(byMonth).sort((a,b)=>a.localeCompare(b)):_lvOld?Object.keys(byMonth).sort():Object.keys(byMonth).sort().reverse();
   const yearDays=live.reduce((s,l)=>s+overlapDays(l.from,l.to,yStart,yEnd),0);
-  const regPanel=`<div class="panel" style="margin-top:16px"><div class="panel-head">Leave register <span class="muted" style="font-weight:400;font-size:12px">every entry, numbered — open to all</span></div>
+  const regPanel=`<div class="panel" style="margin-top:16px"><div class="panel-head" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">Leave register <span class="muted" style="font-weight:400;font-size:12px">every entry, numbered — open to all</span><span style="margin-left:auto">${sortSel("leave",[["new","Date — newest first"],["old","Date — oldest first"],["name","By colleague"]],"new")}</span></div>
     ${reg.length? months.map(mk=>{
-      const items=byMonth[mk].slice().sort((a,b)=>(b.from||"").localeCompare(a.from||"")||(b._sno-a._sno));
+      const items=byMonth[mk].slice().sort((a,b)=>_lvOld?((a.from||"").localeCompare(b.from||"")||(a._sno-b._sno)):((b.from||"").localeCompare(a.from||"")||(b._sno-a._sno)));
       const mdays=items.filter(l=>!l.deleted).reduce((s,l)=>s+leaveLen(l),0);
       return `<div class="leave-month"><div class="leave-month-h">${esc(monthName(mk))}<span class="muted" style="font-weight:400"> · ${mdays} day${mdays!==1?'s':''}</span></div>
         ${items.map(l=>{
@@ -5896,6 +6038,7 @@ function renderLeave(){
     ${reg.length?`<div class="muted" style="font-size:11.5px;padding:10px 12px 2px">${yStart.slice(0,4)} total: <b>${yearDays}</b> day${yearDays!==1?'s':''}.</div>`:''}</div>`;
 
   $("tab-leave").innerHTML=counters+regPanel;
+  wireSort($("tab-leave"), renderLeave);
   if($("tbAddLeave"))$("tbAddLeave").onclick=()=>leaveForm();
   document.querySelectorAll("[data-editleave]").forEach(x=>x.onclick=()=>leaveForm(null,x.dataset.editleave));
   document.querySelectorAll("[data-delleave]").forEach(x=>x.onclick=()=>{
@@ -6030,7 +6173,10 @@ function islandSheet(uid, period){ _regPeriod=period||_regPeriod; _regUid=uid; r
 const _regKindTag={conference:'<span class="reg-k k-conf">conf ½</span>', "legal aid":'<span class="reg-k k-la">legal aid</span>', listing:'<span class="reg-k k-list">listing</span>', matter:''};
 function registerSectionHtml(uid){
   const period=_regPeriod;
-  const rows=creditLedger(uid,period);
+  const _cs=sortVal("credit","new");
+  const rows=creditLedger(uid,period).slice().sort((a,z)=>_cs==="old"?String(a.date||"").localeCompare(String(z.date||""))
+    :_cs==="name"?String(a.title||"").localeCompare(String(z.title||""),undefined,{sensitivity:"base"})
+    :_cs==="credit"?(z.credit-a.credit)||String(z.date||"").localeCompare(String(a.date||"")):String(z.date||"").localeCompare(String(a.date||"")));
   const total=rows.reduce((s,r)=>s+r.credit,0);
   const plab={week:"this week",month:"this month",year:"this year"}[period];
   const cnt=k=>rows.filter(r=>r.kind===k).length;
@@ -6038,6 +6184,7 @@ function registerSectionHtml(uid){
   return `<div class="reg-sec">
     <div class="reg-top"><button class="btn ghost sm" id="regBack"><span class="ic ti ti-arrow-left"></span>Snapshot</button>
       <div><div class="reg-name">${esc(nameOf(uid))}</div><div class="reg-subt">Credit register</div></div></div>
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">${sortSel("credit",[["new","Date — newest first"],["old","Date — oldest first"],["name","Matter A–Z"],["credit","Credit — highest first"]],"new")}</div>
     <div class="seg" id="regSeg"><button type="button" data-rp="week" class="${period==="week"?"active":""}">Week</button><button type="button" data-rp="month" class="${period==="month"?"active":""}">Month</button><button type="button" data-rp="year" class="${period==="year"?"active":""}">Year</button></div>
     <div class="reg-summary"><div><span class="reg-big">${fmtPts(total)}</span> <span class="muted">credit${total===1?'':'s'} ${esc(plab)}</span></div>${bits?`<div class="muted reg-bits">${bits}</div>`:''}</div>
     ${rows.length?`<div class="reg-scroll"><table class="reg-table"><thead><tr><th class="c-sn">#</th><th class="c-case">Matter / conference</th><th class="c-date">Date</th><th class="c-cr">Credit</th></tr></thead>
@@ -6051,6 +6198,7 @@ function renderRegisterBody(uid){
   $("tab-team").innerHTML=`<div id="teamBody">${registerSectionHtml(uid)}</div>`;
   $("regBack").onclick=()=>{ _regUid=null; renderTeam(); };
   document.querySelectorAll("#regSeg [data-rp]").forEach(x=>x.onclick=()=>{ _regPeriod=x.dataset.rp; renderRegisterBody(uid); });
+  wireSort($("tab-team"), ()=>renderRegisterBody(uid));
   bindClicks($("tab-team"));
 }
 // Chamber tab = two sub-tabs: Workload snapshot + Roster (owner's Jul 2026 merge).
