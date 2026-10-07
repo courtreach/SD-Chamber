@@ -47,6 +47,28 @@ Dropbox is reachable, enforced by Dropbox itself) and **one folder per brief**.
   `sd-chamber-files` with KV + both secrets, and connected from the app. Verified from
   outside: home page, 401 without sign-in, CORS for the app origin, KV-backed callback guard.
 
+## Deleting a wrong entry + closing serial gaps (Oct 2026)
+
+Owner: "Make provision for a wrong entry and deletion option … the app should automatically shift
+the numbering and also rename the folders accordingly." = his own filing practice (ASD notes:
+every vacancy was closed by renumbering the cases after it).
+- `removeCaseDialog(b, onRemove)` replaces the plain confirm for deleting a CASE — from the
+  brief ("Delete this matter") and from the day sheet when the listing created the case
+  (`dsDel` alsoBrief). Shows "edit instead if only details are wrong"; the deleted case's
+  folder MOVES to `_to_delete/<folder> - deleted DD.MM.YYYY` (`moveFolderToDelete`, never
+  deletes papers; time suffix on a same-day clash); then **Close the gap** (default; needs
+  Dropbox reachable) or **Leave NNN unused**. The latest case: nothing moves, its number is
+  reused.
+- `closeSerialGaps()` / `gapPlan()`: an unbroken run from the LOWEST serial in use (a register
+  starting at 101 keeps starting at 101); also separates serials used twice; per move updates
+  chamberNo then `applySerialFolder` (folder + numbered papers renamed); up to 3 rounds to
+  catch a case numbered meanwhile; finally `config/serial.next = top+1` (rules: the counter
+  may go BACK only for canManage). Register shows "Numbering has gaps — close them"
+  (`closeGapsForm`, Staff/admin); a duplicates merge that vacates a serial offers it too.
+- Tested in demo: 001–004 entered, 002 deleted from the day sheet → 003/004 became 002/003
+  with folders + papers renamed, next case 004; "leave unused" → gap chip → Close gaps fixed
+  it; deleting the latest → number reused.
+
 ## Day sheet: match check, then number the new case (Oct 2026)
 
 Owner: "every time a new case is added by way of day sheet it should be assigned a serial

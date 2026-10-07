@@ -566,6 +566,12 @@ td.tfiles{white-space:nowrap}
 .wi-match{margin-top:6px;padding:7px 9px;border-radius:8px;background:var(--warn-bg);font-size:12.5px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .wi-match.ok{background:var(--accent-soft)}
 .wi-match select{font-size:12.5px;padding:4px 6px;max-width:100%}
+/* delete case / close gaps */
+.gap-opt{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);border-radius:11px;background:var(--surface);padding:10px 12px;margin-top:8px;cursor:pointer;font-size:13px;line-height:1.5}
+.gap-opt input{width:auto;flex:none;margin:3px 0 0;padding:0;accent-color:var(--accent)}
+.gap-list{margin-top:8px;font-size:12.5px;line-height:1.7;max-height:180px;overflow:auto;border-top:1px dashed var(--line);padding-top:6px}
+.gap-list .mono{color:var(--accent-ink);font-weight:600;margin-right:6px}
+
 
 
 
@@ -3430,6 +3436,7 @@ function dsDel(i){ const ent=daysheet.entries[i]; if(!ent)return; const R=resolv
     const total=Object.values(dsAll).reduce((n,ds)=>n+((ds?.entries||[]).filter(e=>e.briefId===b.id).length),0);
     alsoBrief = total<=1;
   }
+  if(alsoBrief){ removeCaseDialog(b, ()=>purgeBriefEverywhere(b.id)); return; }
   confirmAsk({title:alsoBrief?"Delete this case?":"Remove this listing?",danger:true,confirmLabel:alsoBrief?"Delete case":"Remove listing",
     body: alsoBrief
       ? `Remove <b>Ct-${esc(ent.courtNo||'?')}#${esc(ent.itemNo||'?')}</b> — ${esc(R.title||'this entry')} — and delete it from the register?<br><br><span class="muted" style="font-size:12px">This case was added here and isn't listed on any other day, so it's removed from the register and colleagues' credit for it is cleared.</span>`
@@ -4797,7 +4804,7 @@ function renderDuplicates(){
     const withSerial=dups.filter(b=>serialNum(b)!=null);
     const vac=(serialNum(keep)!=null?withSerial:withSerial.slice(1)).map(b=>pad3(serialNum(b)));
     confirmAsk({title:`Merge ${dups.length} into “${labelOf(keep)}”?`,danger:true,confirmLabel:"Merge",
-      body:`${dups.map(b=>`<b>${esc(labelOf(b))}</b>`).join(", ")} will be merged into it and removed from the register.${vac.length?` Serial ${vac.join(", ")} will then be unused — tell me if you want the numbers closed up.`:""}`,
+      body:`${dups.map(b=>`<b>${esc(labelOf(b))}</b>`).join(", ")} will be merged into it and removed from the register.${vac.length?` Serial ${vac.join(", ")} will then be unused — you'll be offered to close the gap.`:""}`,
       onYes:async()=>{
         for(const d of dups){
           const dupFolder=d.dropboxFolder;
@@ -4807,7 +4814,8 @@ function renderDuplicates(){
           }
           await _mergeBriefInto(keep,d);
         }
-        toast(`Merged ${dups.length}`,"ti-git-merge"); duplicatesForm();
+        toast(`Merged ${dups.length}`,"ti-git-merge");
+        if(vac.length && gapPlan().length) closeGapsForm(`Merged. Serial ${vac.join(", ")} is now unused.`); else duplicatesForm();
       }}); });
 }
 
@@ -4869,6 +4877,104 @@ async function numberNewCase(id){
   catch(e){ const b=briefs[id]; return {n:b?serialNum(b):null, folder:false, err:e.message}; }
 }
 
+/* ---------------- deleting a wrongly entered case, and closing the gap (owner, Oct 2026) ----------------
+   "Make provision for a wrong entry and deletion option … the app should automatically shift the
+   numbering and also rename the folders accordingly." This is the owner's own filing practice:
+   whenever a number fell vacant he closed the gap and renumbered the cases after it.
+   - A deleted case's papers are never deleted: its folder moves to "_to_delete" in the app's
+     Dropbox folder (his habit: he empties it himself).
+   - Close the gap: every later case moves down one; its folder and the numbered papers in it are
+     renamed (F055 -> F054); the counter steps back so the next new case continues the run.
+   - "Close gaps" also repairs any older hole, and any serial accidentally used twice. */
+async function moveFolderToDelete(folder){
+  if(!folder) return null;
+  await mkdirQuiet("_to_delete");
+  const base=`${folder} - deleted ${ddmmyyyy()}`;
+  for(const name of [base, `${base} ${new Date().toTimeString().slice(0,5).replace(":",".")}`]){
+    try{ await filesApi("move",{folder, toFolder:"_to_delete", toSub:name}); return name; }
+    catch(e){ if(/not_found/.test(e.message)) return null; if(!/already exists/.test(e.message)) throw e; }
+  }
+  throw new Error("couldn't move its folder to _to_delete");
+}
+// The renumbering that closing every gap would make: an unbroken run from the LOWEST serial in
+// use (a register that deliberately starts at, say, 101 keeps starting at 101).
+function gapPlan(){
+  const cases=Object.values(briefs).filter(b=>isCaseBrief(b)&&serialNum(b)!=null)
+    .sort((a,z)=>serialNum(a)-serialNum(z)||caseCameOn(a)-caseCameOn(z));
+  if(!cases.length) return [];
+  const start=serialNum(cases[0]);
+  return cases.map((b,i)=>({b,from:serialNum(b),to:start+i})).filter(m=>m.from!==m.to);
+}
+async function closeSerialGaps(onStep){
+  const st=await filesStatus(true);
+  if(!st.connected) throw new Error("Dropbox isn't reachable, so the folders couldn't be renamed — use “Close gaps” in the register later.");
+  let moved=0;
+  for(let round=0; round<3; round++){                       // a case numbered meanwhile is caught next round
+    const moves=gapPlan(); if(!moves.length) break;
+    for(const m of moves){
+      onStep&&onStep(++moved, m);
+      await db.update("briefs/"+m.b.id,{chamberNo:String(m.to),updatedAt:db.now()}); m.b.chamberNo=String(m.to);
+      await applySerialFolder(m.b.id, m.from);
+    }
+  }
+  // the counter steps back so the next case continues the run (Staff/admin only, by the rules)
+  const top=Math.max(0,...Object.values(briefs).filter(isCaseBrief).map(b=>serialNum(b)??0));
+  await db.tx(async t=>{ t.set("config/serial",{next:top+1,updatedAt:db.now()},true); });
+  return moved;
+}
+const _movesHTML=moves=>moves.length?`<div class="gap-list">${moves.slice(0,8).map(m=>`<div><span class="mono">${pad3(m.from)} → ${pad3(m.to)}</span> ${esc(labelOf(m.b))}</div>`).join("")}${moves.length>8?`<div class="muted">… and ${moves.length-8} more</div>`:""}</div>`:"";
+// Delete a case (from the brief, or from the day sheet when the listing created it).
+async function removeCaseDialog(b, onRemove){
+  const n=serialNum(b), st=await filesStatus();
+  const later=n==null?[]:Object.values(briefs).filter(x=>isCaseBrief(x)&&x.id!==b.id&&serialNum(x)!=null&&serialNum(x)>n)
+    .sort((a,z)=>serialNum(a)-serialNum(z)).map(x=>({b:x,from:serialNum(x),to:serialNum(x)-1}));
+  const canClose=!!(st&&st.connected), ld=listingDatesOf(b.id);
+  openSheet(`<div class="sheet-head"><div><h3>Delete this case?</h3><div class="sub">${n!=null?`<span class="mono" style="color:var(--accent-ink);font-weight:700">${pad3(n)}</span> · `:""}${esc(labelOf(b))}</div></div><button class="x-btn"><span class="ti ti-x"></span></button></div>
+    <div class="sheet-body">
+      <div class="notice" style="margin-bottom:12px"><span class="ti ti-bulb"></span><div>Only the details wrong (title, number, court)? <b>Edit the case instead</b> — nothing gets renumbered.</div></div>
+      <div style="font-size:13.5px;line-height:1.55">It is removed from the register${ld.length?` with its ${ld.length} day-sheet listing${ld.length>1?"s":""}`:""}.${b.dropboxFolder?` Its Dropbox folder <b>moves to _to_delete</b> — no paper is lost.`:""}</div>
+      ${n!=null&&later.length?`<div class="section-label" style="margin-top:16px">Serial ${pad3(n)} becomes free</div>
+        <label class="gap-opt"><input type="radio" name="gapc" value="close" ${canClose?"checked":"disabled"}><div><b>Close the gap</b> — the ${later.length} later case${later.length>1?"s":""} move down one; their folders and numbered papers are renamed.${canClose?"":`<div class="muted" style="font-size:12px">Dropbox isn't reachable right now — close it later from the register.</div>`}${_movesHTML(later)}</div></label>
+        <label class="gap-opt"><input type="radio" name="gapc" value="leave" ${canClose?"":"checked"}><div><b>Leave ${pad3(n)} unused</b> — nothing else changes.</div></label>
+        <div class="muted" style="font-size:12px;margin-top:6px">Best done the same day, before the numbers are written anywhere outside the app — a printed or WhatsApped cause list, or a note that says “F${pad3(later[0].from)}”, won't change by itself.</div>`
+        :n!=null?`<div class="muted" style="font-size:12.5px;margin-top:10px">It is the latest case, so the next new case simply takes ${pad3(n)} again.</div>`:""}
+      <div id="rcMsg" class="muted" style="font-size:12.5px;min-height:18px;margin-top:10px"></div>
+      <div class="row" style="gap:8px;justify-content:flex-end;margin-top:8px"><button class="btn ghost sm" id="rcNo">Cancel</button><button class="btn sm danger" id="rcYes"><span class="ic ti ti-trash"></span>Delete case</button></div>
+    </div>`);
+  $("rcNo").onclick=closeSheet;
+  $("rcYes").onclick=async()=>{
+    const close=(document.querySelector('input[name="gapc"]:checked')||{}).value==="close"||(n!=null&&!later.length&&canClose);
+    $("rcYes").disabled=$("rcNo").disabled=true; const msg=t=>{ if($("rcMsg")) $("rcMsg").textContent=t; };
+    try{
+      const folder=b.dropboxFolder;
+      msg("Deleting the case…"); await onRemove();
+      if(folder && canClose){ msg("Moving its folder to _to_delete…"); await moveFolderToDelete(folder); }
+      if(close){ const k=await closeSerialGaps((i,m)=>msg(`Renumbering ${i} — ${pad3(m.from)} → ${pad3(m.to)} ${labelOf(m.b)}`));
+        toast(k?`Case deleted — ${k} case${k>1?"s":""} renumbered`:"Case deleted","ti-check"); }
+      else toast(n!=null?`Case deleted — ${pad3(n)} left unused`:"Case deleted","ti-check");
+      closeSheet(); renderActive();
+    }catch(e){ msg("Stopped: "+e.message); toast(e.message,"ti-alert-triangle"); $("rcNo").disabled=false; }
+  };
+}
+// After a merge, or from the register: show the holes and close them.
+function closeGapsForm(intro){
+  const moves=gapPlan();
+  openSheet(`<div class="sheet-head"><div><h3>Close gaps in the numbering</h3><div class="sub">${moves.length?`${moves.length} case${moves.length>1?"s":""} would be renumbered`:"The numbering has no gaps"}</div></div><button class="x-btn"><span class="ti ti-x"></span></button></div>
+    <div class="sheet-body">
+      ${intro?`<div style="font-size:13.5px;margin-bottom:10px">${intro}</div>`:""}
+      ${moves.length?`<div style="font-size:13px;line-height:1.55">Each case below moves down to fill the hole; its Dropbox folder and the numbered papers in it are renamed to match. Serials used twice are separated too.</div>${_movesHTML(moves)}
+      <div id="cgMsg" class="muted" style="font-size:12.5px;min-height:18px;margin-top:10px"></div>
+      <div class="row" style="gap:8px;justify-content:flex-end;margin-top:8px"><button class="btn ghost sm" id="cgNo">Not now</button><button class="btn sm" id="cgYes"><span class="ic ti ti-arrows-sort"></span>Close the gaps</button></div>`
+      :`<div class="empty"><span class="ic ti ti-circle-check"></span>Every case is numbered in an unbroken run.</div>`}
+    </div>`);
+  if(!moves.length) return;
+  $("cgNo").onclick=closeSheet;
+  $("cgYes").onclick=async()=>{ $("cgYes").disabled=$("cgNo").disabled=true;
+    try{ const k=await closeSerialGaps((i,m)=>{ if($("cgMsg")) $("cgMsg").textContent=`Renumbering ${i} of ${moves.length} — ${pad3(m.from)} → ${pad3(m.to)} ${labelOf(m.b)}`; });
+      toast(`${k} case${k===1?"":"s"} renumbered — no gaps left`,"ti-check"); closeSheet(); renderActive(); }
+    catch(e){ if($("cgMsg")) $("cgMsg").textContent="Stopped: "+e.message; $("cgNo").disabled=false; } };
+}
+
 // The next day-sheet listing of a brief, today or later (court/item come from the sheet).
 function nextListingOf(id){
   const t=todayISO(); let best=null;
@@ -4920,7 +5026,7 @@ function renderBriefs(){
       <div class="rg-sub">${cases.length} files · ${counts[""]} active · next serial <b>${pad3(nextSerial())}</b></div></div>
       ${isAdmin()?`<div class="row" style="gap:8px;flex-wrap:wrap"><button class="btn ghost sm" id="rgDups"><span class="ic ti ti-copy"></span>Find duplicates</button>${noSerial.length?`<button class="btn ghost sm" id="rgNumberDate"><span class="ic ti ti-hash"></span>Number old cases by date</button>`:""}</div>`:""}</div>
     ${isAdmin()&&noSerial.length?`<div class="rg-steps"><span class="ti ti-list-numbers"></span>To number the old cases: <b>1</b> Find duplicates → <b>2</b> Number old cases by date. New cases are numbered when their Files are first opened.</div>`:""}
-    ${(noSerial.length||clashes.length)?`<div class="rg-warn">${noSerial.length?`<button class="chip" data-bf="noserial"><span class="ti ti-hash"></span>${noSerial.length} without a serial</button>`:""}${clashes.map(c=>`<span class="chip"><span class="ti ti-alert-triangle"></span>${pad3(c.n)} used ${c.ids.length}×: ${c.ids.map(id=>esc(labelOf(briefs[id]))).join(" / ")}</span>`).join("")}</div>`:""}`;
+    ${(noSerial.length||clashes.length||(canManage()&&gapPlan().length))?`<div class="rg-warn">${canManage()&&gapPlan().length?`<button class="chip" id="rgGaps"><span class="ti ti-arrows-sort"></span>Numbering has gaps — close them</button>`:""}${noSerial.length?`<button class="chip" data-bf="noserial"><span class="ti ti-hash"></span>${noSerial.length} without a serial</button>`:""}${clashes.map(c=>`<span class="chip"><span class="ti ti-alert-triangle"></span>${pad3(c.n)} used ${c.ids.length}×: ${c.ids.map(id=>esc(labelOf(briefs[id]))).join(" / ")}</span>`).join("")}</div>`:""}`;
   const tools=`<div class="rg-tools"><div class="rg-search"><span class="ti ti-search"></span><input id="bSearch" placeholder="Search serial, title, diary or case no., AoR" value="${esc(briefSearch)}" autocomplete="off"></div>
     <div class="rg-chips">${filters.map(([k,l])=>`<button class="rg-chip ${briefFilter===k?'on':''}" data-bf="${k}">${l}<b>${counts[k]}</b></button>`).join("")}</div></div>`;
   const serialCell=b=>{ const n=serialNum(b); return n!=null?`<button class="rg-serial" data-brief="${b.id}">${pad3(n)}</button>`:`<span class="rg-serial none">no serial</span>`; };
@@ -4952,6 +5058,7 @@ function renderBriefs(){
   document.querySelectorAll("#tab-briefs [data-bf]").forEach(x=>x.onclick=()=>{briefFilter=x.dataset.bf;renderBriefs();});
   document.querySelectorAll("#tab-briefs [data-editbrief]").forEach(x=>x.onclick=e=>{e.stopPropagation();briefForm(briefs[x.dataset.editbrief]);});
   if($("rgNumberDate")) $("rgNumberDate").onclick=numberByDateForm;
+  if($("rgGaps")) $("rgGaps").onclick=()=>closeGapsForm();
   if($("rgDups")) $("rgDups").onclick=duplicatesForm;
   if($("tbNewBrief2"))$("tbNewBrief2").onclick=()=>briefForm();
   if($("tbLegalAid"))$("tbLegalAid").onclick=()=>legalAidForm();
@@ -5100,7 +5207,7 @@ async function filesApi(action, body, raw){
       if(body.name){ const tk=key(body.toFolder||f,body.toSub!=null?body.toSub:sb); const tb=(_demoFiles[tk]=_demoFiles[tk]||[]);
         if(tb.some(x=>x.name===body.toName)) throw new Error("Something with that name already exists — nothing was changed.");
         const i=bag.findIndex(x=>x.name===body.name); if(i<0) throw new Error("Dropbox: from_lookup/not_found/"); const [it]=bag.splice(i,1); tb.push({...it,name:body.toName}); return {ok:true}; }
-      const nk=key(body.toFolder,sb); if(_demoFiles[nk]&&_demoFiles[nk].length) throw new Error("Something with that name already exists — nothing was changed.");
+      const nk=key(body.toFolder,body.toSub!=null?body.toSub:sb); if(_demoFiles[nk]&&_demoFiles[nk].length) throw new Error("Something with that name already exists — nothing was changed.");
       if(!Object.keys(_demoFiles).some(x=>(x===k||x.startsWith(k+"/"))&&x!==nk)) throw new Error("Dropbox: from_lookup/not_found/");
       for(const x of Object.keys(_demoFiles)) if(x===k||x.startsWith(k+"/")){ _demoFiles[nk+x.slice(k.length)]=_demoFiles[x]; delete _demoFiles[x]; }
       return {ok:true}; }
@@ -5648,11 +5755,7 @@ function openBrief(id){
   if($("ob_status"))$("ob_status").onchange=async()=>{await db.update("briefs/"+id,{status:$("ob_status").value,updatedAt:db.now()});closeSheet();openBrief(id);};
   document.querySelectorAll("[data-editbrief]").forEach(x=>x.onclick=()=>{closeSheet();briefForm(b);});
   document.querySelectorAll("[data-brnoteexport]").forEach(x=>x.onclick=()=>{ exportNotesDoc(labelOf(b), `Conference notes${serialNum(b)!=null?` · Serial ${pad3(serialNum(b))}`:''}`, b.confNotes||[], "Conference notes - "+labelOf(b)); });
-  document.querySelectorAll("[data-delbrief]").forEach(x=>x.onclick=()=>{ const ld=listingDatesOf(id);
-    confirmAsk({title:"Delete this matter?",danger:true,confirmLabel:"Delete matter",
-      body:`<b>${esc(labelOf(b))}</b> will be removed from the register for the whole chamber${ld.length?`, along with its ${ld.length} day-sheet listing${ld.length>1?'s':''} and any conference tied to it`:''}. Colleagues' credit for it is cleared.`,
-      onYes:async()=>{ await purgeBriefEverywhere(id); toast("Matter deleted"); closeSheet(); }});
-  });
+  document.querySelectorAll("[data-delbrief]").forEach(x=>x.onclick=()=>removeCaseDialog(b, ()=>purgeBriefEverywhere(id)));
   document.querySelectorAll("[data-mergedup]").forEach(x=>x.onclick=()=>{closeSheet();mergeDuplicateForm(id);});
   document.querySelectorAll("[data-autoassign2]").forEach(x=>x.onclick=async()=>{const r=await autoAssign(id);if(r)notifyForm(id,r);else{closeSheet();openBrief(id);}});
   document.querySelectorAll("[data-notify]").forEach(x=>x.onclick=()=>notifyForm(x.dataset.notify));
