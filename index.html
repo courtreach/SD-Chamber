@@ -14,6 +14,38 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="SD Chamber">
 <script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){});});}</script>
+<script>
+/* Start-up safety net (Oct 2026: an iPhone showed only a white page). Plain old JavaScript so it
+   runs on any browser even when the app itself can't start. If, 12 seconds in, neither the sign-in
+   screen nor the app has appeared, it says so — with the browser's own error and the device — and
+   offers a one-tap reset that clears this app's offline copy and loads it fresh. */
+(function(){
+  var errs=[];
+  window.addEventListener('error',function(e){ if(e&&e.message) errs.push(e.message+(e.filename?' ('+String(e.filename).split('/').pop()+':'+e.lineno+')':'')); });
+  window.addEventListener('unhandledrejection',function(e){ var r=e&&e.reason; errs.push('Promise: '+(r&&(r.message||r))); });
+  window.__resetApp=function(){
+    var jobs=[];
+    try{ if(navigator.serviceWorker&&navigator.serviceWorker.getRegistrations) jobs.push(navigator.serviceWorker.getRegistrations().then(function(rs){ return Promise.all(rs.map(function(r){ return r.unregister(); })); })); }catch(x){}
+    try{ if(window.caches&&caches.keys) jobs.push(caches.keys().then(function(ks){ return Promise.all(ks.map(function(k){ return caches.delete(k); })); })); }catch(x){}
+    Promise.all(jobs).then(go,go); function go(){ location.replace(location.pathname+'?fresh='+Date.now()); }
+  };
+  function check(){
+    var ok=['authView','pendingView','app'].some(function(i){ var el=document.getElementById(i); return el&&!el.classList.contains('hidden'); });
+    if(ok||document.getElementById('bootFail')) return;
+    var d=document.createElement('div'); d.id='bootFail';
+    d.setAttribute('style','position:fixed;inset:0;z-index:999;background:#f6f5f1;color:#1d232a;font:15px/1.5 -apple-system,system-ui,sans-serif;padding:max(28px,env(safe-area-inset-top)) 22px 28px;overflow:auto');
+    var esc=function(t){ return String(t).replace(/[&<>]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c]; }); };
+    d.innerHTML='<div style="max-width:520px;margin:0 auto"><div style="font:600 22px/1.25 Georgia,serif;margin-bottom:8px">The app didn\'t start</div>'+
+      '<div style="color:#555">'+(errs.length?'Your browser reported a problem while starting the app.':'It is taking unusually long — the connection may be slow, or an old copy of the app is stuck on this device.')+'</div>'+
+      '<button onclick="__resetApp()" style="margin-top:18px;width:100%;padding:14px;border:0;border-radius:10px;background:#1d232a;color:#fff;font:600 16px -apple-system,system-ui,sans-serif">Reset and reload the app</button>'+
+      '<button onclick="location.reload()" style="margin-top:10px;width:100%;padding:12px;border:1px solid #ccc;border-radius:10px;background:#fff;color:#1d232a;font:500 15px -apple-system,system-ui,sans-serif">Just try again</button>'+
+      '<div style="margin-top:22px;font-size:12px;color:#777">If it keeps happening, send a screenshot of this screen to the admin.</div>'+
+      '<pre style="margin-top:8px;white-space:pre-wrap;word-break:break-word;font:11.5px/1.45 Menlo,monospace;background:#fff;border:1px solid #ddd;border-radius:8px;padding:10px;color:#333">'+esc((errs.length?errs.slice(0,5).join('\n'):'No error reported')+'\n\n'+navigator.userAgent)+'</pre></div>';
+    (document.body||document.documentElement).appendChild(d);
+  }
+  setTimeout(check,12000);
+})();
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Fraunces:opsz,wght@9..144,380;9..144,450&family=Inter:wght@400;450;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -1103,51 +1135,31 @@ body.demo .topbar{top:34px}
 .conf-who-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
 .conf-who-row .conf-who{margin:0}
 
-/* --- calendar, re-presented --- */
-.cal-toolbar{align-items:center}
+/* --- calendar: minimal (owner, Oct 2026) — the date, how many cases, how many conferences --- */
 .cal-todaybtn{border:1px solid var(--line-2)!important;border-radius:99px!important;padding:5px 14px!important;font-weight:600}
-.cal-sum{display:flex;gap:8px;flex-wrap:wrap}
-.cal-sum>div{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:7px 14px;display:flex;align-items:baseline;gap:7px;box-shadow:var(--sh-1)}
-.cal-sum b{font-family:Fraunces,serif;font-size:19px;font-weight:600;color:var(--ink)}
-.cal-sum span{font-size:11.5px;color:var(--ink-3)}
-.cal-sum>div.away b{color:#c0392b}
-.cal-legend{margin:-6px 0 14px}
-.cal-cell{height:132px;position:relative;padding:9px 10px 8px;gap:3px}
-.cal-cell.past:not(.today){background:var(--surface-2)}
-.cal-cell.past:not(.today) .cal-items,.cal-cell.past:not(.today) .cal-num{opacity:.6}
-.cal-bar{position:absolute;left:0;right:0;top:0;height:3px}
-.cal-bar.lg{background:#4e7a5e}.cal-bar.ly{background:#c99a2e}.cal-bar.lr{background:#b4472e}
+.cal-sum{font-size:12.5px;color:var(--ink-3);display:flex;align-items:baseline;gap:6px;flex-wrap:wrap}
+.cal-sum b{font-size:14px;color:var(--ink);font-weight:600}.cal-sum b.away{color:#c0392b}.cal-sum span{opacity:.5}
+.cal-grid,.cal-dow{gap:6px}
+.cal-cell{height:92px;padding:9px 10px;gap:4px;border-radius:12px;box-shadow:none}
+.cal-cell:hover{transform:none;box-shadow:var(--sh-1)}
+.cal-cell.past:not(.today) .cal-num,.cal-cell.past:not(.today) .cal-info{opacity:.5}
 .cal-top{gap:6px;min-width:0}
-.cal-top .cal-tag{flex:1;min-width:0;display:inline-flex;align-items:center;gap:3px;font-size:10px}
-.cal-cnt{margin-left:auto;font-size:10.5px;font-weight:700;min-width:20px;height:20px;border-radius:99px;display:inline-flex;align-items:center;justify-content:center;padding:0 6px;color:#fff;flex-shrink:0}
-.cal-cnt.lg{background:#4e7a5e}.cal-cnt.ly{background:#c99a2e}.cal-cnt.lr{background:#b4472e}
+.cal-top .cal-tag{flex:1;min-width:0;display:block;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:10px}
 .cal-cell.today .cal-num{background:var(--accent);color:#fff;border-radius:99px;min-width:26px;height:26px;display:inline-flex;align-items:center;justify-content:center;font-size:14.5px;padding:0 6px}
-.cal-items{display:flex;flex-direction:column;gap:2px;min-width:0;margin-top:2px}
-.ci{display:flex;gap:5px;align-items:baseline;font-size:11px;line-height:1.3;color:var(--ink-2);min-width:0}
-.ci b{font-family:var(--mono);font-size:10px;font-weight:600;color:var(--accent-ink);flex-shrink:0}
-.ci span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
-.ci.mine span{color:var(--ink);font-weight:600}
-.ci.next span{font-style:italic;color:var(--ink-3)}
-.ci.more{font-size:10.5px;color:var(--ink-3);font-weight:600}
-.cal-chip{display:inline-flex;align-items:center;gap:3px}
-.cal-chip .ti{font-size:11.5px}
-.cal-chip.leave{background:var(--warn-bg);color:var(--warn)}
-@media (max-width:900px){
-  .cal-items{display:none}
-  .cal-cell{height:80px}
-  .cal-top .cal-tag{display:none}
-  .cal-sum>div{padding:5px 10px}.cal-sum b{font-size:16px}
-}
+.cal-info{margin-top:auto;display:flex;flex-direction:column;gap:2px}
+.cal-l{display:flex;align-items:center;gap:5px;font-size:11.5px;color:var(--ink-3);white-space:nowrap;overflow:hidden}
+.cal-l b{font-size:12.5px;font-weight:600;color:var(--ink)}
+.cal-l .w{overflow:hidden;text-overflow:ellipsis}
+.cal-l.conf .ti{font-size:12px;color:var(--s-conf)}
+.cal-l.conf b{color:var(--s-conf)}
+.cal-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.cal-dot.lg{background:#4e7a5e}.cal-dot.ly{background:#c99a2e}.cal-dot.lr{background:#b4472e}
+@media (max-width:900px){ .cal-top .cal-tag{display:none} .cal-cell{height:76px} }
 @media (max-width:600px){
-  .cal-cell{height:70px;padding:6px 5px}
-  .cal-top{flex-direction:column;align-items:flex-start;gap:3px}
-  .cal-cnt{margin-left:0}
-  .cal-chips{margin-top:auto}.cal-cell .cal-chip{font-size:9px;padding:1px 4px}
-  .cal-sum>div{padding:6px 8px}.cal-sum span{font-size:10.5px;line-height:1.2}
-  .cal-cnt{min-width:17px;height:17px;font-size:9.5px;padding:0 4px}
-  .cal-chip.leave{display:none}
+  .cal-cell{height:64px;padding:6px 5px;border-radius:10px}
+  .cal-l .w{display:none}
+  .cal-l{font-size:10.5px;gap:3px}.cal-l b{font-size:11px}
   .cal-cell.today .cal-num{min-width:22px;height:22px;font-size:12.5px}
-  .cal-sum{width:100%}.cal-sum>div{flex:1;flex-direction:column;align-items:flex-start;gap:0}
 }
 
 /* --- the day popup, as a register --- */
@@ -1194,6 +1206,15 @@ body.demo .topbar{top:34px}
   .dd-acts{grid-column:3;grid-row:1 / span 2}
   .dd-acts .btn-files.big{padding:9px 11px}
 }
+
+/* --- Files as a full page --- */
+.overlay.ov-full{padding:0;background:var(--bg);backdrop-filter:none;align-items:stretch;justify-content:stretch}
+.sheet.sheet-full{max-width:none!important;width:100%;max-height:none;height:100%;border-radius:0;border:none;box-shadow:none;-webkit-overflow-scrolling:touch}
+.sheet-full .sheet-head.fv-head{display:flex;flex-direction:column;align-items:stretch;gap:8px;padding:max(14px,env(safe-area-inset-top)) max(22px,calc((100% - 1180px)/2)) 14px}
+.sheet-full .sheet-body{max-width:1180px;margin:0 auto;padding-bottom:max(28px,env(safe-area-inset-bottom))}
+.fv-backbtn{align-self:flex-start;display:inline-flex;align-items:center;gap:6px;background:none;border:none;padding:6px 0;font-family:inherit;font-size:14px;font-weight:600;color:var(--accent-ink);cursor:pointer}
+.fv-backbtn .ti{font-size:18px}
+.sheet-full .fv-titlebox h3{font-size:22px}
 </style>
 </head>
 <body>
@@ -2920,8 +2941,8 @@ function renderCal(){
   const today=todayISO();
   // Each date island shows WHAT is on that day, not just a number: the first few matters
   // (court·item and the cause title), how many more, conferences, who is on leave.
-  const cells=[], roster=rosterDisplay();
-  let mMatters=0, mConfs=0, mCourtDays=0, mAway=0;
+  const cells=[];
+  let mMatters=0, mConfs=0, mAway=0;
   for(let i=0;i<startDow;i++)cells.push('<div class="cal-cell blank"></div>');
   for(let d=1;d<=dim;d++){
     const iso=`${calMonth}-${String(d).padStart(2,"0")}`;
@@ -2933,19 +2954,15 @@ function renderCal(){
     const load=items.length, loadCls=load?(load<5?'lg':load<=10?'ly':'lr'):'';
     const kind=hol?'day-hol':part?'day-vac':wknd?'day-off':'';
     const senOff=seniorOff(iso);
-    const onLeave=roster.filter(r=>leaveLogCovers(r.id,iso)).length;
-    mMatters+=load; mConfs+=confs.length; if(!hol&&!wknd&&!part) mCourtDays++; if(senOff) mAway++;
+    mMatters+=load; mConfs+=confs.length; if(senOff) mAway++;
     const tag=senOff?`<span class="cal-tag t-sen" title="Senior not available${seniorAvail[iso]?' — '+esc(seniorAvail[iso]):''}"><span class="ti ti-user-off"></span>Senior away</span>`
       :hol?`<span class="cal-tag t-hol" title="${esc(holidays[iso])}">${esc(holidays[iso])}</span>`:part?`<span class="cal-tag t-vac" title="${esc(part)}">Vacation</span>`:'';
-    const SHOW=3;
-    cells.push(`<button class="cal-cell ${senOff?'sen-away':kind} ${iso===today?'today':''} ${iso<today?'past':''}" data-cald="${iso}">
-      ${load?`<span class="cal-bar ${loadCls}"></span>`:''}
-      <div class="cal-top"><span class="cal-num">${d}</span>${tag}${load?`<span class="cal-cnt ${loadCls}">${load}</span>`:''}</div>
-      ${load?`<div class="cal-items">${items.slice(0,SHOW).map(x=>`<div class="ci${x.mine?' mine':''}${x.next?' next':''}">${x.ct?`<b>${esc(x.ct)}</b>`:''}<span>${esc(x.title)}</span></div>`).join("")}${load>SHOW?`<div class="ci more">+${load-SHOW} more</div>`:''}</div>`:''}
-      <div class="cal-chips">
-        ${me.role==="junior"&&mine?`<span class="cal-chip mine">${mine} mine</span>`:''}
-        ${confs.length?`<span class="cal-chip conf" title="Conferences"><span class="ti ti-users-group"></span>${confs.length}</span>`:''}
-        ${onLeave?`<span class="cal-chip leave" title="On leave"><span class="ti ti-plane-departure"></span>${onLeave}</span>`:''}
+    // Minimal: the date, then at most two quiet lines — how many cases, how many conferences.
+    cells.push(`<button class="cal-cell ${senOff?'sen-away':kind} ${iso===today?'today':''} ${iso<today?'past':''}" data-cald="${iso}" aria-label="${fmtDateY(iso)}${load?`, ${load} case${load>1?"s":""}`:""}${confs.length?`, ${confs.length} conference${confs.length>1?"s":""}`:""}">
+      <div class="cal-top"><span class="cal-num">${d}</span>${tag}</div>
+      <div class="cal-info">
+        ${load?`<div class="cal-l"><span class="cal-dot ${loadCls}"></span><b>${load}</b><span class="w"> case${load>1?"s":""}${me.role==="junior"&&mine?` · ${mine} mine`:""}</span></div>`:''}
+        ${confs.length?`<div class="cal-l conf"><span class="ti ti-users-group"></span><b>${confs.length}</b><span class="w"> conf.</span></div>`:''}
       </div>
     </button>`);
   }
@@ -2957,14 +2974,8 @@ function renderCal(){
         <button class="tbtn icon-only" id="calNext" aria-label="Next month"><span class="ic ti ti-chevron-right"></span></button>
         <button class="tbtn cal-todaybtn" id="calToday">Today</button>
       </div>
-      <div class="cal-sum">
-        <div><b>${mMatters}</b><span>matters listed</span></div>
-        <div><b>${mConfs}</b><span>conferences</span></div>
-        <div><b>${mCourtDays}</b><span>court days</span></div>
-        <div class="${mAway?'away':''}"><b>${mAway}</b><span>Senior away</span></div>
-      </div>
+      <div class="cal-sum"><b>${mMatters}</b> cases listed<span>·</span><b>${mConfs}</b> conferences${mAway?`<span>·</span><b class="away">${mAway}</b> day${mAway>1?"s":""} Senior away`:""}</div>
     </div>
-    <div class="cal-legend muted"><span class="lg-grp">Matters a day <span class="ld lg"></span>under 5 <span class="ld ly"></span>5–10 <span class="ld lr"></span>over 10</span><span class="lg-sep">·</span><span class="lg-key t-hol">holiday</span><span class="lg-key t-vac">vacation</span><span class="lg-key t-sen"><span class="ti ti-user-off"></span> senior away</span><span class="lg-sep">·</span><span class="lg-grp"><span class="ti ti-users-group"></span> conferences</span><span class="lg-grp"><span class="ti ti-plane-departure"></span> on leave</span></div>
     <div class="cal-dow">${["Mon","Tue","Wed","Thu","Fri","Sat","Sun"].map(x=>`<div>${x}</div>`).join("")}</div>
     <div class="cal-grid">${cells.join("")}</div>`;
   $("calPrev").onclick=()=>{calMonth=shiftMonth(calMonth,-1);renderCal();};
@@ -5400,14 +5411,23 @@ const _rulesMsg="The app's security rules don't allow this yet — the admin nee
 
 /* ---------------- the Files screen ---------------- */
 let _fv={id:null,sub:"",files:[],dirs:[],q:"",type:"all",loading:false,err:"",st:null};
-let _fvRet=null;   // {id,label,fn}: where "Back" goes when the Files screen was opened from somewhere other than the brief
+let _fvRet=null;
+// Leave the Files page for wherever it was opened from: the brief, the calendar date, or the
+// screen underneath (My work, the register, the day sheet…).
+function fvLeave(){ const id=_fv.id, b=fvTarget();
+  if(!b||b._virtual) return closeSheet();
+  if(_fvRet&&_fvRet.id===id) return _fvRet.fn();
+  openBrief(id); }
+window.addEventListener("popstate",()=>{ if(document.querySelector("#modalRoot .sheet-full")) fvLeave(); });   // {id,label,fn}: where "Back" goes when the Files screen was opened from somewhere other than the brief
 const _hl=(s,q)=>{ s=esc(s); if(!q) return s; const i=s.toLowerCase().indexOf(esc(q).toLowerCase()); return i<0?s:s.slice(0,i)+`<span class="fv-hit">${s.slice(i,i+esc(q).length)}</span>`+s.slice(i+esc(q).length); };
 function filesBtn(briefId, big){
   if(!briefId||!briefs[briefId]) return `<button class="btn-files off${big?" big":""}" data-files="" title="This listing isn't linked to a brief yet"><span class="ti ti-folder"></span>Files</button>`;
   return `<button class="btn-files${big?" big":""}" data-files="${esc(briefId)}"><span class="ti ti-folder"></span>Files</button>`;
 }
 function wireFilesBtns(root){
-  (root||document).querySelectorAll("[data-files]").forEach(x=>x.onclick=e=>{ e.stopPropagation(); _fvRet=null;
+  (root||document).querySelectorAll("[data-files]").forEach(x=>x.onclick=e=>{ e.stopPropagation();
+    // Back returns to the brief when opened from the brief, otherwise to the screen underneath
+    _fvRet=x.closest("#modalRoot")?null:{id:x.dataset.files, label:"Back", fn:closeSheet};
     if(!x.dataset.files){ toast("This listing isn't linked to a brief yet — open it and link or add the brief","ti-info-circle"); return; }
     openFiles(x.dataset.files); });
 }
@@ -5442,9 +5462,10 @@ function renderFilesSheet(){
   if(manage && !virt && b.dropboxFolder && want && b.dropboxFolder!==want && !_fv.sub)
     notes+=`<div class="fv-note"><span class="ti ti-folder-cog"></span><span>Folder is named “${esc(b.dropboxFolder)}”. Rename it to “${esc(want)}” to match the serial and title?</span> <button class="btn sm" id="fv_renameFolder">Rename folder</button></div>`;
   const canAdd=canEditPapers(st) && !virt;
-  openSheet(`<div class="sheet-head"><div><h3>${n!=null?`<span class="fv-serial">${pad3(n)}</span> · `:""}${esc(labelOf(b))}</h3>
-      <div class="fv-path"><span class="ti ti-folder"></span> ${crumbs.map(esc).join(" › ")}</div></div>
-      <button class="x-btn"><span class="ti ti-x"></span></button></div>
+  const backLabel=virt?"Back":(_fvRet&&_fvRet.id===_fv.id)?_fvRet.label:"Back to the brief";
+  openSheet(`<div class="sheet-head fv-head"><button class="fv-backbtn" id="fv_back"><span class="ti ti-arrow-left"></span><span>${esc(backLabel)}</span></button>
+      <div class="fv-titlebox"><h3>${n!=null?`<span class="fv-serial">${pad3(n)}</span> · `:""}${esc(labelOf(b))}</h3>
+      <div class="fv-path"><span class="ti ti-folder"></span> ${crumbs.map(esc).join(" › ")}</div></div></div>
     <div class="sheet-body">
       ${notes}
       <div class="fv-tools">
@@ -5456,14 +5477,16 @@ function renderFilesSheet(){
       </div>
       <div id="fvChips" class="fv-chips"></div>
       <div id="fvList">${_fv.loading?`<div class="fv-empty">Loading papers…</div>`:""}</div>
-      <div class="row" style="margin-top:14px;gap:8px"><button class="btn ghost sm" id="fv_back"><span class="ic ti ti-arrow-left"></span>${virt?"Close":(_fvRet&&_fvRet.id===_fv.id)?esc(_fvRet.label):"Back to the brief"}</button></div>
     </div>`);
-  document.querySelector("#modalRoot .sheet")?.classList.add("sheet-wide");
+  // a page of its own, filling the screen — not a pop-up (owner, Oct 2026)
+  document.querySelector("#modalRoot .overlay")?.classList.add("ov-full");
+  document.querySelector("#modalRoot .sheet")?.classList.add("sheet-full");
+  if(!(history.state&&history.state.fv)){ try{ history.pushState({fv:1},""); }catch(e){} }   // the phone's/browser's Back leaves the page too
   if(!_fv.loading) fvRenderList();
   const id=_fv.id;
   $("fvQ").oninput=e=>{ _fv.q=e.target.value; fvRenderList(); };
   wireSort(document.querySelector("#modalRoot .sheet"), ()=>fvRenderList());
-  $("fv_back").onclick=()=>virt?closeSheet():(_fvRet&&_fvRet.id===id)?_fvRet.fn():openBrief(id);
+  $("fv_back").onclick=()=>{ if(history.state&&history.state.fv) history.back(); else fvLeave(); };
   $("fv_refresh").onclick=()=>{ _filesStatus=null; openFiles(id,_fv.sub); };
   if($("fv_up")) $("fv_up").onclick=()=>openFiles(id,_fv.sub.split("/").slice(0,-1).join("/"));
   if($("fv_connect")) $("fv_connect").onclick=async()=>{ const w=window.open("","_blank"); try{ const d=await filesApi("connect"); if(w) w.location=d.url; else location.href=d.url; _filesStatus=null; }catch(e){ if(w) w.close(); toast(e.message,"ti-alert-triangle"); } };

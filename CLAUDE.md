@@ -47,6 +47,25 @@ Dropbox is reachable, enforced by Dropbox itself) and **one folder per brief**.
   `sd-chamber-files` with KV + both secrets, and connected from the app. Verified from
   outside: home page, 401 without sign-in, CORS for the app origin, KV-backed callback guard.
 
+## Files as a full page · minimal calendar · start-up safety net (Oct 2026)
+
+- **Files is a page, not a pop-up**: `renderFilesSheet` still uses openSheet but marks the
+  overlay `.ov-full` and the sheet `.sheet-full` (fills the screen, safe-area aware), a
+  "← Back" at the top, and pushes a history entry `{fv:1}` so the browser/phone Back leaves it.
+  `fvLeave()` decides where Back goes: `_fvRet` (set by `wireFilesBtns` — screen underneath
+  when opened from a tab, the brief when opened inside the brief sheet; the calendar popup
+  sets "Back to <date>"), else the brief.
+- **Calendar minimal** (owner: "minimalistic but should convey cases listed and conferences"):
+  each date = number (+ holiday / Senior-away label), then two quiet lines — "● 4 cases"
+  (dot coloured by load) and "conf icon 2 conf."; phone shows the numbers only. Month line:
+  "22 cases listed · 2 conferences · 3 days Senior away". No titles in the cells — the date
+  popup (unchanged register) carries the detail.
+- **Start-up safety net** (owner's iPhone showed a white page): a plain, non-module script in
+  <head> records window errors; if 12 s in neither sign-in nor the app is visible, it shows
+  "The app didn't start" with the error + user agent, a **Reset and reload** button
+  (`__resetApp`: unregisters the service worker, clears caches, reloads with ?fresh=) and
+  "Just try again". Cause of the iPhone white page NOT yet known — get the screenshot.
+
 ## Conference Word button · no "likely now" · case folders for all · calendar re-presented (Oct 2026)
 
 - **Conference card**: the Dictation/Instructions bar is gone; ONE blue "W" button sits
