@@ -1244,6 +1244,84 @@ body.demo .topbar{top:34px}
 .fh-open{background:var(--surface);color:var(--ink-2);border:1px solid var(--line-2)}
 .fh-add .ti,.fh-open .ti{font-size:19px}
 .fh-empty{font-size:13px;color:var(--ink-3);padding:14px;border:1px dashed var(--line-2);border-radius:12px;text-align:center}
+
+/* ===== registers on phones (owner, Oct 2026) ===== */
+.l-short{display:none}
+.ds-step{background:none;border:none;color:var(--ink-2);padding:6px 4px;cursor:pointer;display:inline-flex;align-items:center;font-size:16px}
+.rg-toolsbtn{display:none}
+.tool-row{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:8px;font-family:inherit;cursor:pointer}
+.tool-row .ti{font-size:20px;color:var(--accent-ink)}
+.tool-row b{display:block;font-size:14px;color:var(--ink)}
+.tool-row small{font-size:12px;color:var(--ink-3)}
+/* compact register cards (phones + tablets) */
+.rg-card{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:start;cursor:pointer;padding:11px 11px 11px 10px}
+.rgc-t{font-family:var(--serif);font-size:15.5px;font-weight:500;color:var(--ink);line-height:1.3}
+.rgc-t .rg-tag{margin-left:6px}
+.rgc-d{display:flex;flex-wrap:wrap;gap:3px 10px;align-items:center;margin-top:5px;font-size:12px;color:var(--ink-2)}
+.rgc-when{display:inline-flex;align-items:center;gap:4px}.rgc-when .ti{color:var(--s-listed)}
+.rgc-when b{font-weight:600;color:var(--ink)}
+.rgc-past{color:var(--ink-3);font-size:11.5px}
+.rg-card .rg-team{margin-top:6px}
+.rgc-r{align-self:center}
+.rg-card .rg-card-lst{display:none}
+@media (min-width:601px) and (max-width:1100px){ .rg-card .rg-card-lst{display:block} .rg-card .rgc-d{display:none} }
+@media (max-width:600px){
+  /* brief register */
+  .rg-head .rg-title{display:none}
+  .rg-head{align-items:center;margin-bottom:8px}
+  .rg-admin,.rg-steps{display:none!important}
+  .rg-toolsbtn{display:inline-flex}
+  .rg-warn{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:2px}
+  .rg-warn .chip{flex-shrink:0}
+  .rg-tools{display:grid!important;grid-template-columns:1fr;gap:8px}
+  .rg-tools .sortsel select{width:100%}
+  .rg-chips{flex-wrap:nowrap!important;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px;margin:0 -12px;padding-left:12px;padding-right:12px}
+  .rg-chip{flex-shrink:0}
+  .rg-card{margin-bottom:7px;border-radius:12px}
+  .rg-card .rg-serial{font-size:12px;padding:3px 6px}
+  .rg-card .btn-files{padding:9px 11px;flex-direction:column;gap:2px;font-size:11.5px}
+  .rg-card .btn-files .ti{font-size:18px}
+  /* day sheet */
+  .ds-toolbar{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px!important;margin-bottom:16px}
+  .ds-toolbar .ds-date{grid-column:1 / -1;justify-content:space-between}
+  .ds-toolbar .ds-date input{flex:1;text-align:center;font-size:15px}
+  .ds-toolbar .ds-date .lab{display:none}
+  .ds-toolbar>.chip,.ds-toolbar>.muted{grid-column:1 / -1}
+  .ds-toolbar>.btn,.ds-toolbar>.dlink{margin:0!important;flex-direction:column;gap:3px;padding:8px 2px!important;font-size:11px!important;justify-content:center;text-align:center}
+  .ds-toolbar .ic{font-size:18px!important;margin:0}
+  .l-long{display:none}.l-short{display:inline}
+  .rail-item{grid-template-columns:30px 1fr}
+  .rail-num{width:24px;height:24px;font-size:11.5px;margin-top:10px}
+  .rail-body{padding:12px 12px}
+  .rail-case{font-size:16px}
+  /* leave + workload: one line per person */
+  .load-islands{grid-template-columns:1fr!important;gap:6px}
+  .load-island{display:grid;grid-template-columns:34px minmax(0,1fr) auto;grid-template-rows:auto auto;column-gap:10px;row-gap:1px;align-items:center;text-align:left;padding:9px 12px}
+  .load-island .li-ava{grid-row:1 / 3;grid-column:1;margin:0;width:32px;height:32px}
+  .load-island .li-name{grid-column:2;grid-row:1;margin:0;min-height:0;display:block;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .load-island .li-lab{grid-column:2;grid-row:2;margin:0;justify-content:flex-start}
+  .load-island .li-load{grid-column:3;grid-row:1 / 3;margin:0;font-size:24px}
+  .load-island .li-year{grid-column:2;grid-row:2;margin:0;padding:0;border:none;font-size:11.5px;color:var(--ink-3)}
+  .leave-island .li-lab{display:none}
+  /* leave: the register first, then a dense one-line-per-person tally */
+  #tab-leave:not(.hidden){display:flex;flex-direction:column}
+  #tab-leave>.panel:last-child{order:-1;margin-top:0!important;margin-bottom:16px}
+  .leave-island{grid-template-columns:28px minmax(0,1fr) auto auto;grid-template-rows:auto;padding:6px 10px;row-gap:0}
+  .leave-island .li-ava{grid-row:1;width:26px;height:26px;font-size:10.5px}
+  .leave-island .li-name{font-size:13.5px}
+  .leave-island .li-load{grid-row:1;grid-column:3;font-size:17px;font-family:inherit;font-weight:600}
+  .leave-island .li-year{grid-row:1;grid-column:4;font-size:12px;white-space:nowrap}
+  .leave-island .li-year::before{content:"· "}
+  .leave-reg{padding:10px 12px!important;gap:8px}
+  .panel-head{flex-wrap:wrap;gap:8px}
+  .panel-head .seg{width:100%}
+  .panel-head .seg button{flex:1}
+  /* credit register table */
+  .reg-table th,.reg-table td{padding:10px 8px;font-size:13px}
+  .reg-table .c-date{width:auto;font-size:12px}
+  .reg-table .c-sn{width:26px}
+  .reg-table .c-cr{width:44px}
+}
 </style>
 </head>
 <body>
@@ -3599,10 +3677,10 @@ function renderToday(){
     ? `<span class="chip bal-even" title="Supreme Court benches fetched for this date — the Add-matter form fills the bench automatically"><span class="dot"></span>SC benches loaded</span>`
     : (causeListReady()? `<span class="muted" style="font-size:11.5px"><span class="ti ti-clock"></span> No SC list fetched for this date yet</span>` : "");
   const toolbar=`<div class="ds-toolbar">
-    <div class="ds-date"><span class="lab">Date</span><input type="date" id="dsDateInp" value="${dsDate}"></div>
-    <a class="dlink" href="https://www.sci.gov.in/cause-list/" target="_blank" rel="noopener"><span class="ic ti ti-external-link"></span>SCI cause list</a>
+    <div class="ds-date"><button class="ds-step" id="dsPrevDay" aria-label="Previous day"><span class="ti ti-chevron-left"></span></button><span class="lab">Date</span><input type="date" id="dsDateInp" value="${dsDate}"><button class="ds-step" id="dsNextDay" aria-label="Next day"><span class="ti ti-chevron-right"></span></button></div>
+    <a class="dlink" href="https://www.sci.gov.in/cause-list/" target="_blank" rel="noopener"><span class="ic ti ti-external-link"></span><span class="l-long">SCI cause list</span><span class="l-short">SCI list</span></a>
     ${clStatus}
-    <button class="btn ghost sm" id="tbPrint" style="margin-left:auto"><span class="ic ti ti-printer"></span>Print</button><button class="btn ghost sm" id="tbShare"><span class="ic ti ti-share"></span>Share</button><button class="btn ghost sm" id="tbSaveDbx" title="Save this day's cause list to Dropbox › Causelists"><span class="ic ti ti-cloud-upload"></span>Save to Dropbox</button><button class="btn ghost sm" id="tbCauselists" title="Saved cause lists"><span class="ic ti ti-folder"></span>Saved</button>
+    <button class="btn ghost sm" id="tbPrint" style="margin-left:auto"><span class="ic ti ti-printer"></span>Print</button><button class="btn ghost sm" id="tbShare"><span class="ic ti ti-share"></span>Share</button><button class="btn ghost sm" id="tbSaveDbx" title="Save this day's cause list to Dropbox › Causelists"><span class="ic ti ti-cloud-upload"></span><span class="l-long">Save to Dropbox</span><span class="l-short">Save</span></button><button class="btn ghost sm" id="tbCauselists" title="Saved cause lists"><span class="ic ti ti-folder"></span>Saved</button>
   </div>`;
 
   let rail;
@@ -3676,6 +3754,8 @@ function renderToday(){
   const senNotice=senOff?`<div class="notice warn" style="margin-bottom:12px"><span class="ti ti-user-off"></span><div><b>Senior not available on ${fmtDateY(dsDate)}</b>${seniorAvail[dsDate]?` — ${esc(seniorAvail[dsDate])}`:''}. No matter can be listed for this day.</div></div>`:"";
   $("tab-today").innerHTML=senNotice+toolbar+table+rail+confSec;
   $("dsDateInp").onchange=e=>{ dsDate=e.target.value||todayISO(); watchDaysheet(); renderToday(); };
+  const stepDay=d=>{ const x=new Date(dsDate+"T00:00"); x.setDate(x.getDate()+d); dsDate=x.toLocaleDateString("en-CA"); watchDaysheet(); renderToday(); };
+  $("dsPrevDay").onclick=()=>stepDay(-1); $("dsNextDay").onclick=()=>stepDay(1);
   if($("tbAddDs"))$("tbAddDs").onclick=()=>dsForm();
   if($("tbShare"))$("tbShare").onclick=shareDaySheet;
   if($("tbPrint"))$("tbPrint").onclick=()=>printCauseList(dsDate);
@@ -4941,12 +5021,22 @@ function briefListHTML(list, opts){
       <td>${listingsCell(b)}</td><td><div class="rg-team">${team(b)}</div></td>
       <td><div class="rg-acts">${isCaseBrief(b)?filesBtn(b.id):""}${canEd?`<button class="tbtn icon-only" data-editbrief="${b.id}" title="Edit"><span class="ic ti ti-pencil"></span></button>`:""}</div></td></tr>`).join("")}
     </tbody></table>`:"";
-  const cards=list.length?`<div class="rg-cards">${list.map(b=>`<div class="rg-card ${b.status==='disposed'?'dim':''}">
-      <div class="top">${serialCell(b)}${tag(b)}${flags(b)}</div>
-      <button class="rg-name" data-brief="${b.id}" style="font-size:16px">${esc(labelOf(b))}</button>
-      ${nums(b)?`<div class="rg-nums">${esc(nums(b))}</div>`:""}
-      <div class="rg-card-lst">${listingsCell(b)}</div><div class="rg-team" style="margin-top:6px">${team(b)}</div>
-      <div class="acts">${isCaseBrief(b)?filesBtn(b.id):"<span></span>"}<button class="btn ghost" data-brief="${b.id}"><span class="ic ti ti-folder-open"></span>Open</button></div>
+  // phones/tablets: one compact row per brief — tap it to open; Files on the right
+  const nextLine=b=>{ const t=todayISO(), L=briefListings(b.id), up=L.filter(x=>x.date>=t).reverse(), past=L.filter(x=>x.date<t).length;
+    const nx=up[0]||(b.nextDate&&b.nextDate>=t?{date:b.nextDate,next:true}:null);
+    const ci=x=>[x.court?`Ct ${esc(x.court)}`:"",x.item?`Item ${esc(x.item)}`:""].filter(Boolean).join(" · ");
+    return nx?`<span class="rgc-when"><span class="ti ti-calendar-event"></span><b>${fmtDateY(nx.date)}</b>${nx.next?" · next date":ci(nx)?" · "+ci(nx):""}</span>${past?`<span class="rgc-past">${past} earlier</span>`:""}`
+      :past?`<span class="rgc-past">Last listed ${fmtDateY(L.find(x=>x.date<t).date)}${past>1?` · ${past} listings`:""}</span>`:`<span class="rgc-past">Not listed yet</span>`; };
+  const cards=list.length?`<div class="rg-cards">${list.map(b=>`<div class="rg-card ${b.status==='disposed'?'dim':''}" data-brief="${b.id}">
+      <div class="rgc-l">${serialCell(b)}</div>
+      <div class="rgc-m">
+        <div class="rgc-t">${esc(labelOf(b))}${tag(b)}${flags(b)}</div>
+        ${nums(b)?`<div class="rg-nums">${esc(nums(b))}</div>`:""}
+        <div class="rgc-d">${nextLine(b)}</div>
+        <div class="rg-card-lst">${listingsCell(b)}</div>
+        ${(b.assignedTo||[]).length?`<div class="rg-team">${team(b)}</div>`:""}
+      </div>
+      <div class="rgc-r">${isCaseBrief(b)?filesBtn(b.id):""}</div>
     </div>`).join("")}</div>`:"";
   return table+cards;
 }
@@ -5002,7 +5092,7 @@ function renderBriefs(){
   const notice=(!canManage()&&!isSenior()&&myUnacked.length)?`<div class="notice"><span class="ti ti-bell"></span><div><b>${myUnacked.length} new assignment${myUnacked.length>1?'s':''}</b> awaiting your acknowledgment — open and acknowledge.</div></div>`:"";
   const head=`<div class="rg-head"><div><div class="rg-title">Brief register</div>
       <div class="rg-sub">${cases.length} files · ${counts[""]} active · next serial <b>${pad3(nextSerial())}</b></div></div>
-      ${isAdmin()?`<div class="row" style="gap:8px;flex-wrap:wrap"><button class="btn ghost sm" id="rgDups"><span class="ic ti ti-copy"></span>Find duplicates</button><button class="btn ghost sm" id="rgFolders"><span class="ic ti ti-folders"></span>Create case folders</button><button class="btn ghost sm" id="rgExport" title="Download the list of cases (for matching papers kept elsewhere)"><span class="ic ti ti-download"></span>Download case list</button>${noSerial.length?`<button class="btn ghost sm" id="rgNumberDate"><span class="ic ti ti-hash"></span>Number old cases by date</button>`:""}</div>`:""}</div>
+      ${isAdmin()?`<button class="btn ghost sm rg-toolsbtn" id="rgToolsBtn"><span class="ic ti ti-tool"></span>Register tools</button><div class="row rg-admin" style="gap:8px;flex-wrap:wrap"><button class="btn ghost sm" id="rgDups"><span class="ic ti ti-copy"></span>Find duplicates</button><button class="btn ghost sm" id="rgFolders"><span class="ic ti ti-folders"></span>Create case folders</button><button class="btn ghost sm" id="rgExport" title="Download the list of cases (for matching papers kept elsewhere)"><span class="ic ti ti-download"></span>Download case list</button>${noSerial.length?`<button class="btn ghost sm" id="rgNumberDate"><span class="ic ti ti-hash"></span>Number old cases by date</button>`:""}</div>`:""}</div>
     ${isAdmin()&&noSerial.length?`<div class="rg-steps"><span class="ti ti-list-numbers"></span>To number the old cases: <b>1</b> Find duplicates → <b>2</b> Number old cases by date. New cases are numbered when their Files are first opened.</div>`:""}
     ${(noSerial.length||clashes.length||(canManage()&&gapPlan().length))?`<div class="rg-warn">${canManage()&&gapPlan().length?`<button class="chip" id="rgGaps"><span class="ti ti-arrows-sort"></span>Numbering has gaps — close them</button>`:""}${noSerial.length?`<button class="chip" data-bf="noserial"><span class="ti ti-hash"></span>${noSerial.length} without a serial</button>`:""}${clashes.map(c=>`<span class="chip"><span class="ti ti-alert-triangle"></span>${pad3(c.n)} used ${c.ids.length}×: ${c.ids.map(id=>esc(labelOf(briefs[id]))).join(" / ")}</span>`).join("")}</div>`:""}`;
   const tools=`<div class="rg-tools"><div class="rg-search"><span class="ti ti-search"></span><input id="bSearch" placeholder="Search serial, title, diary or case no., AoR" value="${esc(briefSearch)}" autocomplete="off"></div>
@@ -5018,6 +5108,16 @@ function renderBriefs(){
   if($("rgGaps")) $("rgGaps").onclick=()=>closeGapsForm();
   if($("rgDups")) $("rgDups").onclick=duplicatesForm;
   if($("rgFolders")) $("rgFolders").onclick=allFoldersForm;
+  if($("rgToolsBtn")) $("rgToolsBtn").onclick=()=>{
+    const nos=Object.values(briefs).filter(b=>isCaseBrief(b)&&serialNum(b)==null).length;
+    const item=(id,ic,t,sub)=>`<button class="tool-row" data-tool="${id}"><span class="ti ${ic}"></span><span><b>${t}</b><small>${sub}</small></span></button>`;
+    openSheet(`<div class="sheet-head"><div><h3>Register tools</h3></div><button class="x-btn"><span class="ti ti-x"></span></button></div><div class="sheet-body">
+      ${item("dups","ti-copy","Find duplicates","The same matter entered twice")}
+      ${nos?item("num","ti-hash","Number old cases by date",nos+" without a serial"):""}
+      ${item("folders","ti-folders","Create case folders","Make every case's Dropbox folder")}
+      ${item("export","ti-download","Download case list","The register as a file")}
+    </div>`);
+    document.querySelectorAll("#modalRoot [data-tool]").forEach(x=>x.onclick=()=>{ const k=x.dataset.tool; if(k==="export"){ closeSheet(); downloadCaseList(); } else ({dups:duplicatesForm,num:numberByDateForm,folders:allFoldersForm})[k](); }); };
   if($("rgExport")) $("rgExport").onclick=downloadCaseList;
   if($("tbNewBrief2"))$("tbNewBrief2").onclick=()=>briefForm();
   if($("tbLegalAid"))$("tbLegalAid").onclick=()=>legalAidForm();

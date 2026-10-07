@@ -47,6 +47,20 @@ Dropbox is reachable, enforced by Dropbox itself) and **one folder per brief**.
   `sd-chamber-files` with KV + both secrets, and connected from the app. Verified from
   outside: home page, 401 without sign-in, CORS for the app origin, KV-backed callback guard.
 
+## Registers on phones (Oct 2026)
+
+All phone rules sit in one `@media (max-width:600px)` block ("registers on phones"):
+- **Brief register**: page title only (no big heading), admin tools folded into one
+  "Register tools" sheet (`#rgToolsBtn`), steps note hidden, filter chips one scrolling line;
+  each brief is a compact row (`.rg-card` grid: serial · title/numbers/next listing + "N
+  earlier" (`nextLine`) · Files). Tap the row to open. Tablets (601–1100) show the full
+  listing dates in the card instead (`.rg-card-lst`).
+- **Day sheet**: toolbar = date with ‹ › day steppers (also on desktop) + five icon buttons
+  with short labels (`.l-long`/`.l-short`); narrower numbering rail.
+- **Leave**: register first, then a one-line-per-person tally. **Chamber workload** islands
+  become one line per colleague; Weekly/Monthly/Yearly full width. Credit register table
+  padding tightened to fit 375 px.
+
 ## Phone bar by role · Files tab (Oct 2026)
 
 - Bottom bar on phones (`mobileTabs()`, applied in `paintChrome`): **Staff (clerk/pa)** —
