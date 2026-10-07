@@ -1088,6 +1088,112 @@ body.demo .topbar{top:34px}
 .danger-btn:hover{background:var(--danger-bg);border-color:var(--danger)}
 .btn.danger{background:var(--danger);border-color:var(--danger);color:#fff}
 .btn.danger:hover{filter:brightness(.94)}
+
+/* --- conference: one Word button beside the timer controls --- */
+.word-ic{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:4px;background:#185abd;color:#fff;font:800 13px/1 Inter,system-ui,sans-serif;letter-spacing:-.02em;box-shadow:inset -5px 0 0 rgba(255,255,255,.18)}
+.word-ic.sm{width:18px;height:18px;font-size:11.5px}
+.cbtn.word{border-color:#c9d8f2;background:#f1f6fe}
+.cbtn.word:hover{background:#e3edfd}
+.conf-word-wrap{position:relative;display:inline-flex}
+.ncard:has(.conf-word-menu){overflow:visible}
+.conf-word-menu{position:absolute;top:calc(100% + 6px);right:0;z-index:30;min-width:220px;background:var(--surface);border:1px solid var(--line-2);border-radius:12px;box-shadow:var(--sh-2),0 12px 30px rgba(0,0,0,.12);padding:6px}
+.cwm-h{font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);padding:6px 8px 4px}
+.conf-word-menu button{display:flex;width:100%;align-items:center;gap:10px;background:none;border:none;border-radius:8px;padding:10px 10px;font-family:inherit;font-weight:700;font-size:14px;line-height:1.2;color:var(--ink);cursor:pointer;text-align:left}
+.conf-word-menu button:hover{background:var(--surface-2)}
+.conf-who-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
+.conf-who-row .conf-who{margin:0}
+
+/* --- calendar, re-presented --- */
+.cal-toolbar{align-items:center}
+.cal-todaybtn{border:1px solid var(--line-2)!important;border-radius:99px!important;padding:5px 14px!important;font-weight:600}
+.cal-sum{display:flex;gap:8px;flex-wrap:wrap}
+.cal-sum>div{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:7px 14px;display:flex;align-items:baseline;gap:7px;box-shadow:var(--sh-1)}
+.cal-sum b{font-family:Fraunces,serif;font-size:19px;font-weight:600;color:var(--ink)}
+.cal-sum span{font-size:11.5px;color:var(--ink-3)}
+.cal-sum>div.away b{color:#c0392b}
+.cal-legend{margin:-6px 0 14px}
+.cal-cell{height:132px;position:relative;padding:9px 10px 8px;gap:3px}
+.cal-cell.past:not(.today){background:var(--surface-2)}
+.cal-cell.past:not(.today) .cal-items,.cal-cell.past:not(.today) .cal-num{opacity:.6}
+.cal-bar{position:absolute;left:0;right:0;top:0;height:3px}
+.cal-bar.lg{background:#4e7a5e}.cal-bar.ly{background:#c99a2e}.cal-bar.lr{background:#b4472e}
+.cal-top{gap:6px;min-width:0}
+.cal-top .cal-tag{flex:1;min-width:0;display:inline-flex;align-items:center;gap:3px;font-size:10px}
+.cal-cnt{margin-left:auto;font-size:10.5px;font-weight:700;min-width:20px;height:20px;border-radius:99px;display:inline-flex;align-items:center;justify-content:center;padding:0 6px;color:#fff;flex-shrink:0}
+.cal-cnt.lg{background:#4e7a5e}.cal-cnt.ly{background:#c99a2e}.cal-cnt.lr{background:#b4472e}
+.cal-cell.today .cal-num{background:var(--accent);color:#fff;border-radius:99px;min-width:26px;height:26px;display:inline-flex;align-items:center;justify-content:center;font-size:14.5px;padding:0 6px}
+.cal-items{display:flex;flex-direction:column;gap:2px;min-width:0;margin-top:2px}
+.ci{display:flex;gap:5px;align-items:baseline;font-size:11px;line-height:1.3;color:var(--ink-2);min-width:0}
+.ci b{font-family:var(--mono);font-size:10px;font-weight:600;color:var(--accent-ink);flex-shrink:0}
+.ci span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.ci.mine span{color:var(--ink);font-weight:600}
+.ci.next span{font-style:italic;color:var(--ink-3)}
+.ci.more{font-size:10.5px;color:var(--ink-3);font-weight:600}
+.cal-chip{display:inline-flex;align-items:center;gap:3px}
+.cal-chip .ti{font-size:11.5px}
+.cal-chip.leave{background:var(--warn-bg);color:var(--warn)}
+@media (max-width:900px){
+  .cal-items{display:none}
+  .cal-cell{height:80px}
+  .cal-top .cal-tag{display:none}
+  .cal-sum>div{padding:5px 10px}.cal-sum b{font-size:16px}
+}
+@media (max-width:600px){
+  .cal-cell{height:70px;padding:6px 5px}
+  .cal-top{flex-direction:column;align-items:flex-start;gap:3px}
+  .cal-cnt{margin-left:0}
+  .cal-chips{margin-top:auto}.cal-cell .cal-chip{font-size:9px;padding:1px 4px}
+  .cal-sum>div{padding:6px 8px}.cal-sum span{font-size:10.5px;line-height:1.2}
+  .cal-cnt{min-width:17px;height:17px;font-size:9.5px;padding:0 4px}
+  .cal-chip.leave{display:none}
+  .cal-cell.today .cal-num{min-width:22px;height:22px;font-size:12.5px}
+  .cal-sum{width:100%}.cal-sum>div{flex:1;flex-direction:column;align-items:flex-start;gap:0}
+}
+
+/* --- the day popup, as a register --- */
+.dd-head{align-items:flex-start}
+.dd-wd{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
+.dd-date{font-family:Fraunces,serif!important;font-size:26px!important;margin:2px 0 6px!important}
+.dd-stats{display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px;color:var(--ink-3)}
+.dd-stats b{color:var(--ink);font-size:14px}
+.dd-pills{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.dd-pill{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;border-radius:99px;padding:3px 10px}
+.dd-pill.hol{background:#f1ecf8;color:#6a5a86}.dd-pill.vac{background:#faf0e2;color:#a3612a}.dd-pill.sen{background:#fbecea;color:#c0392b}.dd-pill.off{background:var(--surface-2);color:var(--ink-3)}
+.dd-sec{margin-bottom:18px}
+.dd-sec-h{display:flex;align-items:center;gap:7px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);font-weight:700;margin-bottom:8px}
+.dd-sec-h b{background:var(--surface-2);color:var(--ink-2);border-radius:99px;padding:1px 8px;font-size:11px;letter-spacing:0}
+.dd-reg{border:1px solid var(--line);border-radius:12px;background:var(--surface);overflow:hidden}
+.dd-row{display:grid;grid-template-columns:34px 92px minmax(0,1fr) auto;gap:0 12px;align-items:start;padding:12px 12px 12px 0;border-bottom:1px solid var(--line)}
+.dd-row:last-child{border-bottom:none}
+.dd-row.mine{box-shadow:inset 3px 0 0 var(--accent)}
+.dd-sn{font-family:var(--mono);font-size:12px;color:var(--ink-3);text-align:center;padding-top:2px}
+.dd-ct{display:flex;flex-direction:column;gap:1px;font-size:12px;color:var(--ink-2)}
+.dd-ct b{font-family:var(--mono);font-size:13px;color:var(--ink)}
+.dd-ct.next span{font-size:11px;font-style:italic;color:var(--ink-3)}
+.dd-ct.conf b{font-size:14px;color:var(--s-conf)}
+.dd-main{min-width:0}
+.dd-title{display:block;background:none;border:none;padding:0;text-align:left;font-family:inherit;font-weight:600;font-size:14.5px;line-height:1.35;color:var(--ink);cursor:pointer}
+.dd-title:hover{text-decoration:underline;text-decoration-color:var(--line-2)}
+.dd-title.static{cursor:default}.dd-title.static:hover{text-decoration:none}
+.dd-link{background:none;border:none;padding:0;font:inherit;color:var(--accent-ink);cursor:pointer;text-align:left}
+.dd-nums{font-family:var(--mono);font-size:11.5px;color:var(--ink-3);margin-top:2px}
+.dd-meta{font-size:11.5px;color:var(--ink-3);margin-top:2px}
+.dd-people{display:flex;flex-wrap:wrap;gap:4px 10px;margin-top:6px;font-size:12px;color:var(--ink-2);align-items:center}
+.dd-jr{display:inline-flex;align-items:center;gap:5px}
+.dd-counsel{font-weight:600;color:var(--ink)}
+.dd-remark{font-size:12px;font-style:italic;color:var(--ink-3);margin-top:4px}
+.dd-acts{align-self:center}
+.dd-empty{font-size:13px;color:var(--ink-3);padding:14px;border:1px dashed var(--line-2);border-radius:12px;text-align:center}
+.dd-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;padding-top:14px;border-top:1px solid var(--line)}
+.dd-settings{margin-top:16px;border:1px solid var(--line);border-radius:12px;padding:10px 14px;background:var(--surface-2)}
+.dd-settings summary{cursor:pointer;font-size:13px;font-weight:600;color:var(--ink-2);display:flex;align-items:center;gap:7px}
+@media (max-width:640px){
+  .dd-row{grid-template-columns:28px minmax(0,1fr) auto;padding-right:10px}
+  .dd-ct{grid-column:2;flex-direction:row;gap:8px;margin-bottom:3px}
+  .dd-main{grid-column:2}
+  .dd-acts{grid-column:3;grid-row:1 / span 2}
+  .dd-acts .btn-files.big{padding:9px 11px}
+}
 </style>
 </head>
 <body>
@@ -1504,7 +1610,7 @@ let live={};
 // per-conference live status: confstatus/{confKey}={date,time,label,onNow,endEst,
 // endAt,notes:[{text,by,at}],by,at} — broadcast to all so colleagues see whether a
 // conference is on, how long it may run, and the notes taken during it.
-let confStatus={}, _editVideo=null;
+let confStatus={}, _editVideo=null, _confWordMenu=null;
 // bumped whenever users / briefs / daysheets change — invalidates the derived
 // caches below (listing scans) so a render never rescans stale, and repeated
 // look-ups within one render reuse the result instead of re-walking every sheet.
@@ -2541,7 +2647,7 @@ function conferencesOn(dateISO){
       const jrs=[...new Set([...jrsOf(e), ...((e.briefId&&briefs[e.briefId]?.assignedTo)||[])])];
       raw.push({date:cd,time:e.confTime||"",counsel:(e.counsel||"").trim(),title:resolveEntry(e,dt).title,kind:"matter",jrs,briefId:e.briefId||null}); } });
     (ds.conferences||[]).forEach(c=>{ const cd=c.date||dt; if(cd===dateISO)
-      raw.push({date:cd,time:c.time||"",counsel:c.name||"",title:"",kind:"manual",isManual:true,jrs:[],briefId:null}); });
+      raw.push({date:cd,time:c.time||"",counsel:c.name||"",title:(c.briefId&&briefs[c.briefId])?labelOf(briefs[c.briefId]):"",kind:"manual",isManual:true,jrs:(c.juniorUids||[]).slice(),briefId:(c.briefId&&briefs[c.briefId])?c.briefId:null}); });
   });
   const counts={}; raw.forEach(r=>{ if(!r.isManual&&r.counsel){const k=r.counsel.toLowerCase(); counts[k]=(counts[k]||0)+1;} });
   raw.forEach(r=>{ const dup=!r.isManual&&r.counsel&&counts[r.counsel.toLowerCase()]>1; const first=(r.title||"").split(/\s+/)[0]||""; r.label=(r.counsel||"—")+((dup&&first)?` (${first})`:""); });
@@ -2553,11 +2659,14 @@ function conferencesOn(dateISO){
 // Conference tracking only — court location lives in the separate SD Court App.
 const nowConfOpen=new Set();        // expanded conference cards (session)
 let _editNote=null;                 // "confKey|index" of the note being edited inline
+document.addEventListener("click",e=>{ if(_confWordMenu&&!e.target.closest(".conf-word-wrap")){ _confWordMenu=null; if(curTab==="now") renderNow(); } });
 function renderNow(){
   stopConfTimer();   // re-established below if a conference is running
+  $("topbarAction").innerHTML="";   // no buttons of the previous tab left behind
   $("tab-now").innerHTML=`<div class="now-wrap">${confSectionHtml()}</div>`;
   wireConf();
-  document.querySelectorAll("#tab-now [data-confdoc]").forEach(x=>x.onclick=e=>{ e.stopPropagation(); const v=x.dataset.confdoc, i=v.lastIndexOf("|"); newConferenceNote(v.slice(0,i), v.slice(i+1)); });
+  document.querySelectorAll("#tab-now [data-confword]").forEach(x=>x.onclick=e=>{ e.stopPropagation(); const k=x.dataset.confword; _confWordMenu=_confWordMenu===k?null:k; renderNow(); });
+  document.querySelectorAll("#tab-now [data-confdoc]").forEach(x=>x.onclick=e=>{ e.stopPropagation(); const v=x.dataset.confdoc, i=v.lastIndexOf("|"); _confWordMenu=null; renderNow(); newConferenceNote(v.slice(0,i), v.slice(i+1)); });
   wireFilesBtns($("tab-now"));
   if(document.querySelector("#tab-now [data-since]")) _confTimerId=setInterval(_tickConfTimers,1000);
 }
@@ -2574,13 +2683,11 @@ function videoKind(u){ const h=(()=>{try{return new URL(u).hostname;}catch(e){re
 function confSectionHtml(){
   const confs=conferencesOn(todayISO());
   const d=new Date(), nowMin=d.getHours()*60+d.getMinutes();
-  let inferIdx=-1; confs.forEach((c,i)=>{ const m=confMins(c.time); if(m!=null&&m<=nowMin&&(nowMin-m)<=150) inferIdx=i; });
   const isLiveSt=s=>s&&(s.state==="running"||s.state==="paused");
   const anyLive=confs.some(c=>isLiveSt(confStatus[c.key]));
   const cards=confs.map((c,i)=>{
     const st=confStatus[c.key]||{}, state=st.state||"idle";
     const running=state==="running", paused=state==="paused", ended=state==="ended", live=running||paused;
-    const infer=!anyLive&&i===inferIdx;
     const started=st.startedAt||0, elapsed=confElapsed(st);
     const open=live||nowConfOpen.has(c.key);
     const notes=st.notes||[], asks=st.asks||[], smsg=st.statusMsg;
@@ -2593,9 +2700,14 @@ function confSectionHtml(){
     // Compact control column beside the name: Start / Pause / End while it runs,
     // and just the bare run-time (no prefix/suffix) once it has ended.
     let ctrlCol;
-    if(ended){ ctrlCol=`<span class="conf-dur">${esc(fmtElapsed(elapsed))}</span>`; }
+    // one Word button beside the timer controls; it offers Dictation or Instructions
+    const wordBtn=(c.briefId&&canEdit)?`<div class="conf-word-wrap"><button class="cbtn word" data-confword="${esc(c.key)}" title="New Word file in the case folder" aria-label="New Word file"><span class="word-ic">W</span></button>
+      ${_confWordMenu===c.key?`<div class="conf-word-menu"><div class="cwm-h">New Word file in the case folder</div>
+        <button data-confdoc="${esc(c.key)}|Dictated Note"><span class="word-ic sm">W</span>Dictation</button>
+        <button data-confdoc="${esc(c.key)}|Instruction Note"><span class="word-ic sm">W</span>Instructions</button></div>`:""}</div>`:"";
+    if(ended){ ctrlCol=`<span class="conf-dur">${esc(fmtElapsed(elapsed))}</span>${wordBtn?`<div class="conf-btns">${wordBtn}</div>`:""}`; }
     else if(canEdit){ ctrlCol=`${(running||paused)?`<b class="conf-elapsed${paused?" is-paused":""}" ${running?`data-since="${st.runningSince||0}" data-accum="${st.accumMs||0}"`:""}>${esc(fmtElapsed(elapsed))}</b>`:""}
-      <div class="conf-btns">
+      <div class="conf-btns">${wordBtn}
         <button class="cbtn play" data-confstart="${esc(c.key)}" ${running?"disabled":""} title="${paused?"Resume":"Start"}" aria-label="${paused?"Resume":"Start"}"><span class="ic ti ti-player-play"></span></button>
         <button class="cbtn" data-confpause="${esc(c.key)}" ${running?"":"disabled"} title="Pause" aria-label="Pause"><span class="ic ti ti-player-pause"></span></button>
         <button class="cbtn stop" data-confend="${esc(c.key)}" ${live?"":"disabled"} title="End" aria-label="End"><span class="ic ti ti-player-stop"></span></button>
@@ -2610,11 +2722,11 @@ function confSectionHtml(){
         return `<div class="cnote editing"><textarea class="cnote-ta" data-noteeditta="${esc(c.key)}|${ni}">${esc(nn.text)}</textarea><div class="cnote-editbar"><button class="tbtn sm" data-noteeditcancel="1">Cancel</button><button class="tbtn sm go" data-noteeditsave="${esc(c.key)}|${ni}"><span class="ic ti ti-check"></span>Save</button></div></div>`;
       return `<div class="cnote"><div class="cnote-t">${esc(nn.text)}</div><div class="cnote-m">${esc(nameOf(nn.by))} · ${esc(timeAgo(nn.at))}${nn.edited?" · edited":""}${mine?` · <button class="cnote-x edit" data-noteedit="${esc(c.key)}|${ni}">edit</button> · <button class="cnote-x" data-notedel="${esc(c.key)}|${ni}">remove</button>`:""}</div></div>`;
     }).join(""):`<div class="cnote-empty">No notes yet.</div>`;
-    return `<div class="conf-card${running?" on":paused?" paused":ended?" ended":infer?" infer":""}">
+    return `<div class="conf-card${running?" on":paused?" paused":ended?" ended":""}">
       <div class="conf-top" data-conftoggle="${esc(c.key)}">
         <span class="conf-sn">${i+1}</span>
         <div class="conf-main">
-          <div class="conf-line1"><span class="conf-t mono">${esc(fmtConfTime(c.time)||"—")}</span><span class="conf-name">${esc(c.label||"—")}</span>${(infer&&idle)?`<span class="conf-tag maybe">likely now</span>`:""}</div>
+          <div class="conf-line1"><span class="conf-t mono">${esc(fmtConfTime(c.time)||"—")}</span><span class="conf-name">${esc(c.label||"—")}</span></div>
           ${c.title?`<div class="conf-sub">${esc(c.title)}</div>`:""}
           ${st.video?.url?`<a class="conf-join" href="${esc(st.video.url)}" target="_blank" rel="noopener"><span class="ic ti ti-video"></span>Join ${esc(videoKind(st.video.url))}</a>`:""}
           ${started?`<div class="conf-meta"><span class="ic ti ti-clock-play"></span>Started ${esc(fmtClock(started))}${ended?` · ended ${esc(fmtClock(st.endedAt))} · total <b>${esc(fmtElapsed(elapsed))}</b>`:paused?" · paused":""}</div>`:""}
@@ -2624,7 +2736,7 @@ function confSectionHtml(){
         <span class="ic ti ti-chevron-${open?"up":"down"} conf-chev"></span>
       </div>
       <div class="conf-body${open?"":" hidden"}">
-        ${whoNames.length?`<div class="conf-who"><span class="ic ti ti-user"></span>${esc(whoNames.join(", "))}</div>`:(c.isManual?`<div class="conf-who"><span class="ic ti ti-user"></span>Chamber conference</div>`:"")}
+        <div class="conf-who-row">${whoNames.length?`<div class="conf-who"><span class="ic ti ti-user"></span>${esc(whoNames.join(", "))}</div>`:(c.isManual?`<div class="conf-who"><span class="ic ti ti-user"></span>Chamber conference</div>`:"<span></span>")}${c.briefId?filesBtn(c.briefId):""}</div>
         ${canEdit?`<div class="conf-video">
           <div class="conf-updates-h"><span class="ic ti ti-video"></span> Video conference link</div>
           ${st.video?.url&&_editVideo!==c.key?`<div class="conf-video-row"><a class="conf-join big" href="${esc(st.video.url)}" target="_blank" rel="noopener"><span class="ic ti ti-video"></span>Join ${esc(videoKind(st.video.url))}</a><span class="conf-video-url" title="${esc(st.video.url)}">${esc(st.video.url.replace(/^https?:\/\//,""))}</span><button class="tbtn sm" data-vidcopy="${esc(c.key)}"><span class="ic ti ti-copy"></span>Copy</button><button class="tbtn sm" data-videdit="${esc(c.key)}"><span class="ic ti ti-pencil"></span>Change</button><button class="tbtn sm" data-viddel="${esc(c.key)}"><span class="ic ti ti-x"></span>Remove</button></div>`
@@ -2634,9 +2746,6 @@ function confSectionHtml(){
           <div class="conf-updates-h">${canEdit?"Post an update or estimate":"Ask for a status"}</div>
           <div class="conf-inrow">${canEdit?`<input type="text" placeholder="e.g. ~20 min more" data-statusin="${esc(c.key)}"><button class="tbtn sm go" data-statusbtn="${esc(c.key)}">Post</button>`:`<input type="text" placeholder="Ask the attending colleague…" data-askin="${esc(c.key)}"><button class="tbtn sm" data-askbtn="${esc(c.key)}">Ask</button>`}</div>
         </div>
-        ${(c.briefId&&canEdit)?`<div class="conf-docs"><span class="conf-docs-h"><span class="ic ti ti-file-type-doc"></span>New Word file in the case folder</span>
-          <button class="tbtn sm" data-confdoc="${esc(c.key)}|Dictated Note"><span class="ic ti ti-microphone"></span>Dictation</button>
-          <button class="tbtn sm" data-confdoc="${esc(c.key)}|Instruction Note"><span class="ic ti ti-list-check"></span>Instructions</button>${filesBtn(c.briefId)}</div>`:""}
         <div class="conf-notes">
           <div class="conf-notes-h"><span>Notes from the conference${c.briefId?`<span class="conf-savedhint">saved to the brief</span>`:""}</span>${notes.length?`<button class="tbtn sm" data-noteexport="${esc(c.key)}"><span class="ic ti ti-file-type-doc"></span>Export to Word</button>`:""}</div>
           <div class="cnote-list">${noteList}</div>
@@ -2789,6 +2898,16 @@ const seniorOff=iso=>seniorAvail[iso]!=null;
 // a date within an SC partial-court-working (vacation) range
 const isPartial=iso=>{ for(const r of (vacation.ranges||[])){ if(iso>=r[0]&&iso<=(r[1]||r[0])) return r[2]||"Partial court working"; } return null; };
 
+function dayItems(iso){
+  const entries=byCourt((dsAll[iso]?.entries)||(iso===dsDate?(daysheet?.entries||[]):[]), iso);
+  const out=entries.map((e,i)=>{ const b=e.briefId?briefs[e.briefId]:null;
+    return { i, e, b, title:resolveEntry(e,iso).title, ct:(e.courtNo||e.itemNo)?`${e.courtNo||"?"}·${e.itemNo||"?"}`:"",
+      mine:idIn(jrsOf(e),me.uid)||!!(b&&idIn(b.assignedTo,me.uid)) }; });
+  const onSheet=new Set(entries.map(e=>e.briefId).filter(Boolean));
+  Object.values(briefs).forEach(b=>{ if(b.status==="disposed"||b.nextDate!==iso||onSheet.has(b.id)||!isCaseBrief(b)) return;
+    out.push({ b, title:labelOf(b), ct:"", next:true, mine:idIn(b.assignedTo,me.uid) }); });
+  return out;
+}
 function renderCal(){
   // Staff (both of them) get the two things they actually feed here: a note from the
   // court, and the Senior's own diary. Admin keeps the once-a-year calendar tools.
@@ -2799,38 +2918,34 @@ function renderCal(){
   const startDow=(first.getDay()+6)%7;           // Monday-first grid
   const dim=new Date(y,m,0).getDate();
   const today=todayISO();
-  // per-date rollups: every active matter with a next date; junior's own; conferences on the day sheet
-  const byDate={}, mineBy={};
-  Object.values(briefs).forEach(b=>{ if(b.status==="disposed"||!b.nextDate)return;
-    (byDate[b.nextDate]=byDate[b.nextDate]||[]).push(b);
-    if(idIn(b.assignedTo,me.uid))(mineBy[b.nextDate]=mineBy[b.nextDate]||[]).push(b); });
-  const cells=[];
+  // Each date island shows WHAT is on that day, not just a number: the first few matters
+  // (court·item and the cause title), how many more, conferences, who is on leave.
+  const cells=[], roster=rosterDisplay();
+  let mMatters=0, mConfs=0, mCourtDays=0, mAway=0;
   for(let i=0;i<startDow;i++)cells.push('<div class="cal-cell blank"></div>');
   for(let d=1;d<=dim;d++){
     const iso=`${calMonth}-${String(d).padStart(2,"0")}`;
     const dow=new Date(y,m-1,d).getDay();
     const wknd=dow===0||dow===6;
-    const n=(byDate[iso]||[]).length, mine=(mineBy[iso]||[]).length;
-    // ALL conferences on this day — matter-linked conference times AND manual
-    // entries, from every day sheet (a conference can sit on a matter listed
-    // for another hearing day). Keeps the calendar in lockstep with the day
-    // sheet, the Conference tracker, print and share.
-    const conf=conferencesOn(iso).length;
+    const items=dayItems(iso), confs=conferencesOn(iso);
+    const mine=items.filter(x=>x.mine).length;
     const hol=isHol(iso), part=(!hol&&!wknd)?isPartial(iso):null;
-    // workload = matters listed that day; the ONLY strong colour, carried by a
-    // small dot beside the count (green <5, amber 5–10, red >10).
-    const load=Math.max(n,(dsAll[iso]?.entries||[]).length);
-    const loadCls=load?(load<5?'lg':load<=10?'ly':'lr'):'';
-    // one calm neutral mute for any non-working day; a thin left accent marks WHICH kind.
+    const load=items.length, loadCls=load?(load<5?'lg':load<=10?'ly':'lr'):'';
     const kind=hol?'day-hol':part?'day-vac':wknd?'day-off':'';
     const senOff=seniorOff(iso);
-    cells.push(`<button class="cal-cell ${senOff?'sen-away':kind} ${iso===today?'today':''}" data-cald="${iso}">
-      <div class="cal-top"><span class="cal-num">${d}</span>${senOff?`<span class="cal-sen ti ti-user-off" title="Senior not available${seniorAvail[iso]?' — '+esc(seniorAvail[iso]):''}"></span>`:''}</div>
-      ${senOff?`<div class="cal-tag t-sen" title="Senior not available${seniorAvail[iso]?' — '+esc(seniorAvail[iso]):''}">Senior away</div>`:hol?`<div class="cal-tag t-hol" title="${esc(holidays[iso])}">${esc(holidays[iso])}</div>`:part?`<div class="cal-tag t-vac" title="${esc(part)}">Vacation</div>`:''}
+    const onLeave=roster.filter(r=>leaveLogCovers(r.id,iso)).length;
+    mMatters+=load; mConfs+=confs.length; if(!hol&&!wknd&&!part) mCourtDays++; if(senOff) mAway++;
+    const tag=senOff?`<span class="cal-tag t-sen" title="Senior not available${seniorAvail[iso]?' — '+esc(seniorAvail[iso]):''}"><span class="ti ti-user-off"></span>Senior away</span>`
+      :hol?`<span class="cal-tag t-hol" title="${esc(holidays[iso])}">${esc(holidays[iso])}</span>`:part?`<span class="cal-tag t-vac" title="${esc(part)}">Vacation</span>`:'';
+    const SHOW=3;
+    cells.push(`<button class="cal-cell ${senOff?'sen-away':kind} ${iso===today?'today':''} ${iso<today?'past':''}" data-cald="${iso}">
+      ${load?`<span class="cal-bar ${loadCls}"></span>`:''}
+      <div class="cal-top"><span class="cal-num">${d}</span>${tag}${load?`<span class="cal-cnt ${loadCls}">${load}</span>`:''}</div>
+      ${load?`<div class="cal-items">${items.slice(0,SHOW).map(x=>`<div class="ci${x.mine?' mine':''}${x.next?' next':''}">${x.ct?`<b>${esc(x.ct)}</b>`:''}<span>${esc(x.title)}</span></div>`).join("")}${load>SHOW?`<div class="ci more">+${load-SHOW} more</div>`:''}</div>`:''}
       <div class="cal-chips">
-        ${load?`<span class="cal-load"><span class="ld ${loadCls}"></span>${load}</span>`:''}
         ${me.role==="junior"&&mine?`<span class="cal-chip mine">${mine} mine</span>`:''}
-        ${conf?`<span class="cal-chip conf">${conf}</span>`:''}
+        ${confs.length?`<span class="cal-chip conf" title="Conferences"><span class="ti ti-users-group"></span>${confs.length}</span>`:''}
+        ${onLeave?`<span class="cal-chip leave" title="On leave"><span class="ti ti-plane-departure"></span>${onLeave}</span>`:''}
       </div>
     </button>`);
   }
@@ -2840,10 +2955,16 @@ function renderCal(){
         <button class="tbtn icon-only" id="calPrev" aria-label="Previous month"><span class="ic ti ti-chevron-left"></span></button>
         <div class="cal-month">${monthName}</div>
         <button class="tbtn icon-only" id="calNext" aria-label="Next month"><span class="ic ti ti-chevron-right"></span></button>
-        <button class="tbtn" id="calToday">Today</button>
+        <button class="tbtn cal-todaybtn" id="calToday">Today</button>
       </div>
-      <div class="cal-legend muted"><span class="lg-grp">Matters <span class="ld lg"></span>&lt;5 <span class="ld ly"></span>5–10 <span class="ld lr"></span>&gt;10</span><span class="lg-sep">·</span><span class="lg-key t-hol">holiday</span><span class="lg-key t-vac">vacation</span><span class="lg-key t-sen"><span class="ti ti-user-off"></span> senior away</span></div>
+      <div class="cal-sum">
+        <div><b>${mMatters}</b><span>matters listed</span></div>
+        <div><b>${mConfs}</b><span>conferences</span></div>
+        <div><b>${mCourtDays}</b><span>court days</span></div>
+        <div class="${mAway?'away':''}"><b>${mAway}</b><span>Senior away</span></div>
+      </div>
     </div>
+    <div class="cal-legend muted"><span class="lg-grp">Matters a day <span class="ld lg"></span>under 5 <span class="ld ly"></span>5–10 <span class="ld lr"></span>over 10</span><span class="lg-sep">·</span><span class="lg-key t-hol">holiday</span><span class="lg-key t-vac">vacation</span><span class="lg-key t-sen"><span class="ti ti-user-off"></span> senior away</span><span class="lg-sep">·</span><span class="lg-grp"><span class="ti ti-users-group"></span> conferences</span><span class="lg-grp"><span class="ti ti-plane-departure"></span> on leave</span></div>
     <div class="cal-dow">${["Mon","Tue","Wed","Thu","Fri","Sat","Sun"].map(x=>`<div>${x}</div>`).join("")}</div>
     <div class="cal-grid">${cells.join("")}</div>`;
   $("calPrev").onclick=()=>{calMonth=shiftMonth(calMonth,-1);renderCal();};
@@ -2893,63 +3014,76 @@ async function applySCYear(year){
 function dayDetail(iso){
   const d=new Date(iso+"T00:00");
   const wd=d.toLocaleDateString('en-IN',{weekday:'long'});
-  const entries=byCourt((dsAll[iso]?.entries)||(iso===dsDate?(daysheet?.entries||[]):[]), iso);
+  const all=dayItems(iso), listed=all.filter(x=>!x.next), nextOnly=all.filter(x=>x.next);
   const confItems=conferencesOn(iso);   // matter-linked + manual, from every sheet — same source as the tracker
-  const hol=isHol(iso), off=seniorOff(iso);
-  openSheet(`<div class="sheet-head"><div><h3>${wd}, ${fmtDateY(iso)}</h3>
-      <div class="sub">${entries.length?`${entries.length} item${entries.length>1?'s':''} listed`:'Nothing listed yet'}${confItems.length?` · ${confItems.length} conference${confItems.length>1?'s':''}`:''}</div></div>
+  const hol=isHol(iso), off=seniorOff(iso), wknd=[0,6].includes(d.getDay()), part=(!hol&&!wknd)?isPartial(iso):null;
+  const onlv=rosterDisplay().filter(m=>leaveLogCovers(m.id,iso));
+  const people=x=>{ const u=x.e?jrsOf(x.e):(x.b?.assignedTo||[]); return u.map(id=>`<span class="dd-jr"><span class="mini-ava">${esc(initials(nameOf(id)))}</span>${esc(nameOf(id))}</span>`).join(""); };
+  const nums=b=>b?[serialNum(b)!=null?pad3(serialNum(b)):"", b.caseNo, b.diaryNo?"Dy. "+b.diaryNo:""].filter(Boolean).join(" · "):"";
+  const row=(x,n)=>{ const b=x.b, R=x.e?resolveEntry(x.e,iso):null;
+    const ct=x.e?`<div class="dd-ct"><b>Ct ${esc(x.e.courtNo||"?")}</b><span>Item ${esc(x.e.itemNo||"?")}</span>${x.e.time?`<span class="mono">${esc(x.e.time)}</span>`:""}</div>`:`<div class="dd-ct next"><span>next date</span></div>`;
+    return `<div class="dd-row${x.mine?" mine":""}">
+      <span class="dd-sn">${n}</span>${ct}
+      <div class="dd-main">
+        <button class="dd-title" ${b?`data-brief="${b.id}"`:`data-ddsheet="1"`}>${R?renderTitle(R.title,R.appearingFor,"html"):esc(x.title)}${b?.priority?' <span class="ti ti-flag-3" style="color:var(--urgent)"></span>':""}</button>
+        ${nums(b)?`<div class="dd-nums">${esc(nums(b))}</div>`:""}
+        ${R?.bench?`<div class="dd-meta">${esc(shortBench(R.bench))}</div>`:""}
+        <div class="dd-people">${x.e?.counsel?`<span class="dd-counsel">${esc(x.e.counsel)}</span>`:""}${people(x)||'<span class="muted">no colleague marked</span>'}</div>
+        ${x.e?.remarks?`<div class="dd-remark">${esc(x.e.remarks)}</div>`:""}
+      </div>
+      <div class="dd-acts">${filesBtn(b?.id,true)}</div>
+    </div>`; };
+  const status=[hol?`<span class="dd-pill hol"><span class="ti ti-beach"></span>${esc(holidays[iso])}</span>`:"",
+    part?`<span class="dd-pill vac"><span class="ti ti-sun"></span>${esc(part)}</span>`:"",
+    off?`<span class="dd-pill sen"><span class="ti ti-user-off"></span>Senior not available${seniorAvail[iso]?` — ${esc(seniorAvail[iso])}`:""}</span>`:"",
+    wknd&&!hol?`<span class="dd-pill off">Weekend</span>`:""].join("");
+  openSheet(`<div class="sheet-head dd-head"><div>
+      <div class="dd-wd">${wd}${iso===todayISO()?" · today":""}</div><h3 class="dd-date">${fmtDateY(iso)}</h3>
+      <div class="dd-stats"><span><b>${listed.length}</b> listed</span>${nextOnly.length?`<span><b>${nextOnly.length}</b> next date${nextOnly.length>1?"s":""}</span>`:""}<span><b>${confItems.length}</b> conference${confItems.length===1?"":"s"}</span>${onlv.length?`<span><b>${onlv.length}</b> on leave</span>`:""}</div>
+      ${status?`<div class="dd-pills">${status}</div>`:""}</div>
       <button class="x-btn"><span class="ti ti-x"></span></button></div>
     <div class="sheet-body">
-      ${hol?`<div class="notice warn" style="margin-bottom:12px"><span class="ti ti-beach"></span><div><b>${esc(holidays[iso])}</b> — court holiday.</div></div>`:''}
-      ${off?`<div class="notice warn" style="margin-bottom:12px"><span class="ti ti-user-off"></span><div><b>Senior not available</b>${seniorAvail[iso]?` — ${esc(seniorAvail[iso])}`:''}</div></div>`:''}
-
-      <div class="section-label">Cases listed${entries.length?` (${entries.length})`:''}</div>
-      ${entries.length?`<div class="reg">${entries.map((e,i)=>{const R=resolveEntry(e,iso); const jr=jrsOf(e).map(u=>esc(nameOf(u))).join(" / ");
-        return `<button class="reg-row" data-dsopen="${i}">
-          <span class="reg-sn">${i+1}</span>
-          <span class="reg-main">
-            <span class="reg-line1"><b>${esc(R.title)}</b></span>
-            <span class="reg-line2">${[e.courtNo?`Court ${esc(e.courtNo)}`:'', e.itemNo?`Item ${esc(e.itemNo)}`:'', e.time?esc(e.time):'', R.listType].filter(Boolean).join(" &middot; ")||'&nbsp;'}</span>
-            ${jr?`<span class="reg-line3"><span class="ti ti-users" style="font-size:11px"></span> ${jr}</span>`:''}
-          </span>
-          <span class="reg-go ti ti-chevron-right"></span>
-        </button>`;}).join("")}</div>`:'<div class="muted" style="font-size:13px">No cases entered for this day yet.</div>'}
-
-      <div class="section-label" style="margin-top:18px">Conferences${confItems.length?` (${confItems.length})`:''}</div>
-      ${confItems.length?`<div class="reg">${confItems.map((c,i)=>`<div class="reg-row static">
-          <span class="reg-sn">${i+1}</span>
-          <span class="reg-main">
-            <span class="reg-line1">${esc(c.label||"—")}</span>
-            <span class="reg-line2"><b class="mono">${esc(fmtConfTime(c.time)||"—")}</b>${c.title?` &middot; ${esc(c.title)}`:''}</span>
-          </span></div>`).join("")}</div>`:'<div class="muted" style="font-size:13px">No conferences on this day.</div>'}
-
-      ${canManage()?`<div class="section-label" style="margin-top:20px">Senior's availability</div>
+      <div class="dd-sec"><div class="dd-sec-h"><span class="ti ti-list-numbers"></span>Day sheet — cases listed <b>${listed.length}</b></div>
+        ${listed.length?`<div class="dd-reg">${listed.map((x,k)=>row(x,k+1)).join("")}</div>`:`<div class="dd-empty">Nothing on the day sheet for this date yet.</div>`}</div>
+      ${nextOnly.length?`<div class="dd-sec"><div class="dd-sec-h"><span class="ti ti-calendar-event"></span>Next date fixed — not yet on the day sheet <b>${nextOnly.length}</b></div>
+        <div class="dd-reg">${nextOnly.map((x,k)=>row(x,k+1)).join("")}</div></div>`:""}
+      <div class="dd-sec"><div class="dd-sec-h"><span class="ti ti-users-group"></span>Conferences <b>${confItems.length}</b></div>
+        ${confItems.length?`<div class="dd-reg">${confItems.map((c,k)=>{ const b=c.briefId?briefs[c.briefId]:null; const who=(c.jrs||[]).map(nameOf).filter(n=>n&&n!=="—");
+          return `<div class="dd-row"><span class="dd-sn">${k+1}</span><div class="dd-ct conf"><b class="mono">${esc(fmtConfTime(c.time)||"—")}</b></div>
+            <div class="dd-main"><div class="dd-title static">${esc(c.label||"—")}</div>${c.title?`<div class="dd-nums">${b?`<button class="dd-link" data-brief="${b.id}">${esc(c.title)}</button>`:esc(c.title)}</div>`:""}${who.length?`<div class="dd-people">${who.map(n=>`<span class="dd-jr">${esc(n)}</span>`).join("")}</div>`:""}</div>
+            <div class="dd-acts">${b?filesBtn(b.id,true):""}</div></div>`; }).join("")}</div>`:`<div class="dd-empty">No conferences on this day.</div>`}</div>
+      ${onlv.length?`<div class="dd-sec"><div class="dd-sec-h"><span class="ti ti-plane-departure"></span>On leave <b>${onlv.length}</b></div>
+        <div class="row" style="flex-wrap:wrap;gap:6px">${onlv.map(m=>`<span class="chip av-leave"><span class="dot"></span>${esc(m.name)}</span>`).join("")}</div></div>`:""}
+      <div class="dd-actions">
+        <button class="btn" id="dOpenSheet"><span class="ic ti ti-list-check"></span>${listed.length?'Open the day sheet':'Open the day sheet for this date'}</button>
+        ${listed.length?`<button class="btn ghost" id="dPrint"><span class="ic ti ti-printer"></span>Print</button><button class="btn ghost" id="dSharePdf"><span class="ic ti ti-file-type-pdf"></span>Share PDF</button>`:''}
+        <button class="btn ghost" id="dMarkLeave"><span class="ic ti ti-plane-departure"></span>Mark my leave</button>
+      </div>
+      ${(canManage()||canAdmin())?`<details class="dd-settings"${(off||hol)?" open":""}><summary><span class="ti ti-adjustments"></span>Day settings — Senior's availability${canAdmin()?", court holiday":""}</summary>
+      ${canManage()?`<div class="section-label" style="margin-top:12px">Senior's availability</div>
         <div class="seg" id="avSeg" style="width:100%">
           <button type="button" data-av="in" class="${off?'':'active'}" style="flex:1"><span class="ti ti-user-check"></span> Available</button>
           <button type="button" data-av="out" class="${off?'active':''}" style="flex:1"><span class="ti ti-user-off"></span> Not available</button>
         </div>
         <input id="ds_note" style="margin-top:8px;${off?'':'display:none'}" value="${esc(seniorAvail[iso]??'')}" placeholder="Reason (optional) — e.g. travelling, part-heard at Delhi HC">`:''}
-
-      ${canAdmin()?`<div class="section-label" style="margin-top:18px">Court holiday</div>
+      ${canAdmin()?`<div class="section-label" style="margin-top:16px">Court holiday</div>
         <div id="holBox">${hol
           ? `<div class="row" style="align-items:center;gap:10px"><span class="chip st-prep"><span class="ti ti-beach"></span> ${esc(holidays[iso])}</span><button class="btn ghost sm" id="holRemove" style="color:var(--danger)">Remove holiday</button></div>`
           : `<div class="row" style="gap:8px"><input id="dh_name" placeholder="Name — e.g. Holi, Ambedkar Jayanti" style="flex:1"><button class="btn sm" id="holMark">Mark holiday</button></div>
              <div class="muted" style="font-size:11.5px;margin-top:6px">Missed one? Mark a single day here, or a whole range from the calendar's “Mark holidays” button.</div>`}</div>`:''}
-
-      ${(()=>{const onlv=rosterDisplay().filter(m=>leaveLogCovers(m.id,iso));return onlv.length?`<div class="section-label" style="margin-top:18px">On leave this day</div>
-        <div class="row" style="flex-wrap:wrap;gap:6px">${onlv.map(m=>`<span class="chip av-leave"><span class="dot"></span>${esc(m.name)}</span>`).join("")}</div>`:'';})()}
-      <div class="row" style="margin-top:22px;gap:8px;flex-wrap:wrap">
-        <button class="btn ghost sm" id="dOpenSheet"><span class="ic ti ti-list-check"></span>${entries.length?'Open the day sheet':'Open day sheet for this date'}</button>
-        ${entries.length?`<button class="btn ghost sm" id="dPrint"><span class="ic ti ti-printer"></span>Print</button>`:''}
-        ${entries.length?`<button class="btn ghost sm" id="dSharePdf"><span class="ic ti ti-file-type-pdf"></span>Share PDF</button>`:''}
-        <button class="btn ghost sm" id="dMarkLeave"><span class="ic ti ti-plane-departure"></span>Mark my leave</button>
-      </div>
+      </details>`:""}
     </div>`);
+  document.querySelector("#modalRoot .sheet")?.classList.add("sheet-wide");
+  const sh=document.querySelector("#modalRoot .sheet");
+  sh.querySelectorAll("[data-files]").forEach(x=>x.onclick=e=>{ e.stopPropagation();
+    if(!x.dataset.files){ toast("This listing isn't linked to a brief yet — open it on the day sheet and link the brief","ti-info-circle"); return; }
+    _fvRet={id:x.dataset.files, label:"Back to "+fmtDateY(iso), fn:()=>dayDetail(iso)}; openFiles(x.dataset.files); });
+  sh.querySelectorAll("[data-brief]").forEach(x=>x.onclick=e=>{ e.stopPropagation(); openBrief(x.dataset.brief); });
+  sh.querySelectorAll("[data-ddsheet]").forEach(x=>x.onclick=()=>goSheet());
   const goSheet=()=>{ closeSheet(); dsDate=iso; watchDaysheet(); selectTab("today"); };
   if($("dPrint")) $("dPrint").onclick=()=>printCauseList(iso);
   if($("dSharePdf")) $("dSharePdf").onclick=()=>shareCauselistPdf(iso);
   if($("dMarkLeave")) $("dMarkLeave").onclick=()=>leaveForm(iso);   // syncs with the Leave tab + engine
-  document.querySelectorAll("[data-dsopen]").forEach(x=>x.onclick=goSheet);
   $("dOpenSheet").onclick=goSheet;
   // senior availability — immediate toggle, no separate Save
   document.querySelectorAll('#avSeg [data-av]').forEach(b=>b.onclick=async()=>{
@@ -4811,7 +4945,7 @@ function renderBriefs(){
   const notice=(!canManage()&&!isSenior()&&myUnacked.length)?`<div class="notice"><span class="ti ti-bell"></span><div><b>${myUnacked.length} new assignment${myUnacked.length>1?'s':''}</b> awaiting your acknowledgment — open and acknowledge.</div></div>`:"";
   const head=`<div class="rg-head"><div><div class="rg-title">Brief register</div>
       <div class="rg-sub">${cases.length} files · ${counts[""]} active · next serial <b>${pad3(nextSerial())}</b></div></div>
-      ${isAdmin()?`<div class="row" style="gap:8px;flex-wrap:wrap"><button class="btn ghost sm" id="rgDups"><span class="ic ti ti-copy"></span>Find duplicates</button>${noSerial.length?`<button class="btn ghost sm" id="rgNumberDate"><span class="ic ti ti-hash"></span>Number old cases by date</button>`:""}</div>`:""}</div>
+      ${isAdmin()?`<div class="row" style="gap:8px;flex-wrap:wrap"><button class="btn ghost sm" id="rgDups"><span class="ic ti ti-copy"></span>Find duplicates</button><button class="btn ghost sm" id="rgFolders"><span class="ic ti ti-folders"></span>Create case folders</button>${noSerial.length?`<button class="btn ghost sm" id="rgNumberDate"><span class="ic ti ti-hash"></span>Number old cases by date</button>`:""}</div>`:""}</div>
     ${isAdmin()&&noSerial.length?`<div class="rg-steps"><span class="ti ti-list-numbers"></span>To number the old cases: <b>1</b> Find duplicates → <b>2</b> Number old cases by date. New cases are numbered when their Files are first opened.</div>`:""}
     ${(noSerial.length||clashes.length||(canManage()&&gapPlan().length))?`<div class="rg-warn">${canManage()&&gapPlan().length?`<button class="chip" id="rgGaps"><span class="ti ti-arrows-sort"></span>Numbering has gaps — close them</button>`:""}${noSerial.length?`<button class="chip" data-bf="noserial"><span class="ti ti-hash"></span>${noSerial.length} without a serial</button>`:""}${clashes.map(c=>`<span class="chip"><span class="ti ti-alert-triangle"></span>${pad3(c.n)} used ${c.ids.length}×: ${c.ids.map(id=>esc(labelOf(briefs[id]))).join(" / ")}</span>`).join("")}</div>`:""}`;
   const tools=`<div class="rg-tools"><div class="rg-search"><span class="ti ti-search"></span><input id="bSearch" placeholder="Search serial, title, diary or case no., AoR" value="${esc(briefSearch)}" autocomplete="off"></div>
@@ -4826,6 +4960,7 @@ function renderBriefs(){
   if($("rgNumberDate")) $("rgNumberDate").onclick=numberByDateForm;
   if($("rgGaps")) $("rgGaps").onclick=()=>closeGapsForm();
   if($("rgDups")) $("rgDups").onclick=duplicatesForm;
+  if($("rgFolders")) $("rgFolders").onclick=allFoldersForm;
   if($("tbNewBrief2"))$("tbNewBrief2").onclick=()=>briefForm();
   if($("tbLegalAid"))$("tbLegalAid").onclick=()=>legalAidForm();
   wireSort($("tab-briefs"), renderBriefs);
@@ -5158,6 +5293,42 @@ async function bumpSerialCounter(minNext){
     if(minNext>cur) t.set("config/serial",{next:minNext,updatedAt:db.now()},true); });
 }
 
+/* ---------------- Create the Dropbox folder of EVERY case (admin) ----------------
+   "create folders for the old cases in the dropbox". Every numbered case gets its
+   "<Short title> (NNN)" folder in the app folder; one that exists is left as it is (the
+   gatekeeper's mkdir is a no-op on an existing folder, never a rename or a copy). Cases with
+   no serial yet are sent through "Number old cases by date" first, which makes their folders
+   as it numbers them. Colleagues and Staff can then add papers to any of them from Files. */
+function allFoldersForm(){
+  if(!isAdmin()) return;
+  const cases=Object.values(briefs).filter(isCaseBrief);
+  const numbered=cases.filter(b=>serialNum(b)!=null).sort((a,z)=>serialNum(a)-serialNum(z)), none=cases.filter(b=>serialNum(b)==null);
+  openSheet(`<div class="sheet-head"><div><h3>Create case folders in Dropbox</h3><div class="sub">${cases.length} cases · ${numbered.length} numbered${none.length?` · ${none.length} without a serial`:""}</div></div><button class="x-btn"><span class="ti ti-x"></span></button></div>
+    <div class="sheet-body">
+      <div style="font-size:13.5px;line-height:1.55">Each numbered case gets its folder — <span class="mono">Short title (NNN)</span> — inside <b>Dropbox › Apps › SD Master Case File</b>. A folder that is already there is left exactly as it is; nothing is moved, renamed or overwritten. Colleagues and Staff can then save papers into any case from its <b>Files</b> button.</div>
+      ${none.length?`<div class="notice warn" style="margin-top:12px"><span class="ti ti-hash"></span><div><b>${none.length} case${none.length>1?"s have":" has"} no serial yet.</b> Number them first (by the date each came in, after the numbers already given) — their folders are made as they are numbered.<div style="margin-top:8px"><button class="btn sm" id="afNumber"><span class="ic ti ti-hash"></span>Number ${none.length} old case${none.length>1?"s":""} by date</button></div></div></div>`:""}
+      <div id="afMsg" class="muted" style="font-size:12.5px;min-height:18px;margin-top:12px"></div>
+      <div class="row" style="gap:8px;justify-content:flex-end;margin-top:6px"><button class="btn ghost sm" id="afNo">Close</button><button class="btn sm" id="afGo" ${numbered.length?"":"disabled"}><span class="ic ti ti-folders"></span>Create ${numbered.length} folder${numbered.length===1?"":"s"}</button></div>
+    </div>`);
+  $("afNo").onclick=closeSheet;
+  if($("afNumber")) $("afNumber").onclick=numberByDateForm;
+  $("afGo").onclick=async()=>{
+    const msg=t=>{ if($("afMsg")) $("afMsg").innerHTML=t; };
+    const st=await filesStatus(true);
+    if(!st.connected){ msg(st.unreachable?"Files aren't reachable right now — try again in a minute.":"Dropbox isn't connected."); return; }
+    $("afGo").disabled=true; let done=0; const fails=[];
+    const queue=numbered.slice();
+    const worker=async()=>{ while(queue.length){ const b=queue.shift();
+      try{ if(b.dropboxFolder) await mkdirQuiet(b.dropboxFolder); else await ensureCaseFolder(b.id); }
+      catch(e){ fails.push(`${pad3(serialNum(b))} ${labelOf(b)}: ${e.message}`); }
+      done++; msg(`Created ${done} of ${numbered.length}…`); } };
+    await Promise.all([worker(),worker(),worker(),worker()]);
+    msg(fails.length?`<b>${numbered.length-fails.length} done; ${fails.length} need a second try:</b><br>${fails.slice(0,10).map(esc).join("<br>")}`:`All ${numbered.length} case folders are in Dropbox.`);
+    toast(fails.length?`${fails.length} folders need a second try`:`All ${numbered.length} case folders created`, fails.length?"ti-alert-triangle":"ti-folder-check");
+    $("afGo").disabled=false;
+  };
+}
+
 /* ---------------- Number old cases by date (admin, one time) ---------------- */
 let _nbdForce=false;
 function numberByDateForm(){
@@ -5176,7 +5347,7 @@ function numberByDateForm(){
     return;
   }
   _nbdForce=false;
-  let mode="all";
+  let mode=numbered.length?"keep":"all";   // never renumber existing folders unless asked
   const plan=()=>{
     const byDate=(a,z)=>caseCameOn(a)-caseCameOn(z)||labelOf(a).localeCompare(labelOf(z));
     if(mode==="all") return cases.slice().sort(byDate).map((b,i)=>({b,n:i+1}));
@@ -5189,7 +5360,7 @@ function numberByDateForm(){
     const day=b=>{ const t=caseCameOn(b); return t===Number.MAX_SAFE_INTEGER?"—":fmtDateY(new Date(t).toLocaleDateString("en-CA")); };
     body.innerHTML=`${numbered.length?`<div class="seg" style="margin-bottom:12px;width:100%">
         <button type="button" data-nbm="all" class="${mode==="all"?"active":""}" style="flex:1">Every case by date, from 001</button>
-        <button type="button" data-nbm="keep" class="${mode==="keep"?"active":""}" style="flex:1">Keep the ${numbered.length} numbers already given</button></div>`:""}
+        <button type="button" data-nbm="keep" class="${mode==="keep"?"active":""}" style="flex:1">Keep the ${numbered.length} number${numbered.length>1?"s":""} already given</button></div>`:""}
       <div class="muted" style="font-size:12.5px;margin-bottom:10px">${changes.length} case${changes.length===1?"":"s"} will get a number${withFolder.length?` · ${withFolder.length} existing folder${withFolder.length>1?"s":""} will be renamed (and the numbered papers in them)`:""}. Each case's Dropbox folder is created as it is numbered. The date is the earliest the app knows for the case — when it was entered, assigned or first listed.</div>
       <div style="max-height:48vh;overflow:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)">
       <table class="sl-table"><thead><tr><th>Serial</th><th>Came in</th><th>Case</th><th>Now</th></tr></thead><tbody>
@@ -5229,13 +5400,14 @@ const _rulesMsg="The app's security rules don't allow this yet — the admin nee
 
 /* ---------------- the Files screen ---------------- */
 let _fv={id:null,sub:"",files:[],dirs:[],q:"",type:"all",loading:false,err:"",st:null};
+let _fvRet=null;   // {id,label,fn}: where "Back" goes when the Files screen was opened from somewhere other than the brief
 const _hl=(s,q)=>{ s=esc(s); if(!q) return s; const i=s.toLowerCase().indexOf(esc(q).toLowerCase()); return i<0?s:s.slice(0,i)+`<span class="fv-hit">${s.slice(i,i+esc(q).length)}</span>`+s.slice(i+esc(q).length); };
 function filesBtn(briefId, big){
   if(!briefId||!briefs[briefId]) return `<button class="btn-files off${big?" big":""}" data-files="" title="This listing isn't linked to a brief yet"><span class="ti ti-folder"></span>Files</button>`;
   return `<button class="btn-files${big?" big":""}" data-files="${esc(briefId)}"><span class="ti ti-folder"></span>Files</button>`;
 }
 function wireFilesBtns(root){
-  (root||document).querySelectorAll("[data-files]").forEach(x=>x.onclick=e=>{ e.stopPropagation();
+  (root||document).querySelectorAll("[data-files]").forEach(x=>x.onclick=e=>{ e.stopPropagation(); _fvRet=null;
     if(!x.dataset.files){ toast("This listing isn't linked to a brief yet — open it and link or add the brief","ti-info-circle"); return; }
     openFiles(x.dataset.files); });
 }
@@ -5284,14 +5456,14 @@ function renderFilesSheet(){
       </div>
       <div id="fvChips" class="fv-chips"></div>
       <div id="fvList">${_fv.loading?`<div class="fv-empty">Loading papers…</div>`:""}</div>
-      <div class="row" style="margin-top:14px;gap:8px"><button class="btn ghost sm" id="fv_back"><span class="ic ti ti-arrow-left"></span>${virt?"Close":"Back to the brief"}</button></div>
+      <div class="row" style="margin-top:14px;gap:8px"><button class="btn ghost sm" id="fv_back"><span class="ic ti ti-arrow-left"></span>${virt?"Close":(_fvRet&&_fvRet.id===_fv.id)?esc(_fvRet.label):"Back to the brief"}</button></div>
     </div>`);
   document.querySelector("#modalRoot .sheet")?.classList.add("sheet-wide");
   if(!_fv.loading) fvRenderList();
   const id=_fv.id;
   $("fvQ").oninput=e=>{ _fv.q=e.target.value; fvRenderList(); };
   wireSort(document.querySelector("#modalRoot .sheet"), ()=>fvRenderList());
-  $("fv_back").onclick=()=>virt?closeSheet():openBrief(id);
+  $("fv_back").onclick=()=>virt?closeSheet():(_fvRet&&_fvRet.id===id)?_fvRet.fn():openBrief(id);
   $("fv_refresh").onclick=()=>{ _filesStatus=null; openFiles(id,_fv.sub); };
   if($("fv_up")) $("fv_up").onclick=()=>openFiles(id,_fv.sub.split("/").slice(0,-1).join("/"));
   if($("fv_connect")) $("fv_connect").onclick=async()=>{ const w=window.open("","_blank"); try{ const d=await filesApi("connect"); if(w) w.location=d.url; else location.href=d.url; _filesStatus=null; }catch(e){ if(w) w.close(); toast(e.message,"ti-alert-triangle"); } };

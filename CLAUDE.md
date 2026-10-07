@@ -47,6 +47,29 @@ Dropbox is reachable, enforced by Dropbox itself) and **one folder per brief**.
   `sd-chamber-files` with KV + both secrets, and connected from the app. Verified from
   outside: home page, 401 without sign-in, CORS for the app origin, KV-backed callback guard.
 
+## Conference Word button · no "likely now" · case folders for all · calendar re-presented (Oct 2026)
+
+- **Conference card**: the Dictation/Instructions bar is gone; ONE blue "W" button sits
+  beside Start/Pause/End (also on an ended conference) and opens a small menu — Dictation /
+  Instructions (bold) — `_confWordMenu`, closed by any outside click. Files moved to the
+  card's who-row. "likely now" (time-inferred highlight) removed. Manual conferences now keep
+  their `briefId` and `juniorUids` (they were dropped in `conferencesOn`, so a conference added
+  against a case never offered Files/Word). `renderNow` clears the top bar.
+- **Create case folders** (register, admin): `allFoldersForm` — mkdir every numbered case's
+  folder (4 at a time; existing folders untouched — the gatekeeper's mkdir ignores a conflict);
+  unnumbered cases are routed to "Number old cases by date", whose default is now **keep the
+  numbers already given** when any exist (never renumber existing folders unasked).
+- **Calendar**: month summary (matters listed, conferences, court days, Senior away); each
+  date island shows a load bar + count badge, the first 3 matters as `court·item  title`
+  (mine bold, next-date-only italic), "+N more", conference and on-leave chips; today is a
+  filled circle; past days dimmed. Phone: number + count + chips only. `dayItems(iso)` =
+  day-sheet entries + briefs whose nextDate is that day but not yet on the sheet.
+- **Day popup** (`dayDetail`) is a register: Ct/Item/time | case (title opens the brief,
+  serial/case/diary nos., bench, counsel + colleagues, remarks) | big Files button; then
+  "Next date fixed — not yet on the day sheet", conferences (Files when tied to a case), on
+  leave, actions, and a collapsible "Day settings" (Senior availability, holiday). Files opened
+  from here have "Back to <date>" (`_fvRet`).
+
 ## Trimmed: Done buttons, Note for office, both imports · listing dates · video links (Oct 2026)
 
 - **Removed on the owner's word** (code deleted, not flagged off): the day sheet's Done/Undo
