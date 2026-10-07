@@ -47,6 +47,35 @@ Dropbox is reachable, enforced by Dropbox itself) and **one folder per brief**.
   `sd-chamber-files` with KV + both secrets, and connected from the app. Verified from
   outside: home page, 401 without sign-in, CORS for the app origin, KV-backed callback guard.
 
+## Day sheet: match check, then number the new case (Oct 2026)
+
+Owner: "every time a new case is added by way of day sheet it should be assigned a serial
+number and … a serial numbered folder in the dropbox. The app should inform the person … of any
+already case matching the cause title or the number or any sort of match. Once that match is
+approved the case will not be numbered serially and be linked to the old serial number."
+- `caseMatches({title,caseNo,diaryNo})`: same case no. (`_normCase`, ≥5) / same diary no. /
+  same normalised title = STRONG; ≥2 shared significant words (`_sigWords`, dup stop-list)
+  → "similar cause title" (Jaccard ≥0.5) or "parties in common". Top 6, strong first.
+- **Add matter (`dsForm` f_save)**: the old silent `findBriefForListing` auto-link is gone for
+  NEW cases. `askCaseMatch` (overlay `#cmOverlay` over the form) lists matches; a strong one is
+  pre-chosen, a weak one must be chosen (Continue locked); "Back" returns to the form with
+  nothing saved. Same case → listing linked, no number spent. New → brief created, then
+  `numberNewCase` = `ensureCaseFolder` (serial via the transaction + Dropbox folder; folder
+  deferred to first Files open if Dropbox is unreachable). Toast says "new case NNN, folder
+  created" / "linked to case NNN". Editing a listing / "Existing matter" mode skip the check.
+- **Word import**: each parsed matter gets `_cands` + `pick` (strong pre-picked, weak = must
+  decide, none = new); a select per row; Add is disabled while any is undecided; new ones are
+  numbered after the write.
+- NOT changed: `syncRegister` (background repair that creates briefs for old unlinked
+  listings — no person to ask; they get numbered on first Files open or by "Number old cases
+  by date"), and "New brief" from the register (numbered on first Files open). Linking a
+  listing to an old case that has no serial yet leaves it unnumbered (the by-date batch or its
+  first Files open numbers it).
+- Radio inputs in `.cm-opt`/`.dup-m` override the global `input{width:100%}`.
+- Tested in demo: exact title match → linked, no number; brand new → 001 + folder; weak match
+  → locked until chosen, Back keeps the form, New → 002; case-no + title match shown with
+  reasons; Word import with exact/weak/none rows → decide-gate, linked + new 001/002.
+
 ## Serials v2 — numbered on first Files tap; old cases by date (Oct 2026, supersedes the Word-list import)
 
 Owner: "Forget about the word files. The app will number a case with serial number only when

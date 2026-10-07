@@ -536,12 +536,37 @@ td.tfiles{white-space:nowrap}
 .dup-why{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
 .dup-m{display:flex;gap:10px;align-items:flex-start;padding:9px 10px;border:1px solid var(--line);border-radius:10px;margin-bottom:6px;cursor:pointer}
 .dup-m.keep{border-color:var(--accent);background:var(--accent-soft)}
-.dup-m input{margin-top:3px}
+
 .dup-main{flex:1;min-width:0}
 .dup-t{font-family:var(--serif);font-size:14.5px}
 .dup-s{font-size:12px;color:var(--ink-2);margin-top:3px}
 .rg-steps{display:flex;gap:8px;flex-wrap:wrap;align-items:center;font-size:12.5px;color:var(--ink-2);background:var(--accent-soft);border-radius:10px;padding:9px 12px;margin-bottom:12px}
 .rg-steps b{color:var(--accent-ink)}
+/* "Is this an existing case?" */
+#cmOverlay{position:fixed;inset:0;z-index:90;background:rgba(16,20,24,.55);display:flex;align-items:center;justify-content:center;padding:16px}
+.cm-box{background:var(--bg);border-radius:14px;width:min(640px,100%);max-height:90vh;display:flex;flex-direction:column;box-shadow:0 24px 70px rgba(10,12,14,.4);overflow:hidden}
+.cm-head{padding:16px 18px 10px;border-bottom:1px solid var(--line);background:var(--surface)}
+.cm-head h3{font-family:var(--serif);font-weight:450;font-size:19px;margin:0}
+.cm-head .sub{font-size:12.5px;color:var(--ink-2);margin-top:4px}
+.cm-body{padding:12px 14px;overflow:auto}
+.cm-opt{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);border-radius:11px;background:var(--surface);padding:10px 12px;margin-bottom:8px;cursor:pointer}
+.cm-opt.on{border-color:var(--accent);background:var(--accent-soft)}
+.cm-opt.new{border-style:dashed}
+.cm-opt input,.dup-m input{width:auto;flex:none;margin:3px 0 0;padding:0;accent-color:var(--accent)}
+.cm-main{flex:1;min-width:0}
+.cm-why{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:5px}
+.cm-t{font-family:var(--serif);font-size:15px}
+.cm-n{font-family:var(--mono);font-weight:700;color:var(--accent-ink)}
+.cm-n.none{font-family:var(--sans);font-weight:500;font-size:11.5px;color:var(--warn)}
+.cm-s{font-size:12px;color:var(--ink-2);margin-top:3px}
+.cm-act{font-size:12px;font-weight:600;color:var(--accent-ink);margin-top:6px}
+.cm-foot{display:flex;gap:8px;justify-content:flex-end;padding:12px 14px;border-top:1px solid var(--line);background:var(--surface)}
+@media (max-width:600px){ #cmOverlay{padding:0;align-items:flex-end} .cm-box{border-radius:16px 16px 0 0;max-height:92vh} }
+/* Word import: a possible match on a row */
+.wi-match{margin-top:6px;padding:7px 9px;border-radius:8px;background:var(--warn-bg);font-size:12.5px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.wi-match.ok{background:var(--accent-soft)}
+.wi-match select{font-size:12.5px;padding:4px 6px;max-width:100%}
+
 
 
 .dir-row{display:flex;align-items:flex-start;gap:9px;padding:8px 0;border-bottom:1px solid var(--line)}
@@ -3833,10 +3858,21 @@ function dsForm(idx=null, preset=null){
     // --- connect the listing to the briefs register: enrich an existing brief or
     // create one from the causelist data, so every listed case lands in the register ---
     let notifyBrief=null;   // the connected brief, for the share/notify prompt
+    let _dsLinked=null, _dsNew=null;   // what happened to the case, for the closing message
     if(entry.caseTitle || (entry.courtNo&&entry.itemNo)){
       const refs = hit ? refsFromCauseLine(hit.caseLine) : {caseNo:"",diaryNo:""};
       if(!refs.caseNo && !refs.diaryNo && typedNo){ if(/^\s*(D\b|DIARY|D\.?\s*NO)/i.test(typedNo)) refs.diaryNo=typedNo; else refs.caseNo=typedNo; }
-      const brief = findBriefForListing(entry, refs.caseNo, refs.diaryNo);
+      // a listing already tied to a brief (editing, or "Existing matter" picked) goes straight
+      // there; a NEW case is first checked against every existing one and the person decides
+      let brief=(entry.briefId&&briefs[entry.briefId])?briefs[entry.briefId]:null;
+      if(!brief){
+        const cands=caseMatches({title:entry.caseTitle, caseNo:refs.caseNo||typedNo, diaryNo:refs.diaryNo});
+        if(cands.length){
+          const pick=await askCaseMatch({title:entry.caseTitle, nums:[refs.caseNo,refs.diaryNo].filter(Boolean).join(" · ")||typedNo}, cands);
+          if(pick===null) return;                                  // back to the form, nothing saved
+          if(pick!=="new"){ brief=briefs[pick]; _dsLinked=brief.id; }
+        }
+      }
       if(brief){
         entry.briefId = brief.id;
         // safety net: a "New matter" that actually matched a file by number/title
@@ -3880,6 +3916,7 @@ function dsForm(idx=null, preset=null){
           fromListing:true, createdBy:me.uid, createdAt:db.now(), updatedAt:db.now() };
         entry.briefId = await addBrief(nb);
         notifyBrief={...nb, id:entry.briefId};
+        _dsNew=entry.briefId;
       }
     }
     const writeTo=(dt,entriesArr,confs)=>db.set("daysheets/"+dt,{date:dt,entries:entriesArr,conferences:confs,updatedAt:db.now(),updatedBy:me.uid},true);
@@ -3896,7 +3933,11 @@ function dsForm(idx=null, preset=null){
     if(fAutoPicked && !fAutoPicked.forced) await advancePointer();   // auto-assign consumes a roster turn
     closeSheet();
     if(idx===null && preset && preset.onSaved){ try{ await preset.onSaved(entry, listDate); }catch(_){ } }
-    toast(fAutoPicked?`Saved — auto-assigned to ${nameOf(fAutoPicked.uid)}`:`Saved to ${fmtDateY(listDate)}`,
+    // a NEW case takes the next serial and its Dropbox folder right away; a linked one keeps its own
+    let _caseMsg="";
+    if(_dsNew){ const r=await numberNewCase(_dsNew); _caseMsg=r.n!=null?` · new case ${pad3(r.n)}${r.folder?", folder created":""}`:""; }
+    else if(_dsLinked && briefs[_dsLinked]){ const n=serialNum(briefs[_dsLinked]); _caseMsg=` · linked to ${n!=null?"case "+pad3(n):"the existing case"}`; }
+    toast((fAutoPicked?`Saved — auto-assigned to ${nameOf(fAutoPicked.uid)}`:`Saved to ${fmtDateY(listDate)}`)+_caseMsg,
       fAutoPicked?"ti-user-check":"ti-check");
     renderActive();
     // in-app notify the colleagues on the listing (new ones on an edit)
@@ -4371,6 +4412,10 @@ function wordImportForm(){
 }
 function renderWiPreview(){
   const d=_wiData; if(!d){ return; }
+  // each matter is checked against the register once; a strong match is pre-chosen, a weaker one
+  // must be decided by the person (same case, or a new case) before anything is added
+  d.matters.forEach(m=>{ if(m._cands===undefined){ m._cands=caseMatches({title:m.title}); m.pick=m._cands[0]&&m._cands[0].strong?m._cands[0].b.id:(m._cands.length?"":"new"); } });
+  const undecided=d.matters.filter(m=>m.include&&m.court&&m.item&&m.pick==="").length;
   const cols=chamberColleagues();
   const collSel=(mi)=>`<select class="wi-add" data-mi="${mi}"><option value="">+ colleague</option>${cols.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join("")}</select>`;
   const nInc=d.matters.filter(m=>m.include&&m.court&&m.item).length;
@@ -4385,6 +4430,10 @@ function renderWiPreview(){
         ${m.unmatched.map(tk=>`<span class="wi-chip un" title="not recognised">${esc(tk)} ?</span>`).join("")}
         ${collSel(i)}
       </div>
+      ${m._cands&&m._cands.length?`<div class="wi-match ${m.pick?"ok":""}"><span class="ti ti-${m.pick?"link":"alert-triangle"}"></span>${m.pick?"":"<b>Possible existing case — choose:</b>"}
+        <select data-wpick="${i}"><option value="" ${m.pick===""?"selected":""} disabled>— is it one of these? —</option>
+          ${m._cands.map(c=>`<option value="${c.b.id}" ${m.pick===c.b.id?"selected":""}>Same case: ${serialNum(c.b)!=null?pad3(serialNum(c.b))+" · ":""}${esc(labelOf(c.b))} (${esc(c.why.join(", "))})</option>`).join("")}
+          <option value="new" ${m.pick==="new"?"selected":""}>A new case — give it the next serial</option></select></div>`:""}
     </div>
   </div>`).join("");
   // each conference carries its own DATE (the clerk's list mixes the eve-before and
@@ -4406,7 +4455,9 @@ function renderWiPreview(){
   $("wi_res").innerHTML=`<div class="wi-summary">${d.matters.length} matter${d.matters.length!==1?'s':''} · ${d.conferences.length} conference${d.conferences.length!==1?'s':''} found</div>
     <div class="wi-list">${rows||'<div class="empty">No Ct-x#y matters recognised in this file.</div>'}</div>
     ${confRows}
-    <div style="margin-top:16px"><button class="btn" id="wi_add" ${nInc?'':'disabled'}><span class="ic ti ti-plus"></span>Add ${nInc} matter${nInc!==1?'s':''} to ${esc(fmtDateY(dsDate))}</button></div>`;
+    ${undecided?`<div class="notice warn" style="margin-top:14px"><span class="ti ti-alert-triangle"></span><div><b>${undecided} possible match${undecided>1?"es":""} to decide</b> — say for each whether it is an existing case or a new one.</div></div>`:""}
+    <div style="margin-top:16px"><button class="btn" id="wi_add" ${nInc&&!undecided?'':'disabled'}><span class="ic ti ti-plus"></span>Add ${nInc} matter${nInc!==1?'s':''} to ${esc(fmtDateY(dsDate))}</button></div>`;
+  document.querySelectorAll("[data-wpick]").forEach(x=>x.onchange=()=>{ _wiData.matters[+x.dataset.wpick].pick=x.value; renderWiPreview(); });
   document.querySelectorAll("[data-inc]").forEach(x=>x.onchange=()=>{ _wiData.matters[+x.dataset.inc].include=x.checked; renderWiPreview(); });
   document.querySelectorAll("[data-rm]").forEach(x=>x.onclick=()=>{ const [i,id]=x.dataset.rm.split(":"); const m=_wiData.matters[+i]; m.jrs=m.jrs.filter(j=>j!==id); renderWiPreview(); });
   document.querySelectorAll(".wi-add").forEach(sel=>sel.onchange=()=>{ const m=_wiData.matters[+sel.dataset.mi]; if(sel.value&&!m.jrs.includes(sel.value)) m.jrs.push(sel.value); renderWiPreview(); });
@@ -4423,12 +4474,14 @@ async function applyWordImport(){
   for(const cf of d.conferences){ if(cf.matched && cf.matterIdx!=null && d.matters[cf.matterIdx]) d.matters[cf.matterIdx].confDate=cf.date||date; }
   const arr=[...(dsAll[date]?.entries||[])];
   const use=d.matters.filter(m=>m.include&&m.court&&m.item);
+  if(use.some(m=>m.pick==="")){ toast("Decide the possible matches first","ti-alert-triangle"); return; }
+  const _wiNew=[];
   for(const m of use){
     const entry={ briefId:null, caseTitle:m.title||"", courtNo:String(m.court), itemNo:String(m.item),
       listType:"", appearingFor:m.party||"", time:m.time||"10.30",
       confTime:m.confTime||"", confDate:m.confTime?(m.confDate||date):"", bench:m.bench||"", counsel:m.counsel||"", caseNo:"",
       awaitingList:false, juniorUids:m.jrs.slice(), juniorUid:m.jrs[0]||null, remarks:"", done:false };
-    const brief=findBriefForListing(entry,"","");            // link an existing register file by title
+    const brief=(m.pick&&m.pick!=="new"&&briefs[m.pick])?briefs[m.pick]:null;   // the person's own choice
     if(brief){
       entry.briefId=brief.id;
       const patch={updatedAt:db.now()};
@@ -4450,7 +4503,7 @@ async function applyWordImport(){
         status:"listed", priority:false, nextDate:date, detailsAwaited:true,
         conferenceAt:entry.confTime?date:null, fromListing:true, wordImport:true,
         createdBy:me.uid, createdAt:db.now(), updatedAt:db.now() };
-      try{ entry.briefId=await addBrief(nb); }catch(_){}
+      try{ entry.briefId=await addBrief(nb); _wiNew.push(entry.briefId); }catch(_){}
     }
     arr.push(entry);
   }
@@ -4461,7 +4514,9 @@ async function applyWordImport(){
     if(!confs.some(x=>x.time===cf.time && (x.name||"")===cf.name && (x.date||date)===cdate)) confs.push({date:cdate,time:cf.time,name:cf.name,briefId:null,juniorUids:[]}); }
   try{ await db.set("daysheets/"+date,{date,entries:byCourt(arr,date),conferences:confs,updatedAt:db.now(),updatedBy:me.uid},true); }catch(_){}
   closeSheet();
-  toast(`Imported ${use.length} matter${use.length!==1?'s':''} from the Word list`,"ti-file-check");
+  // the new cases take their serials and folders
+  const nums=[]; for(const id of _wiNew){ const r=await numberNewCase(id); if(r.n!=null) nums.push(pad3(r.n)); }
+  toast(`Imported ${use.length} matter${use.length!==1?'s':''} from the Word list${nums.length?` · new case${nums.length>1?"s":""} ${nums.join(", ")}`:""}`,"ti-file-check");
 }
 
 function importCauseList(){
@@ -4754,6 +4809,64 @@ function renderDuplicates(){
         }
         toast(`Merged ${dups.length}`,"ti-git-merge"); duplicatesForm();
       }}); });
+}
+
+/* ---------------- "Is this an existing case?" (owner, Oct 2026) ----------------
+   "Every time a new case is added by way of day sheet it should be assigned a serial number and
+   should be given a serial numbered folder in the dropbox. The app should inform the person
+   inputting a case in the day sheet of any already case matching the cause title or the number
+   or any sort of match. Once that match is approved the case will not be numbered serially and
+   be linked to the old serial number."
+   So a new day-sheet case is NEVER silently linked or silently created: every possible match is
+   shown, the person decides, and only a genuinely new case takes a serial (and its folder). */
+function caseMatches(q){
+  const cn=_normCase(q.caseNo||""), dn=_normNo(q.diaryNo||""), t=_normTitle(q.title||""), w=_sigWords(q.title||"");
+  const out=[];
+  for(const b of Object.values(briefs)){
+    if(!isCaseBrief(b)) continue; const why=[];
+    if(cn.length>=5 && b.caseNo && _normCase(b.caseNo)===cn) why.push("same case number");
+    if(dn.length>=5 && b.diaryNo && _normNo(b.diaryNo)===dn) why.push("same diary number");
+    if(t.length>6 && _normTitle(labelOf(b))===t) why.push("same cause title");
+    else if(w.size>=2){ const bw=_sigWords(labelOf(b)); let inter=0; w.forEach(x=>{ if(bw.has(x)) inter++; });
+      if(inter>=2) why.push(inter/(w.size+bw.size-inter)>=0.5?"similar cause title":"parties in common"); }
+    if(why.length) out.push({b, why, strong:why.some(r=>/^same/.test(r))});
+  }
+  return out.sort((x,y)=>(y.strong-x.strong)||(y.why.length-x.why.length)||((serialNum(x.b)??1e9)-(serialNum(y.b)??1e9))).slice(0,6);
+}
+function _matchCardHTML(b){
+  const n=serialNum(b), L=listingDatesOf(b.id), st=STATUS[b.status]||STATUS.received;
+  return `<div class="cm-t">${n!=null?`<span class="cm-n">${pad3(n)}</span> · `:`<span class="cm-n none">no serial yet</span> · `}${esc(labelOf(b))}</div>
+    <div class="cm-s">${esc([b.caseNo,b.diaryNo?"Dy. "+b.diaryNo:"",b.aor?"AoR "+b.aor:""].filter(Boolean).join(" · ")||"no case or diary number")}</div>
+    <div class="cm-s"><span class="chip ${st.cls}" style="font-size:10.5px"><span class="dot"></span>${st.label}</span> ${L.length?`last listed ${fmtDateY(L[L.length-1])}`:"never listed"}${(b.assignedTo||[]).length?" · "+(b.assignedTo||[]).map(nameOf).map(esc).join(", "):""}</div>`;
+}
+// A small dialog OVER the form (the form stays open behind it). Resolves to a brief id (same
+// case), "new" (a different case), or null (go back and edit).
+function askCaseMatch(adding, cands){
+  return new Promise(res=>{
+    let ov=$("cmOverlay"); if(ov) ov.remove();
+    ov=document.createElement("div"); ov.id="cmOverlay";
+    const pre=cands[0]&&cands[0].strong?cands[0].b.id:"";
+    ov.innerHTML=`<div class="cm-box" role="dialog" aria-modal="true">
+      <div class="cm-head"><h3>Is this an existing case?</h3><div class="sub">You are adding: <b>${esc(adding.title||"(no title)")}</b>${adding.nums?` · <span class="mono">${esc(adding.nums)}</span>`:""}</div></div>
+      <div class="cm-body">
+        ${cands.map(c=>`<label class="cm-opt ${c.b.id===pre?"on":""}"><input type="radio" name="cmpick" value="${c.b.id}" ${c.b.id===pre?"checked":""}>
+          <div class="cm-main"><div class="cm-why">${c.why.map(r=>`<span class="chip ${/^same/.test(r)?"st-listed":"st-received"}">${esc(r)}</span>`).join(" ")}</div>${_matchCardHTML(c.b)}
+          <div class="cm-act">Same case — link this listing to it${serialNum(c.b)!=null?` (keeps serial ${pad3(serialNum(c.b))})`:""}</div></div></label>`).join("")}
+        <label class="cm-opt new"><input type="radio" name="cmpick" value="new"><div class="cm-main"><div class="cm-t">None of these — it's a <b>new case</b></div><div class="cm-s">It gets the next serial (${pad3(nextSerial())}) and its own Dropbox folder.</div></div></label>
+      </div>
+      <div class="cm-foot"><button class="btn ghost" id="cm_back">Back</button><button class="btn" id="cm_go" ${pre?"":"disabled"}>Continue</button></div></div>`;
+    document.body.appendChild(ov);
+    const done=v=>{ ov.remove(); res(v); };
+    ov.querySelectorAll('input[name="cmpick"]').forEach(x=>x.onchange=()=>{ ov.querySelectorAll(".cm-opt").forEach(o=>o.classList.toggle("on",o.contains(x))); $("cm_go").disabled=false; });
+    $("cm_back").onclick=()=>done(null);
+    $("cm_go").onclick=()=>{ const c=ov.querySelector('input[name="cmpick"]:checked'); if(c) done(c.value); };
+  });
+}
+// Number a just-created day-sheet case and make its folder. Never blocks the listing: if
+// Dropbox can't be reached, the folder is made the first time its Files are opened.
+async function numberNewCase(id){
+  try{ const b=await ensureCaseFolder(id); return {n:serialNum(b), folder:true}; }
+  catch(e){ const b=briefs[id]; return {n:b?serialNum(b):null, folder:false, err:e.message}; }
 }
 
 // The next day-sheet listing of a brief, today or later (court/item come from the sheet).
