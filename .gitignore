@@ -1,3 +1,7 @@
 firestore.rules
 __pycache__/
 *.pyc
+
+# The Dropbox gatekeeper (Cloudflare Worker) — server side, pasted into Cloudflare by hand,
+# deliberately not published with the app. See files-gatekeeper/SETUP.md.
+files-gatekeeper/

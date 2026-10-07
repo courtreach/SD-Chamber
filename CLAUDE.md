@@ -8,6 +8,43 @@ file as `CLAUDE.md` in the repository root — Claude Code reads it automaticall
 A work-allocation and cause-list tool **between the clerk and the juniors**.
 The senior advocate is deliberately NOT a user (role removed by owner decision).
 
+## Brief files in Dropbox (Oct 2026)
+
+Owner: link Dropbox (his own 2 TB personal plan) for case files, like ASD's OneDrive.
+Decided: **App folder** access only (Dropbox/Apps/<app name>/ — nothing else in his
+Dropbox is reachable, enforced by Dropbox itself) and **one folder per brief**.
+
+- **Gatekeeper** = Cloudflare Worker `sd-chamber-files` (URL hardcoded in the app as
+  `FILES_GATEKEEPER`, account subdomain `sdentertainmentservices`). Source in
+  `files-gatekeeper/worker.js` + `SETUP.md` — **gitignored, pasted by hand** (same rule as
+  CourtReach's worker: server code is not published). Holds the Dropbox refresh token in
+  KV (`dbx_refresh`, `dbx_access`, `dbx_account`, `oauth_state:*`). Secrets
+  `DROPBOX_APP_KEY` / `DROPBOX_APP_SECRET`; project, admin email and allowed origin are
+  constants at the top of the worker (keep `ADMIN_EMAIL` in step with `CHAMBER.adminEmail`).
+- **Who is asking:** every request carries the Firebase ID token (`auth.idToken()`); the
+  worker verifies it (Google JWKS, RS256, project `sd-chamber-1aa78`) and reads the
+  caller's own `users/{uid}` with THEIR token (rules allow any signed-in read) — so no
+  Firebase key in the worker. Roles mirror firestore.rules: admin (email or role) /
+  manage (clerk, pa) may upload + delete / active members may list + open. Only admin may
+  connect/disconnect. Endpoints POST `/api/{status,connect,disconnect,list,link,upload,delete}`,
+  GET `/callback`. Upload streams through (X-Folder / X-File-Name headers, ≤95 MB),
+  `mode:add, autorename:true` — never overwrites. Opening/sharing = Dropbox temporary links
+  (4 h). Paths are one segment each, `..`/slashes refused.
+- **App:** `openBrief` has a **Files** section (`loadBriefFiles`). The folder name is fixed
+  once on first upload as `brief.dropboxFolder` (`briefFolderName`: "chamberNo - title", or
+  "title (id5)" with no number) so renames never strand files; `_mergeBriefInto` carries it
+  to the keeper. Deleting a brief does NOT delete its folder. Status is cached 5 min **per
+  uid** (a bug caught in testing: a colleague signing in after Staff inherited Add/Remove).
+  `window.open` happens inside the tap, then the link is filled in — or iPhone blocks it.
+  DEMO has an in-memory stand-in (`_demoFiles`). No firestore.rules change (Staff already
+  have full brief update; the folder name is the only new field).
+- **Tested:** 39 gatekeeper checks in the browser with genuinely RS256-signed tokens and a
+  fake Dropbox (roles, expired/tampered/wrong-project tokens, inactive/outsider refusal,
+  path guards, Unicode names → ASCII-escaped Dropbox-API-Arg, pagination, missing folder,
+  CORS incl. preflight, single-use OAuth state); app flows in demo at desktop + 375 px.
+- **Pending (owner):** SETUP.md parts A–C. Until then the Files section says "not set up
+  yet" (admin sees the reason).
+
 ## Notes from court + Senior's calendar (Sep 2026)
 
 - **Notes from court** (`courtNoteForm` / `courtNotesPanel` / `wireCourtNotes`, block
