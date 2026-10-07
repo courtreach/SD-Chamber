@@ -4650,7 +4650,7 @@ function renamePaperForm(id,folder,sub,f,files){
 /* ---------------- the day's cause list → Dropbox/Apps/…/Causelists ---------------- */
 async function saveCauselistToDropbox(iso){
   const st=await filesStatus(true);
-  if(!st.connected){ toast(st.unreachable?"Files aren't reachable right now":"Dropbox isn't connected yet","ti-alert-triangle"); return; }
+  if(!st.connected){ toast(st.unreachable?(st.why||"Files aren't reachable right now"):"Dropbox isn't connected yet","ti-alert-triangle"); return; }
   toast("Preparing the cause list…","ti-file-text");
   let out; try{ out=await buildCauselistPdf(iso); }catch(e){ toast("Couldn't build the PDF — check your connection and retry","ti-alert-triangle"); return; }
   const d=new Date(iso+"T00:00");
@@ -4947,7 +4947,7 @@ async function newConferenceNote(confKeyStr, kind){
   const c=conferencesOn(todayISO()).find(x=>x.key===confKeyStr);
   if(!c||!c.briefId||!briefs[c.briefId]){ toast("This conference isn't tied to a case — add it from the day sheet against its matter","ti-alert-triangle"); return; }
   const st=await filesStatus(true);
-  if(!canEditPapers(st)){ toast(st.unreachable?"Files aren't reachable right now":"Dropbox isn't connected yet","ti-alert-triangle"); return; }
+  if(!canEditPapers(st)){ toast(st.unreachable?(st.why||"Files aren't reachable right now"):"Dropbox isn't connected yet","ti-alert-triangle"); return; }
   toast(`Creating the ${kind.toLowerCase()}…`,"ti-file-plus");
   try{
     const b=await ensureCaseFolder(c.briefId), folder=b.dropboxFolder;
@@ -5289,10 +5289,17 @@ async function filesStatus(force){
   // remembered for 5 minutes, but only for the SAME person — a different sign-in on this
   // device must never inherit the previous person's Add / Remove buttons
   const uid=me?.uid||"";
-  if(!force && _filesStatus && _filesStatusUid===uid && Date.now()-_filesStatusAt<300000) return _filesStatus;
+  if(!force && _filesStatus && !_filesStatus.unreachable && _filesStatusUid===uid && Date.now()-_filesStatusAt<300000) return _filesStatus;
   _filesStatusUid=uid;
   try{ _filesStatus=await filesApi("status"); }
-  catch(e){ _filesStatus={unreachable:true, error:e.message}; }
+  catch(e){
+    // say WHY (owner, Oct 2026: a colleague's laptop only ever saw "not reachable"):
+    // no answer at all = this computer's internet / network / blocker; 401 = sign-in; 403 = account
+    const why=!e.status?"This device couldn't reach the chamber's Files service — its internet, office network, antivirus or an ad-blocker is stopping it."
+      :e.status===401?"Your sign-in has expired — sign out and sign in again."
+      :e.status===403?(e.message||"Your account isn't allowed to open Files — ask the admin.")
+      :"The Files service had a problem ("+(e.message||e.status)+"). Try again in a minute.";
+    _filesStatus={unreachable:true, error:e.message, why, status:e.status||0}; }
   _filesStatusAt=Date.now(); return _filesStatus;
 }
 const fmtSize=n=>!n?"":n<1024?n+" B":n<1048576?Math.round(n/1024)+" KB":(n/1048576).toFixed(n<10485760?1:0)+" MB";
@@ -5304,7 +5311,7 @@ async function loadBriefFiles(id){
   box.innerHTML=card("Loading…"); wireFilesBtns(box);
   const st=await filesStatus(); if(!$("ob_files")) return;
   let sum;
-  if(st.unreachable) sum="Files aren't reachable right now.";
+  if(st.unreachable) sum="Files aren't available right now. "+(st.why||"");
   else if(!st.connected) sum=st.admin?"Dropbox isn't connected yet.":"Files aren't set up yet.";
   else if(!b.dropboxFolder) sum=serialNum(b)==null?"No papers yet — the first paper gives it its serial and folder.":`No papers yet · folder <b>${esc(caseFolderName(b))}</b>`;
   else { try{ const d=await filesApi("list",{folder:b.dropboxFolder}); const f=d.files||[], dr=d.dirs||[];
@@ -5631,7 +5638,7 @@ function renderFilesHome(){
   $("tab-files").querySelectorAll("[data-files]").forEach(x=>x.onclick=e=>{ e.stopPropagation(); _fvRet={id:x.dataset.files,label:"Back",fn:closeSheet}; openFiles(x.dataset.files); });
   $("tab-files").querySelectorAll("[data-fhadd]").forEach(inp=>inp.onchange=async e=>{ const id=inp.dataset.fhadd, list=[...e.target.files]; inp.value=""; if(!list.length) return;
     _fvRet={id,label:"Back",fn:closeSheet}; await openFiles(id);
-    if(!canEditPapers(_fv.st)){ toast(_fv.st&&_fv.st.unreachable?"Files aren't reachable right now":"You can't add papers yet — ask the admin","ti-alert-triangle"); return; }
+    if(!canEditPapers(_fv.st)){ toast(_fv.st&&_fv.st.unreachable?(_fv.st.why||"Files aren't reachable right now"):"You can't add papers yet — ask the admin","ti-alert-triangle"); return; }
     addPapersForm(id,list,""); });
 }
 async function openFiles(id, sub){
@@ -5658,7 +5665,7 @@ function renderFilesSheet(){
   const st=_fv.st, manage=!!(st&&st.manage), n=serialNum(b), folder=briefFolder(b), virt=!!b._virtual;
   const crumbs=["Dropbox","Apps","SD Master Case File"].concat(folder?[folder]:[]).concat(_fv.sub?_fv.sub.split("/"):[]);
   let notes="";
-  if(st&&st.unreachable) notes+=`<div class="fv-note warn"><span class="ti ti-plug-off"></span>Files aren't reachable right now${isAdmin()?" — the Dropbox gatekeeper didn't answer":""}.</div>`;
+  if(st&&st.unreachable) notes+=`<div class="fv-note warn"><span class="ti ti-plug-off"></span><span><b>Files aren't available right now.</b> ${esc(st.why||"")}${!st.status?` <a href="${FILES_GATEKEEPER}/" target="_blank" rel="noopener">Test the connection</a> — it should open a page saying “SD Chamber files”.`:""}</span> <button class="btn sm" id="fv_retry">Try again</button></div>`;
   else if(st&&!st.connected) notes+=`<div class="fv-note warn"><span class="ti ti-brand-dropbox"></span>${st.admin?"Dropbox isn't connected.":"Files aren't set up yet — the admin needs to connect Dropbox."}${st.admin?` <button class="btn sm" id="fv_connect">Connect Dropbox</button>`:""}</div>`;
   if(n==null&&!virt) notes+=`<div class="fv-note"><span class="ti ti-hash"></span><span>No serial or folder yet — they are given as soon as Dropbox is reachable.</span>${canEditPapers(st)?` <button class="btn sm" id="fv_giveSerial">Create its folder now</button>`:""}</div>`;
   const want=caseFolderName(b);
@@ -5691,6 +5698,7 @@ function renderFilesSheet(){
   wireSort(document.querySelector("#modalRoot .sheet"), ()=>fvRenderList());
   $("fv_back").onclick=()=>{ if(history.state&&history.state.fv) history.back(); else fvLeave(); };
   $("fv_refresh").onclick=()=>{ _filesStatus=null; openFiles(id,_fv.sub); };
+  if($("fv_retry")) $("fv_retry").onclick=()=>{ _filesStatus=null; openFiles(id,_fv.sub); };
   if($("fv_up")) $("fv_up").onclick=()=>openFiles(id,_fv.sub.split("/").slice(0,-1).join("/"));
   if($("fv_connect")) $("fv_connect").onclick=async()=>{ const w=window.open("","_blank"); try{ const d=await filesApi("connect"); if(w) w.location=d.url; else location.href=d.url; _filesStatus=null; }catch(e){ if(w) w.close(); toast(e.message,"ti-alert-triangle"); } };
   if($("fv_giveSerial")) $("fv_giveSerial").onclick=async()=>{ $("fv_giveSerial").disabled=true;
