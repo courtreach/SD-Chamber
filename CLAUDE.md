@@ -42,8 +42,10 @@ Dropbox is reachable, enforced by Dropbox itself) and **one folder per brief**.
   fake Dropbox (roles, expired/tampered/wrong-project tokens, inactive/outsider refusal,
   path guards, Unicode names → ASCII-escaped Dropbox-API-Arg, pagination, missing folder,
   CORS incl. preflight, single-use OAuth state); app flows in demo at desktop + 375 px.
-- **Pending (owner):** SETUP.md parts A–C. Until then the Files section says "not set up
-  yet" (admin sees the reason).
+- **LIVE since 7 Oct 2026.** Owner completed SETUP A–C: Dropbox app **"SD Master Case
+  File"** (so files live in **Dropbox/Apps/SD Master Case File/**), Cloudflare worker
+  `sd-chamber-files` with KV + both secrets, and connected from the app. Verified from
+  outside: home page, 401 without sign-in, CORS for the app origin, KV-backed callback guard.
 
 ## Notes from court + Senior's calendar (Sep 2026)
 
