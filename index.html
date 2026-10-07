@@ -1952,9 +1952,17 @@ auth.onChange(async user=>{
   });
 });
 
+// Older member records may lack `active` — the app treats that as active, but the Files
+// gatekeeper (and the security rules) need it recorded as true. The admin's device fills it in.
+let _activeRepaired=false;
+async function repairActiveFlags(){
+  if(_activeRepaired||!isAdmin()||DEMO) return; _activeRepaired=true;
+  for(const u of Object.values(users)) if(["senior","clerk","pa","junior"].includes(u.role)&&typeof u.active!=="boolean"){
+    try{ await db.update("users/"+u.id,{active:true}); }catch(_){} }
+}
 function startApp(){
   showView("app"); paintChrome();
-  unsub.push(db.watchCollection("users", rows=>{ users={}; rows.forEach(u=>users[u.id]=u); _scanVer++; renderActive(); paintChrome(); }));
+  unsub.push(db.watchCollection("users", rows=>{ users={}; rows.forEach(u=>users[u.id]=u); _scanVer++; renderActive(); paintChrome(); repairActiveFlags(); }));
   unsub.push(db.watchCollection("briefs", rows=>{ briefs={}; rows.forEach(b=>briefs[b.id]=b); _scanVer++; $("cntBriefs").textContent=Object.values(briefs).filter(b=>b.status!=="disposed").length; renderActive(); _briefsLoaded=true; maybeSyncRegister(); }, ["updatedAt","desc"]));
   unsub.push(db.watchDoc("config/roster", d=>{ roster = d || {order:[],pointer:0}; renderActive(); }));
   unsub.push(db.watchDoc("config/holidays", d=>{ holidays=d||{}; delete holidays.id; renderActive(); }));
@@ -5297,7 +5305,7 @@ async function filesStatus(force){
     // no answer at all = this computer's internet / network / blocker; 401 = sign-in; 403 = account
     const why=!e.status?"This device couldn't reach the chamber's Files service — its internet, office network, antivirus or an ad-blocker is stopping it."
       :e.status===401?"Your sign-in has expired — sign out and sign in again."
-      :e.status===403?(e.message||"Your account isn't allowed to open Files — ask the admin.")
+      :e.status===403?`${e.message||"Your account isn't allowed to open Files."} The app shows you as ${ROLES[me?.role]||me?.role||"—"}, ${me?.active===true?"active":me?.active===false?"not active":"active not recorded"}. Ask the admin to open Chamber → your name → Save.`
       :"The Files service had a problem ("+(e.message||e.status)+"). Try again in a minute.";
     _filesStatus={unreachable:true, error:e.message, why, status:e.status||0}; }
   _filesStatusAt=Date.now(); return _filesStatus;
