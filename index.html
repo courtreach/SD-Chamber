@@ -509,6 +509,40 @@ label{display:block;font-size:11.5px;font-weight:500;color:var(--ink-2);letter-s
 /* day sheet: the prominent files button */
 .rail-actions .btn-files{order:-1}
 td.tfiles{white-space:nowrap}
+/* preview (ASD Quick Look) */
+#qlOverlay{position:fixed;inset:0;z-index:80;background:rgba(16,20,24,.62);display:none;align-items:center;justify-content:center;padding:14px}
+#qlOverlay.on{display:flex}
+.ql-box{background:var(--bg);border-radius:14px;width:min(960px,100%);height:min(90vh,1200px);display:flex;flex-direction:column;box-shadow:0 24px 70px rgba(10,12,14,.45);overflow:hidden}
+.ql-head{display:flex;align-items:center;gap:10px;padding:10px 12px 10px 16px;border-bottom:1px solid var(--line);background:var(--surface)}
+.ql-title{flex:1;min-width:0}
+#qlName{font-weight:600;font-size:14.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ql-meta{font-size:12px;color:var(--ink-3)}
+.ql-btns{display:flex;gap:6px;flex:none}
+.ql-btns button{border:1px solid var(--line-2);background:var(--surface-2);color:var(--accent-ink);border-radius:8px;padding:6px 10px;font-size:13px;font-weight:600;font-family:inherit;cursor:pointer}
+.ql-btns button:hover{background:var(--accent-soft)}
+.ql-body{flex:1;overflow:auto;background:#7d8287;padding:12px;display:flex;flex-direction:column;align-items:center;gap:10px}
+.ql-page{background:#fff;position:relative;box-shadow:0 2px 8px rgba(0,0,0,.25);max-width:100%}
+.ql-page canvas{display:block;max-width:100%;height:auto !important}
+.ql-pn{position:absolute;top:6px;right:8px;font-size:11px;color:#999}
+.ql-img{max-width:100%;height:auto;background:#fff}
+.ql-docx{width:100%;background:#fff}
+.ql-msg{color:#fff;font-size:15px;text-align:center;margin:auto;padding:30px}
+@media (max-width:600px){ #qlOverlay{padding:0} .ql-box{height:100%;border-radius:0} .ql-btns button{padding:6px 8px} #qlPrev,#qlNext{display:none} }
+/* edit in Word */
+.ew-step{display:flex;gap:12px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:9px;font-size:13.5px}
+.ew-n{flex:none;width:24px;height:24px;border-radius:50%;background:var(--accent);color:#fff;font-weight:700;font-size:12.5px;display:flex;align-items:center;justify-content:center}
+/* duplicates */
+.dup-g{border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:12px;margin-bottom:12px}
+.dup-why{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.dup-m{display:flex;gap:10px;align-items:flex-start;padding:9px 10px;border:1px solid var(--line);border-radius:10px;margin-bottom:6px;cursor:pointer}
+.dup-m.keep{border-color:var(--accent);background:var(--accent-soft)}
+.dup-m input{margin-top:3px}
+.dup-main{flex:1;min-width:0}
+.dup-t{font-family:var(--serif);font-size:14.5px}
+.dup-s{font-size:12px;color:var(--ink-2);margin-top:3px}
+.rg-steps{display:flex;gap:8px;flex-wrap:wrap;align-items:center;font-size:12.5px;color:var(--ink-2);background:var(--accent-soft);border-radius:10px;padding:9px 12px;margin-bottom:12px}
+.rg-steps b{color:var(--accent-ink)}
+
 
 .dir-row{display:flex;align-items:flex-start;gap:9px;padding:8px 0;border-bottom:1px solid var(--line)}
 .dir-row:last-child{border-bottom:none}
@@ -3254,7 +3288,7 @@ function renderToday(){
     <div class="ds-date"><span class="lab">Date</span><input type="date" id="dsDateInp" value="${dsDate}"></div>
     <a class="dlink" href="https://www.sci.gov.in/cause-list/" target="_blank" rel="noopener"><span class="ic ti ti-external-link"></span>SCI cause list</a>
     ${clStatus}
-    <button class="btn ghost sm" id="tbPrint" style="margin-left:auto"><span class="ic ti ti-printer"></span>Print</button><button class="btn ghost sm" id="tbShare"><span class="ic ti ti-share"></span>Share</button>
+    <button class="btn ghost sm" id="tbPrint" style="margin-left:auto"><span class="ic ti ti-printer"></span>Print</button><button class="btn ghost sm" id="tbShare"><span class="ic ti ti-share"></span>Share</button><button class="btn ghost sm" id="tbSaveDbx" title="Save this day's cause list to Dropbox › Causelists"><span class="ic ti ti-cloud-upload"></span>Save to Dropbox</button><button class="btn ghost sm" id="tbCauselists" title="Saved cause lists"><span class="ic ti ti-folder"></span>Saved</button>
   </div>`;
 
   let rail;
@@ -3341,6 +3375,8 @@ function renderToday(){
   if($("tbWordImport"))$("tbWordImport").onclick=wordImportForm;
   if($("tbShare"))$("tbShare").onclick=shareDaySheet;
   if($("tbPrint"))$("tbPrint").onclick=()=>printCauseList(dsDate);
+  if($("tbSaveDbx"))$("tbSaveDbx").onclick=()=>saveCauselistToDropbox(dsDate);
+  if($("tbCauselists"))$("tbCauselists").onclick=()=>openFiles("@Causelists");
   if($("tbAddConf"))$("tbAddConf").onclick=()=>confForm();
   $("tab-today").querySelectorAll("[data-confedit]").forEach(x=>x.onclick=()=>confForm(+x.dataset.confedit));
   $("tab-today").querySelectorAll("[data-confdel]").forEach(x=>x.onclick=()=>{const c=[...(daysheet?.conferences||[])];c.splice(+x.dataset.confdel,1);saveDaysheet(daysheet?.entries||[],c);});
@@ -4456,6 +4492,261 @@ function importCauseList(){
    BRIEFS
    ============================================================ */
 let briefFilter="", briefSearch="";
+/* ---------------- what a member may do with papers ----------------
+   Owner, Oct 2026: "I want the colleague to be able to add, delete, edit files." Every active
+   member now adds, renames, replaces and removes papers (the gatekeeper allows it). Giving a
+   serial and renaming a brief's FOLDER stay with Staff/admin. */
+const canEditPapers=st=>!!(st&&st.connected&&(st.member||st.manage));
+// The cause lists saved from the day sheet live beside the case folders, not inside one.
+const VIRTUAL_FOLDERS={"@Causelists":{id:"@Causelists",caseTitle:"Saved cause lists",dropboxFolder:"Causelists",_virtual:true}};
+const fvTarget=()=>briefs[_fv.id]||VIRTUAL_FOLDERS[_fv.id]||null;
+
+/* ---------------- preview — ASD's Quick Look ----------------
+   PDFs render with pdf.js, a few pages at a time, fetched in pieces (Range requests) through
+   the gatekeeper's /api/content — so a 300-page paper book opens quickly on a phone. Word
+   documents render with docx-preview; photos show as they are. Libraries load on first use. */
+let _ql={open:false,list:[],i:-1,seq:0,doc:null,obs:null,url:null,ctx:null};
+async function qlPdfLib(){ if(!window.pdfjsLib) await loadScript("https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js");
+  window.pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"; return window.pdfjsLib; }
+async function qlDocxLib(){ if(!window.JSZip) await loadScript("https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js");
+  if(!window.docx) await loadScript("https://cdn.jsdelivr.net/npm/docx-preview@0.3.5/dist/docx-preview.min.js"); return window.docx; }
+async function paperSource(folder,sub,name){
+  if(DEMO){ const k=folder+(sub?"/"+sub:""); const it=(_demoFiles[k]||[]).find(x=>x.name===name);
+    if(!it||!it.blob) throw new Error("No preview in the demo for this paper."); return {blob:it.blob}; }
+  const tok=await auth.idToken(); const q=new URLSearchParams({folder,name}); if(sub) q.set("sub",sub);
+  return {url:FILES_GATEKEEPER+"/api/content?"+q.toString(), headers:{Authorization:"Bearer "+tok}};
+}
+async function paperBlob(src){ if(src.blob) return src.blob;
+  const r=await fetch(src.url,{headers:src.headers}); if(!r.ok) throw new Error((await r.json().catch(()=>({}))).error||"Couldn't fetch the paper."); return r.blob(); }
+function qlBox(){
+  let ov=$("qlOverlay"); if(ov) return ov;
+  ov=document.createElement("div"); ov.id="qlOverlay";
+  ov.innerHTML=`<div class="ql-box" role="dialog" aria-modal="true">
+    <div class="ql-head"><div class="ql-title"><div id="qlName"></div><div id="qlMeta" class="ql-meta"></div></div>
+      <div class="ql-btns"><button id="qlPrev" title="Previous">‹</button><button id="qlNext" title="Next">›</button>
+      <button id="qlEdit" hidden>Edit in Word</button><button id="qlOpen">Open</button><button id="qlClose" title="Close">✕</button></div></div>
+    <div class="ql-body" id="qlBody"></div></div>`;
+  ov.addEventListener("click",e=>{ if(e.target===ov) qlClose(); });
+  document.body.appendChild(ov);
+  $("qlClose").onclick=qlClose; $("qlPrev").onclick=()=>qlStep(-1); $("qlNext").onclick=()=>qlStep(1);
+  return ov;
+}
+function qlClose(){ const ov=$("qlOverlay"); if(ov) ov.classList.remove("on"); _ql.open=false; _ql.seq++;
+  try{ _ql.obs&&_ql.obs.disconnect(); }catch(e){} _ql.obs=null; try{ _ql.doc&&_ql.doc.destroy(); }catch(e){} _ql.doc=null;
+  if(_ql.url){ URL.revokeObjectURL(_ql.url); _ql.url=null; } }
+function qlStep(d){ const n=_ql.list.length; if(n>1) qlShow((_ql.i+d+n)%n); }
+document.addEventListener("keydown",e=>{ if(!_ql.open) return;
+  if(e.key==="Escape"){ e.preventDefault(); qlClose(); } else if(e.key==="ArrowRight"||e.key==="ArrowDown"){ e.preventDefault(); qlStep(1); } else if(e.key==="ArrowLeft"||e.key==="ArrowUp"){ e.preventDefault(); qlStep(-1); } });
+function previewPapers(list,i,ctx){ _ql.list=list; _ql.ctx=ctx; qlShow(i); }
+async function qlShow(i){
+  const f=_ql.list[i]; if(!f) return; const ctx=_ql.ctx;
+  const ov=qlBox(); ov.classList.add("on"); _ql.open=true; _ql.i=i; const seq=++_ql.seq;
+  try{ _ql.obs&&_ql.obs.disconnect(); }catch(e){} _ql.obs=null; try{ _ql.doc&&_ql.doc.destroy(); }catch(e){} _ql.doc=null;
+  if(_ql.url){ URL.revokeObjectURL(_ql.url); _ql.url=null; }
+  const p=paperInfo(f.name,ctx.b);
+  $("qlName").textContent=p.desc||f.name;
+  $("qlMeta").textContent=[p.num, fmtSize(f.size), f.modified?fmtDateY(String(f.modified).slice(0,10)):""].filter(Boolean).join(" · ");
+  $("qlPrev").hidden=$("qlNext").hidden=_ql.list.length<2;
+  const isWord=/\.(docx?|rtf)$/i.test(f.name);
+  $("qlEdit").hidden=!(isWord&&ctx.canEdit);
+  $("qlEdit").onclick=()=>{ qlClose(); ctx.onEdit(f); };
+  $("qlOpen").onclick=()=>{ qlClose(); ctx.onOpen(f); };
+  const body=$("qlBody"); body.scrollTop=0; body.innerHTML=`<div class="ql-msg">Loading preview…</div>`;
+  const stale=()=>seq!==_ql.seq; const ext=(String(f.name).match(/\.[^.]+$/)||[""])[0].toLowerCase();
+  try{
+    if(ext===".pdf"){
+      const [lib,src]=await Promise.all([qlPdfLib(), paperSource(ctx.folder,ctx.sub,f.name)]); if(stale()) return;
+      const task=src.blob ? lib.getDocument({data:await src.blob.arrayBuffer()})
+        : lib.getDocument({url:src.url, httpHeaders:src.headers, disableAutoFetch:true, disableStream:true, rangeChunkSize:262144});
+      const pdf=await task.promise; if(stale()){ try{ pdf.destroy(); }catch(e){} return; }
+      _ql.doc=pdf; $("qlMeta").textContent=[p.num, pdf.numPages+" page"+(pdf.numPages>1?"s":""), fmtSize(f.size)].filter(Boolean).join(" · ");
+      body.innerHTML=""; const W=Math.min(body.clientWidth-24,900);
+      const first=await pdf.getPage(1); const v1=first.getViewport({scale:1}); const ratio=v1.height/v1.width; const holders=[];
+      for(let n=1;n<=pdf.numPages;n++){ const h=document.createElement("div"); h.className="ql-page"; h.style.width=W+"px"; h.style.height=Math.round(W*ratio)+"px"; h.dataset.p=n; h.innerHTML=`<span class="ql-pn">${n}</span>`; body.appendChild(h); holders.push(h); }
+      const render=async h=>{ if(h.dataset.done||stale()) return; h.dataset.done="1";
+        const page=+h.dataset.p===1?first:await pdf.getPage(+h.dataset.p); if(stale()) return;
+        const vp0=page.getViewport({scale:1}), dpr=Math.min(2,window.devicePixelRatio||1), vp=page.getViewport({scale:W/vp0.width*dpr});
+        const c=document.createElement("canvas"); c.width=vp.width; c.height=vp.height; c.style.width=W+"px"; c.style.height=Math.round(vp.height/dpr)+"px";
+        h.style.height="auto"; h.appendChild(c); await page.render({canvasContext:c.getContext("2d"),viewport:vp}).promise; };
+      _ql.obs=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting) render(e.target); }),{root:body,rootMargin:"300px 0px"});
+      holders.forEach(h=>_ql.obs.observe(h));
+    } else if(/^\.(jpe?g|png|gif|webp)$/.test(ext)){
+      const blob=await paperBlob(await paperSource(ctx.folder,ctx.sub,f.name)); if(stale()) return;
+      _ql.url=URL.createObjectURL(blob); body.innerHTML=`<img class="ql-img" src="${_ql.url}" alt="">`;
+    } else if(ext===".docx"){
+      const [lib,blob]=await Promise.all([qlDocxLib(), paperSource(ctx.folder,ctx.sub,f.name).then(paperBlob)]); if(stale()) return;
+      body.innerHTML=`<div class="ql-docx"></div>`;
+      await lib.renderAsync(blob, body.querySelector(".ql-docx"), null, {inWrapper:true, ignoreLastRenderedPageBreak:true});
+    } else {
+      body.innerHTML=`<div class="ql-msg">No quick preview for this kind of file.<br><button class="btn sm" style="margin-top:12px" id="qlOpen2">Open it</button></div>`;
+      $("qlOpen2").onclick=()=>{ qlClose(); ctx.onOpen(f); };
+    }
+  }catch(e){ if(!stale()) body.innerHTML=`<div class="ql-msg">${esc(e.message||"Preview failed")}</div>`; }
+}
+
+/* ---------------- Edit in Word ----------------
+   With Dropbox, someone without their own Dropbox account can't have Word save straight back
+   into the case folder. So: Open in Word (the ms-word: link hands Word a 4-hour copy), edit
+   and save, then "Replace with edited version" puts it back under the SAME name and number —
+   the owner's rule that a revision goes into the same document. Dropbox keeps the earlier
+   version, so a wrong replace can be undone from dropbox.com. */
+async function editInWordForm(id,folder,sub,f){
+  const b=briefs[id]||VIRTUAL_FOLDERS[id];
+  openSheet(`<div class="sheet-head"><div><h3>Edit in Word</h3><div class="sub">${esc(f.name)}</div></div><button class="x-btn"><span class="ti ti-x"></span></button></div>
+    <div class="sheet-body">
+      <div class="ew-step"><span class="ew-n">1</span><div><b>Open it in Word</b><div class="muted" style="font-size:12px;margin-top:2px">Opens in the Word app on this computer, iPhone or iPad. No Word app? Download a copy instead.</div>
+        <div class="row" style="gap:8px;margin-top:8px;flex-wrap:wrap" id="ew_links"><span class="muted">Preparing…</span></div></div></div>
+      <div class="ew-step"><span class="ew-n">2</span><div><b>Edit and save</b> it in Word (on a phone: save a copy to Files).</div></div>
+      <div class="ew-step"><span class="ew-n">3</span><div><b>Put the edited version back</b><div class="muted" style="font-size:12px;margin-top:2px">It replaces this paper under the same name and number. Dropbox keeps the earlier version.</div>
+        <label class="btn sm" style="margin-top:8px;cursor:pointer"><span class="ic ti ti-upload"></span>Replace with edited version<input type="file" id="ew_file" accept=".docx,.doc,.rtf" hidden></label></div></div>
+      <div id="ew_msg" class="muted" style="font-size:12.5px;min-height:18px;margin-top:6px"></div>
+      <button class="btn ghost sm" id="ew_back" style="margin-top:8px"><span class="ic ti ti-arrow-left"></span>Back to the papers</button>
+    </div>`);
+  $("ew_back").onclick=()=>openFiles(id,sub);
+  try{ const link=DEMO?"about:blank":(await filesApi("link",{folder,sub,name:f.name})).link; if(!$("ew_links")) return;
+    $("ew_links").innerHTML=`<a class="btn sm" href="${esc("ms-word:ofe|u|"+link)}"><span class="ic ti ti-file-type-doc"></span>Open in Word</a><a class="btn ghost sm" href="${esc(link)}" target="_blank" rel="noopener"><span class="ic ti ti-download"></span>Download a copy</a>`; }
+  catch(e){ if($("ew_links")) $("ew_links").innerHTML=`<span class="muted">${esc(e.message)}</span>`; }
+  $("ew_file").onchange=e=>{ const nf=e.target.files[0]; if(!nf) return;
+    confirmAsk({title:"Replace with the edited version?",confirmLabel:"Replace",
+      body:`<b>${esc(f.name)}</b> will be replaced by <b>${esc(nf.name)}</b>, keeping the paper's name and number. Dropbox keeps the earlier version for 30 days.`,
+      onYes:async()=>{ try{ await filesApi("upload",null,{folder,sub,name:f.name,file:nf,mode:"overwrite"}); toast("Edited version saved","ti-check"); }catch(err){ toast(err.message,"ti-alert-triangle"); } openFiles(id,sub); }}); };
+}
+
+/* ---------------- rename / renumber a paper ----------------
+   Change what a paper is called, or its kind (letter) — a new letter takes the next number of
+   that kind, with the ASD .1/.2 rule. A paper dropped in straight from Dropbox ("Not yet
+   numbered") is numbered the same way. */
+function renamePaperForm(id,folder,sub,f,files){
+  const b=briefs[id]; if(!b||serialNum(b)==null) return;
+  const p=paperInfo(f.name,b); let L=p.t==="X"?guessLetter(f.name):p.t, desc=p.t==="X"?cleanDesc(f.name):p.desc;
+  const others=files.filter(x=>x.name!==f.name);
+  const target=()=> (L===p.t&&p.serial===serialNum(b)) ? paperName(b,L,p.sub,desc||"Document",p.ext) : paperName(b,L,planNumber(b,others,L).sub,desc||"Document",p.ext);
+  openSheet(`<div class="sheet-head"><div><h3>${p.t==="X"?"Number this paper":"Rename this paper"}</h3><div class="sub">${esc(f.name)}</div></div><button class="x-btn"><span class="ti ti-x"></span></button></div>
+    <div class="sheet-body">
+      <label>Kind of paper</label><select id="rp_l">${PAPER_LETTERS.map(([k,v])=>`<option value="${k}" ${L===k?"selected":""}>${k} — ${esc(v)}</option>`).join("")}</select>
+      <label>What it is</label><input id="rp_d" value="${esc(desc)}">
+      <div class="ap-final" id="rp_final" style="margin-top:10px"></div>
+      <div class="row" style="gap:8px;margin-top:16px"><button class="btn" id="rp_go">Save</button><button class="btn ghost" id="rp_back">Cancel</button></div>
+    </div>`);
+  const upd=()=>{ $("rp_final").textContent=target(); }; upd();
+  $("rp_l").onchange=e=>{ L=e.target.value; upd(); }; $("rp_d").oninput=e=>{ desc=cleanDesc(e.target.value+".x"); upd(); };
+  $("rp_back").onclick=()=>openFiles(id,sub);
+  $("rp_go").onclick=async()=>{ $("rp_go").disabled=true;
+    try{
+      if(!(L===p.t&&p.serial===serialNum(b))){ const plan=planNumber(b,others,L);
+        if(plan.rename) await filesApi("move",{folder,sub,name:plan.rename.from,toName:plan.rename.to});
+        await filesApi("move",{folder,sub,name:f.name,toName:paperName(b,L,plan.sub,desc||"Document",p.ext)}); }
+      else { const to=paperName(b,L,p.sub,desc||"Document",p.ext); if(to!==f.name) await filesApi("move",{folder,sub,name:f.name,toName:to}); }
+      toast("Paper renamed","ti-check");
+    }catch(e){ toast(e.message,"ti-alert-triangle"); }
+    openFiles(id,sub); };
+}
+
+/* ---------------- the day's cause list → Dropbox/Apps/…/Causelists ---------------- */
+async function saveCauselistToDropbox(iso){
+  const st=await filesStatus(true);
+  if(!st.connected){ toast(st.unreachable?"Files aren't reachable right now":"Dropbox isn't connected yet","ti-alert-triangle"); return; }
+  toast("Preparing the cause list…","ti-file-text");
+  let out; try{ out=await buildCauselistPdf(iso); }catch(e){ toast("Couldn't build the PDF — check your connection and retry","ti-alert-triangle"); return; }
+  const d=new Date(iso+"T00:00");
+  const name=`Causelist ${ddmmyyyy(d)} (${d.toLocaleDateString("en-IN",{weekday:"long"})}).pdf`;
+  // saving the same day again replaces it — a revision goes into the same document
+  try{ await filesApi("upload",null,{folder:"Causelists",name,file:new File([out.doc.output("blob")],name,{type:"application/pdf"}),mode:"overwrite"});
+    toast(`Saved to Dropbox › Causelists › ${name}`,"ti-cloud-check"); }
+  catch(e){ toast(e.message,"ti-alert-triangle"); }
+}
+
+/* ---------------- FIND DUPLICATES (admin, before numbering) ----------------
+   Owner: "The app already houses many briefs which also be duplicate cases. How do we resolve
+   this and number them serially." The automatic merge (mergeDuplicateBriefs) already folds
+   briefs sharing a full case/diary number; this finds the rest for the admin to DECIDE —
+   nothing is merged without his tick (ASD lesson: guessing by shared words linked wrong cases).
+   Reasons: same case number, same diary number, same title, similar title (≥2 shared
+   significant words and ≥60% overlap). "Not duplicates" is remembered (config/dupreview).
+   Merging reuses _mergeBriefInto (listings, conferences, colleagues and missing details move
+   to the kept brief, credit counted once); a merged brief's Dropbox folder moves INTO the kept
+   brief's folder as an older folder, so no paper is lost. Do this BEFORE numbering, so no
+   serial is spent on a duplicate. */
+const _DUP_STOP=new Set("the and of vs v versus ors anr others another state union india govt government ltd limited pvt private co company through thr its by in re matter mr ms smt shri sri".split(" "));
+const _sigWords=t=>new Set(_normTitle(t).split(/\s+/).filter(w=>w.length>=3&&!_DUP_STOP.has(w)));
+let _dupDismissed={};
+const _dupKey=(a,b)=>[a,b].sort().join("|");
+function findDuplicateGroups(){
+  const cases=Object.values(briefs).filter(isCaseBrief);
+  const parent={}; cases.forEach(b=>parent[b.id]=b.id);
+  const find=x=>parent[x]===x?x:(parent[x]=find(parent[x]));
+  const why={};
+  const link=(a,b,r)=>{ if(_dupDismissed[_dupKey(a,b)]) return; const A=find(a),B=find(b); if(A!==B) parent[B]=A; (why[_dupKey(a,b)]=why[_dupKey(a,b)]||new Set()).add(r); };
+  const byKey=(fn,label)=>{ const m={}; cases.forEach(b=>{ const k=fn(b); if(k) (m[k]=m[k]||[]).push(b.id); });
+    Object.values(m).forEach(ids=>{ for(let i=1;i<ids.length;i++) link(ids[0],ids[i],label); }); };
+  byKey(b=>{ const c=_normCase(b.caseNo); return c.length>=6?c:""; },"same case number");
+  byKey(b=>{ const d=String(b.diaryNo||"").replace(/\D/g,""); return d.length>=5?d:""; },"same diary number");
+  byKey(b=>{ const t=_normTitle(labelOf(b)); return t.length>=6?t:""; },"same title");
+  const W=cases.map(b=>({id:b.id,w:_sigWords(labelOf(b))}));
+  for(let i=0;i<W.length;i++) for(let j=i+1;j<W.length;j++){
+    const a=W[i].w, c=W[j].w; if(a.size<2||c.size<2) continue;
+    let inter=0; a.forEach(x=>{ if(c.has(x)) inter++; }); const uni=a.size+c.size-inter;
+    if(inter>=2 && inter/uni>=0.6) link(W[i].id,W[j].id,"similar title");
+  }
+  const groups={}; cases.forEach(b=>{ const r=find(b.id); (groups[r]=groups[r]||[]).push(b); });
+  return Object.values(groups).filter(g=>g.length>1).map(g=>{
+    const reasons=new Set(); for(let i=0;i<g.length;i++) for(let j=i+1;j<g.length;j++) (why[_dupKey(g[i].id,g[j].id)]||[]).forEach(r=>reasons.add(r));
+    return {members:g, reasons:[...reasons]}; })
+    .sort((x,y)=>(y.reasons.includes("same case number")||y.reasons.includes("same diary number"))-(x.reasons.includes("same case number")||x.reasons.includes("same diary number")));
+}
+// The suggested keeper is the brief with the real history: most listings, then the one with
+// colleagues on it, then the oldest. A serial is NOT a reason to keep a brief — new briefs get
+// one automatically, so a freshly re-entered duplicate would otherwise win.
+function _dupDefaultKeep(g){
+  const created=b=>b.createdAt?._t??b.createdAt?.toMillis?.()??Number.MAX_SAFE_INTEGER;
+  return g.slice().sort((a,z)=>(listingDatesOf(z.id).length-listingDatesOf(a.id).length)||((z.assignedTo||[]).length-(a.assignedTo||[]).length)||(created(a)-created(z)))[0].id;
+}
+function duplicatesForm(){
+  if(!isAdmin()) return;
+  openSheet(`<div class="sheet-head"><div><h3>Find duplicate briefs</h3><div class="sub">Step 1 of numbering — merge duplicates first, so no serial is spent on one</div></div><button class="x-btn"><span class="ti ti-x"></span></button></div>
+    <div class="sheet-body"><div id="dupBody"><div class="muted">Looking…</div></div></div>`);
+  document.querySelector("#modalRoot .sheet")?.classList.add("sheet-wide");
+  sheetUnsubs.push(db.watchDoc("config/dupreview",d=>{ _dupDismissed=(d&&d.pairs)||{}; renderDuplicates(); }));
+}
+function renderDuplicates(){
+  const box=$("dupBody"); if(!box) return;
+  const groups=findDuplicateGroups();
+  if(!groups.length){ box.innerHTML=`<div class="empty"><span class="ic ti ti-circle-check"></span>No likely duplicates left. Next: <b>Import serial list</b>, then <b>Number the rest</b>.</div>`; return; }
+  const card=(b,gi,keep)=>{ const n=serialNum(b), L=listingDatesOf(b.id), st=STATUS[b.status]||STATUS.received;
+    return `<label class="dup-m ${b.id===keep?"keep":""}"><input type="radio" name="dg${gi}" value="${b.id}" ${b.id===keep?"checked":""}>
+      <div class="dup-main"><div class="dup-t">${n!=null?`<span class="mono" style="color:var(--accent-ink);font-weight:700">${pad3(n)}</span> · `:""}${esc(labelOf(b))}</div>
+        <div class="dup-s">${esc([b.caseNo,b.diaryNo?"Dy. "+b.diaryNo:"",b.aor?"AoR "+b.aor:""].filter(Boolean).join(" · ")||"no case or diary number")}</div>
+        <div class="dup-s"><span class="chip ${st.cls}" style="font-size:10.5px"><span class="dot"></span>${st.label}</span> ${L.length?`listed ${L.length}× (last ${fmtDateY(L[L.length-1])})`:"never listed"} · ${(b.assignedTo||[]).map(nameOf).map(esc).join(", ")||"unassigned"}${b.dropboxFolder?` · <span class="ti ti-folder"></span> has papers`:""}</div></div></label>`; };
+  box.innerHTML=`<div class="muted" style="font-size:12.5px;margin-bottom:12px">${groups.length} possible group${groups.length>1?"s":""}. Tick the brief to <b>keep</b> — the others are merged into it (their listings, conferences, colleagues and papers move across). If they are different matters, press <b>Not duplicates</b>.</div>`+
+    groups.map((g,gi)=>{ const keep=_dupDefaultKeep(g.members);
+      return `<div class="dup-g" data-dg="${gi}"><div class="dup-why">${g.reasons.map(r=>`<span class="chip ${/number/.test(r)?"st-listed":"st-received"}">${esc(r)}</span>`).join(" ")}</div>
+        ${g.members.map(b=>card(b,gi,keep)).join("")}
+        <div class="row" style="gap:8px;margin-top:8px"><button class="btn sm" data-dgmerge="${gi}"><span class="ic ti ti-git-merge"></span>Merge into the ticked one</button><button class="btn ghost sm" data-dgno="${gi}">Not duplicates</button></div></div>`; }).join("");
+  box.querySelectorAll(".dup-m input").forEach(x=>x.onchange=()=>{ x.closest(".dup-g").querySelectorAll(".dup-m").forEach(m=>m.classList.toggle("keep",m.contains(x))); });
+  box.querySelectorAll("[data-dgno]").forEach(x=>x.onclick=async()=>{ const g=groups[+x.dataset.dgno].members, pairs={};
+    for(let i=0;i<g.length;i++) for(let j=i+1;j<g.length;j++) pairs[_dupKey(g[i].id,g[j].id)]=true;
+    await db.set("config/dupreview",{pairs},true); toast("Noted — they won't be suggested again","ti-check"); });
+  box.querySelectorAll("[data-dgmerge]").forEach(x=>x.onclick=()=>{ const gi=+x.dataset.dgmerge, g=groups[gi].members;
+    // merged lowest serial first: if the keeper has none, the lowest one carries over to it
+    const keepId=box.querySelector(`input[name="dg${gi}"]:checked`).value, keep=briefs[keepId],
+      dups=g.filter(b=>b.id!==keepId).sort((a,z)=>(serialNum(a)??1e9)-(serialNum(z)??1e9));
+    const withSerial=dups.filter(b=>serialNum(b)!=null);
+    const vac=(serialNum(keep)!=null?withSerial:withSerial.slice(1)).map(b=>pad3(serialNum(b)));
+    confirmAsk({title:`Merge ${dups.length} into “${labelOf(keep)}”?`,danger:true,confirmLabel:"Merge",
+      body:`${dups.map(b=>`<b>${esc(labelOf(b))}</b>`).join(", ")} will be merged into it and removed from the register.${vac.length?` Serial ${vac.join(", ")} will then be unused — tell me if you want the numbers closed up.`:""}`,
+      onYes:async()=>{
+        for(const d of dups){
+          const dupFolder=d.dropboxFolder;
+          if(dupFolder && keep.dropboxFolder && dupFolder!==keep.dropboxFolder){
+            try{ await filesApi("move",{folder:dupFolder,toFolder:keep.dropboxFolder,toSub:dupFolder}); }
+            catch(e){ if(!/not_found/.test(e.message)){ toast(`Papers of “${labelOf(d)}” couldn't be moved (${e.message}) — merge stopped`,"ti-alert-triangle"); return; } }
+          }
+          await _mergeBriefInto(keep,d);
+        }
+        toast(`Merged ${dups.length}`,"ti-git-merge"); duplicatesForm();
+      }}); });
+}
+
 // The next day-sheet listing of a brief, today or later (court/item come from the sheet).
 function nextListingOf(id){
   const t=todayISO(); let best=null;
@@ -4505,7 +4796,8 @@ function renderBriefs(){
   const notice=(!canManage()&&!isSenior()&&myUnacked.length)?`<div class="notice"><span class="ti ti-bell"></span><div><b>${myUnacked.length} new assignment${myUnacked.length>1?'s':''}</b> awaiting your acknowledgment — open and acknowledge.</div></div>`:"";
   const head=`<div class="rg-head"><div><div class="rg-title">Brief register</div>
       <div class="rg-sub">${cases.length} files · ${counts[""]} active · next serial <b>${pad3(nextSerial())}</b></div></div>
-      ${isAdmin()?`<div class="row" style="gap:8px"><button class="btn ghost sm" id="rgImport"><span class="ic ti ti-file-import"></span>Import serial list</button>${noSerial.length?`<button class="btn ghost sm" id="rgNumber"><span class="ic ti ti-hash"></span>Number the rest</button>`:""}</div>`:""}</div>
+      ${isAdmin()?`<div class="row" style="gap:8px;flex-wrap:wrap"><button class="btn ghost sm" id="rgDups"><span class="ic ti ti-copy"></span>Find duplicates</button><button class="btn ghost sm" id="rgImport"><span class="ic ti ti-file-import"></span>Import serial list</button>${noSerial.length?`<button class="btn ghost sm" id="rgNumber"><span class="ic ti ti-hash"></span>Number the rest</button>`:""}</div>`:""}</div>
+    ${isAdmin()&&noSerial.length?`<div class="rg-steps"><span class="ti ti-list-numbers"></span>To number the register: <b>1</b> Find duplicates → <b>2</b> Import serial list → <b>3</b> Number the rest</div>`:""}
     ${(noSerial.length||clashes.length)?`<div class="rg-warn">${noSerial.length?`<button class="chip" data-bf="noserial"><span class="ti ti-hash"></span>${noSerial.length} without a serial</button>`:""}${clashes.map(c=>`<span class="chip"><span class="ti ti-alert-triangle"></span>${pad3(c.n)} used ${c.ids.length}×: ${c.ids.map(id=>esc(labelOf(briefs[id]))).join(" / ")}</span>`).join("")}</div>`:""}`;
   const tools=`<div class="rg-tools"><div class="rg-search"><span class="ti ti-search"></span><input id="bSearch" placeholder="Search serial, title, diary or case no., AoR" value="${esc(briefSearch)}" autocomplete="off"></div>
     <div class="rg-chips">${filters.map(([k,l])=>`<button class="rg-chip ${briefFilter===k?'on':''}" data-bf="${k}">${l}<b>${counts[k]}</b></button>`).join("")}</div></div>`;
@@ -4538,6 +4830,7 @@ function renderBriefs(){
   document.querySelectorAll("#tab-briefs [data-bf]").forEach(x=>x.onclick=()=>{briefFilter=x.dataset.bf;renderBriefs();});
   document.querySelectorAll("#tab-briefs [data-editbrief]").forEach(x=>x.onclick=e=>{e.stopPropagation();briefForm(briefs[x.dataset.editbrief]);});
   if($("rgImport")) $("rgImport").onclick=serialImportForm;
+  if($("rgDups")) $("rgDups").onclick=duplicatesForm;
   if($("rgNumber")) $("rgNumber").onclick=numberRemainingForm;
   if($("tbNewBrief2"))$("tbNewBrief2").onclick=()=>briefForm();
   if($("tbLegalAid"))$("tbLegalAid").onclick=()=>legalAidForm();
@@ -4672,9 +4965,11 @@ async function filesApi(action, body, raw){
   if(DEMO){                               // an in-memory stand-in for Dropbox, same behaviour as the gatekeeper
     const f=(body&&body.folder)||(raw&&raw.folder), sb=(body&&body.sub)||(raw&&raw.sub)||"";
     const key=(a,b)=>a+(b?"/"+b:""), k=f?key(f,sb):"", bag=f?(_demoFiles[k]=_demoFiles[k]||[]):null;
-    if(action==="status") return {connected:true, account:{name:"Demo Dropbox"}, admin:isAdmin(), manage:canManage()};
+    if(action==="status") return {connected:true, account:{name:"Demo Dropbox"}, admin:isAdmin(), manage:canManage(), member:true};
     if(action==="list") return {files:bag.slice(), dirs:Object.keys(_demoFiles).filter(x=>x.startsWith(k+"/")&&!x.slice(k.length+1).includes("/")).map(x=>({name:x.slice(k.length+1)}))};
-    if(action==="upload"){ let n=raw.name, c=1; while(bag.some(x=>x.name===n)) n=raw.name.replace(/(\.[^.]*)?$/,m=>` (${c++})${m}`); bag.push({name:n,size:raw.file.size,modified:new Date().toISOString()}); return {name:n}; }
+    if(action==="upload"){
+      if(raw.mode==="overwrite"){ const i=bag.findIndex(x=>x.name===raw.name); const it={name:raw.name,size:raw.file.size,modified:new Date().toISOString(),blob:raw.file}; if(i>=0) bag[i]=it; else bag.push(it); return {name:raw.name}; }
+      let n=raw.name, c=1; while(bag.some(x=>x.name===n)) n=raw.name.replace(/(\.[^.]*)?$/,m=>` (${c++})${m}`); bag.push({name:n,size:raw.file.size,modified:new Date().toISOString(),blob:raw.file}); return {name:n}; }
     if(action==="move"){
       if(body.name){ const tk=key(body.toFolder||f,body.toSub!=null?body.toSub:sb); const tb=(_demoFiles[tk]=_demoFiles[tk]||[]);
         if(tb.some(x=>x.name===body.toName)) throw new Error("Something with that name already exists — nothing was changed.");
@@ -4690,7 +4985,7 @@ async function filesApi(action, body, raw){
   }
   const tok=await auth.idToken();
   const init={method:"POST", headers:{Authorization:"Bearer "+tok}};
-  if(raw){ init.headers["Content-Type"]="application/octet-stream"; init.headers["X-Folder"]=encodeURIComponent(raw.folder); init.headers["X-File-Name"]=encodeURIComponent(raw.name); if(raw.sub) init.headers["X-Sub"]=encodeURIComponent(raw.sub); init.body=raw.file; }
+  if(raw){ init.headers["Content-Type"]="application/octet-stream"; init.headers["X-Folder"]=encodeURIComponent(raw.folder); init.headers["X-File-Name"]=encodeURIComponent(raw.name); if(raw.sub) init.headers["X-Sub"]=encodeURIComponent(raw.sub); if(raw.mode) init.headers["X-Mode"]=raw.mode; init.body=raw.file; }
   else { init.headers["Content-Type"]="application/json"; init.body=JSON.stringify(body||{}); }
   const r=await fetch(FILES_GATEKEEPER+"/api/"+action, init);
   const d=await r.json().catch(()=>({}));
@@ -4810,13 +5105,13 @@ function wireFilesBtns(root){
     openFiles(x.dataset.files); });
 }
 async function openFiles(id, sub){
-  const b=briefs[id]; if(!b) return;
+  const b=briefs[id]||VIRTUAL_FOLDERS[id]; if(!b) return;
   _fv={id, sub:sub||"", files:[], dirs:[], q:"", type:"all", loading:true, err:"", st:null};
   renderFilesSheet();
   _fv.st=await filesStatus();
   if(_fv.id!==id) return;
-  const folder=briefFolder(briefs[id]||b);
-  if(_fv.st.connected && folder && b.dropboxFolder){
+  const folder=briefFolder(briefs[id]||VIRTUAL_FOLDERS[id]||b);
+  if(_fv.st.connected && folder && (b.dropboxFolder||b._virtual)){
     try{ const d=await filesApi("list",{folder, sub:_fv.sub}); _fv.files=d.files||[]; _fv.dirs=d.dirs||[]; }
     catch(e){ _fv.err=e.message; }
   }
@@ -4824,17 +5119,17 @@ async function openFiles(id, sub){
   if(_fv.id===id) renderFilesSheet();
 }
 function renderFilesSheet(){
-  const b=briefs[_fv.id]; if(!b) return;
-  const st=_fv.st, manage=!!(st&&st.manage), n=serialNum(b), folder=briefFolder(b);
+  const b=fvTarget(); if(!b) return;
+  const st=_fv.st, manage=!!(st&&st.manage), n=serialNum(b), folder=briefFolder(b), virt=!!b._virtual;
   const crumbs=["Dropbox","Apps","SD Master Case File"].concat(folder?[folder]:[]).concat(_fv.sub?_fv.sub.split("/"):[]);
   let notes="";
   if(st&&st.unreachable) notes+=`<div class="fv-note warn"><span class="ti ti-plug-off"></span>Files aren't reachable right now${isAdmin()?" — the Dropbox gatekeeper didn't answer":""}.</div>`;
   else if(st&&!st.connected) notes+=`<div class="fv-note warn"><span class="ti ti-brand-dropbox"></span>${st.admin?"Dropbox isn't connected.":"Files aren't set up yet — the admin needs to connect Dropbox."}${st.admin?` <button class="btn sm" id="fv_connect">Connect Dropbox</button>`:""}</div>`;
-  if(n==null) notes+=`<div class="fv-note warn"><span class="ti ti-hash"></span><span>This brief has no serial number yet, so its folder can't be named.</span>${manage?` <button class="btn sm" id="fv_giveSerial">Give it serial ${pad3(nextSerial())}</button>`:""}</div>`;
+  if(n==null&&!virt) notes+=`<div class="fv-note warn"><span class="ti ti-hash"></span><span>This brief has no serial number yet, so its folder can't be named.</span>${manage?` <button class="btn sm" id="fv_giveSerial">Give it serial ${pad3(nextSerial())}</button>`:""}</div>`;
   const want=caseFolderName(b);
-  if(manage && b.dropboxFolder && want && b.dropboxFolder!==want && !_fv.sub)
+  if(manage && !virt && b.dropboxFolder && want && b.dropboxFolder!==want && !_fv.sub)
     notes+=`<div class="fv-note"><span class="ti ti-folder-cog"></span><span>Folder is named “${esc(b.dropboxFolder)}”. Rename it to “${esc(want)}” to match the serial and title?</span> <button class="btn sm" id="fv_renameFolder">Rename folder</button></div>`;
-  const canAdd=manage && st&&st.connected && n!=null;
+  const canAdd=canEditPapers(st) && n!=null && !virt;
   openSheet(`<div class="sheet-head"><div><h3>${n!=null?`<span class="fv-serial">${pad3(n)}</span> · `:""}${esc(labelOf(b))}</h3>
       <div class="fv-path"><span class="ti ti-folder"></span> ${crumbs.map(esc).join(" › ")}</div></div>
       <button class="x-btn"><span class="ti ti-x"></span></button></div>
@@ -4848,13 +5143,13 @@ function renderFilesSheet(){
       </div>
       <div id="fvChips" class="fv-chips"></div>
       <div id="fvList">${_fv.loading?`<div class="fv-empty">Loading papers…</div>`:""}</div>
-      <div class="row" style="margin-top:14px;gap:8px"><button class="btn ghost sm" id="fv_back"><span class="ic ti ti-arrow-left"></span>Back to the brief</button></div>
+      <div class="row" style="margin-top:14px;gap:8px"><button class="btn ghost sm" id="fv_back"><span class="ic ti ti-arrow-left"></span>${virt?"Close":"Back to the brief"}</button></div>
     </div>`);
   document.querySelector("#modalRoot .sheet")?.classList.add("sheet-wide");
   if(!_fv.loading) fvRenderList();
   const id=_fv.id;
   $("fvQ").oninput=e=>{ _fv.q=e.target.value; fvRenderList(); };
-  $("fv_back").onclick=()=>openBrief(id);
+  $("fv_back").onclick=()=>virt?closeSheet():openBrief(id);
   $("fv_refresh").onclick=()=>{ _filesStatus=null; openFiles(id,_fv.sub); };
   if($("fv_up")) $("fv_up").onclick=()=>openFiles(id,_fv.sub.split("/").slice(0,-1).join("/"));
   if($("fv_connect")) $("fv_connect").onclick=async()=>{ const w=window.open("","_blank"); try{ const d=await filesApi("connect"); if(w) w.location=d.url; else location.href=d.url; _filesStatus=null; }catch(e){ if(w) w.close(); toast(e.message,"ti-alert-triangle"); } };
@@ -4868,13 +5163,13 @@ function renderFilesSheet(){
   if($("fv_add")) $("fv_add").onchange=e=>{ const list=[...e.target.files]; if(list.length) addPapersForm(id,list,_fv.sub); };
 }
 function fvRows(){
-  const b=briefs[_fv.id];
+  const b=fvTarget();
   const files=_fv.files.map(f=>{ const p=paperInfo(f.name,b); return {...f,...p,_label:p.desc||f.name}; });
   return {files, dirs:_fv.dirs};
 }
 function fvRenderList(){
   const box=$("fvList"); if(!box) return;
-  const b=briefs[_fv.id]; const st=_fv.st||{};
+  const b=fvTarget(); const st=_fv.st||{}; const edit=canEditPapers(st), virt=!!b._virtual;
   if(_fv.err){ box.innerHTML=`<div class="fv-empty">${esc(_fv.err)}</div>`; return; }
   const {files,dirs}=fvRows();
   const q=_fv.q.trim().toLowerCase(), t=_fv.type;
@@ -4886,14 +5181,18 @@ function fvRenderList(){
   const cnt=k=>k==="dir"?dirs.length:files.filter(x=>k==="LS"?(x.t==="L"||x.t==="S"):x.t===k).length;
   if(chips) chips.innerHTML=t==="all"?"":`<button class="fv-chip" data-fvtype="all">‹ All kinds</button><span class="fv-chip on">${esc(KLAB[t]||"")}<b>${cnt(t)}</b></span>`;
   const row=(x,i)=>{ const kind=fileKindOf(x.ext); const [lab,col]=FK[kind];
-    return `<div class="fv-row"><div class="fv-ic" style="background:${col}">${lab}</div>
-      <div class="fv-main" data-fvopen="${i}" title="Open"><div class="fv-name">${_hl(x._label,q)}</div>
-        <div class="fv-meta">${x.num?`<span class="fv-num">${_hl(x.num,q)}</span>`:`<span class="fv-num none">no number</span>`}<span>${esc(dateOf(x))}</span><span>${esc(fmtSize(x.size))}</span></div></div>
-      <div class="fv-acts"><button data-fvopen="${i}">Open</button><button data-fvshare="${i}">Share</button>${st.manage?`<button class="del" data-fvdel="${i}" title="Remove"><span class="ti ti-trash"></span></button>`:""}</div></div>`; };
+    const word=kind==="word"&&edit&&!virt, ren=edit&&!virt&&serialNum(b)!=null;
+    return `<div class="fv-row"><div class="fv-ic" style="background:${col}" data-fvprev="${i}">${lab}</div>
+      <div class="fv-main" data-fvprev="${i}" title="Preview"><div class="fv-name">${_hl(x._label,q)}</div>
+        <div class="fv-meta">${x.num?`<span class="fv-num">${_hl(x.num,q)}</span>`:(virt?"":`<span class="fv-num none">no number</span>`)}<span>${esc(dateOf(x))}</span><span>${esc(fmtSize(x.size))}</span></div></div>
+      <div class="fv-acts"><button data-fvprev="${i}">Preview</button><button data-fvopen="${i}">Open</button>${word?`<button data-fvedit="${i}">Edit</button>`:""}<button data-fvshare="${i}">Share</button>${ren?`<button data-fvren="${i}" title="${x.t==="X"?"Number it":"Rename"}"><span class="ti ti-forms"></span></button>`:""}${edit?`<button class="del" data-fvdel="${i}" title="Remove"><span class="ti ti-trash"></span></button>`:""}</div></div>`; };
   const drow=d=>`<div class="fv-row"><div class="fv-ic dir"><span class="ti ti-folder"></span></div><div class="fv-main" data-fvdir="${esc(d.name)}"><div class="fv-name">${_hl(d.name,q)}</div><div class="fv-meta"><span>older folder, kept as it was</span></div></div><div class="fv-acts"><button data-fvdir="${esc(d.name)}">Open</button></div></div>`;
   const idx=new Map(files.map((x,i)=>[x,i]));
   let h="";
-  if(t==="all"&&!q){
+  if(virt){
+    const fl=files.filter(x=>match(x)).sort((a,z)=>String(z.name).localeCompare(String(a.name),undefined,{numeric:true}));
+    h=fl.length?`<div class="fv-group">${esc(b.caseTitle)} · ${fl.length}</div>`+fl.map(x=>row(x,idx.get(x))).join(""):`<div class="fv-empty">${q?`Nothing matches “${esc(_fv.q)}”.`:"Nothing saved yet — use “Save to Dropbox” on the day sheet."}</div>`;
+  } else if(t==="all"&&!q){
     if(!files.length&&!dirs.length){
       h=`<div class="fv-empty">${!b.dropboxFolder?"No papers yet — this brief's folder is created when the first paper is added.":"The folder is empty."}</div>`;
     } else {
@@ -4917,6 +5216,17 @@ function fvRenderList(){
   const linkFor=f=>filesApi("link",{folder,sub,name:f.name}).then(d=>d.link);
   document.querySelectorAll("#modalRoot [data-fvtype]").forEach(x=>x.onclick=()=>{ _fv.type=x.dataset.fvtype; fvRenderList(); });
   box.querySelectorAll("[data-fvdir]").forEach(x=>x.onclick=()=>openFiles(_fv.id,(sub?sub+"/":"")+x.dataset.fvdir));
+  const openPaper=async f=>{ const w=window.open("","_blank");
+    try{ const l=await linkFor(f); if(w) w.location=l; else location.href=l; }catch(e){ if(w) w.close(); toast(e.message,"ti-alert-triangle"); } };
+  // previews step through the papers in the order they are shown
+  const shown=[]; box.querySelectorAll(".fv-main[data-fvprev]").forEach(x=>shown.push(files[+x.dataset.fvprev]));
+  const id=_fv.id;
+  box.querySelectorAll("[data-fvprev]").forEach(x=>x.onclick=()=>{ const f=files[+x.dataset.fvprev];
+    previewPapers(shown, Math.max(0,shown.indexOf(f)), {b, folder, sub, canEdit:edit&&!virt,
+      onOpen:f2=>{ const w=window.open("","_blank"); linkFor(f2).then(l=>{ if(w) w.location=l; else location.href=l; }).catch(e=>{ if(w) w.close(); toast(e.message,"ti-alert-triangle"); }); },
+      onEdit:f2=>editInWordForm(id,folder,sub,f2)}); });
+  box.querySelectorAll("[data-fvedit]").forEach(x=>x.onclick=()=>editInWordForm(id,folder,sub,files[+x.dataset.fvedit]));
+  box.querySelectorAll("[data-fvren]").forEach(x=>x.onclick=()=>renamePaperForm(id,folder,sub,files[+x.dataset.fvren],_fv.files));
   box.querySelectorAll("[data-fvopen]").forEach(x=>x.onclick=async()=>{ const f=files[+x.dataset.fvopen]; const w=window.open("","_blank");
     try{ const l=await linkFor(f); if(w) w.location=l; else location.href=l; }catch(e){ if(w) w.close(); toast(e.message,"ti-alert-triangle"); } });
   box.querySelectorAll("[data-fvshare]").forEach(x=>x.onclick=async()=>{ const f=files[+x.dataset.fvshare];
@@ -4956,7 +5266,10 @@ function addPapersForm(id, list, sub){
   $("ap_go").onclick=async()=>{
     $("ap_go").disabled=true; $("ap_cancel").disabled=true;
     let bb=briefs[id];
-    if(!bb.dropboxFolder){ const fold=caseFolderName(bb); await db.update("briefs/"+id,{dropboxFolder:fold,updatedAt:db.now()}); bb={...bb,dropboxFolder:fold}; }
+    if(!bb.dropboxFolder){ const fold=caseFolderName(bb);
+      try{ await db.update("briefs/"+id,{dropboxFolder:fold,updatedAt:db.now()}); }
+      catch(e){ toast("The app's security rules don't yet let colleagues start a brief's folder — ask Staff to add the first paper","ti-lock"); $("ap_go").disabled=false; $("ap_cancel").disabled=false; return; }
+      bb={...bb,dropboxFolder:fold}; }
     const folder=bb.dropboxFolder; let ok=0;
     for(let i=0;i<rows.length;i++){ const r=rows[i];
       $("ap_msg").textContent=`Adding ${i+1} of ${rows.length} — ${r.f.name}…`;

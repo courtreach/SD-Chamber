@@ -47,6 +47,48 @@ Dropbox is reachable, enforced by Dropbox itself) and **one folder per brief**.
   `sd-chamber-files` with KV + both secrets, and connected from the app. Verified from
   outside: home page, 401 without sign-in, CORS for the app origin, KV-backed callback guard.
 
+## Colleague file rights, preview, Edit in Word, duplicates, cause-list save (Oct 2026)
+
+- **Colleagues manage papers** (owner: "colleague to be able to add, delete, edit files"):
+  the gatekeeper now lets every ACTIVE member upload / rename / replace / delete (connect &
+  disconnect stay admin; serials and renaming a brief's FOLDER stay canManage). App gate:
+  `canEditPapers(st)` (`st.member` from /api/status). A colleague's first paper on a brief
+  writes `dropboxFolder` → needs the **firestore.rules** clause "any approved member may set
+  `dropboxFolder` (+updatedAt) only while it is unset" (local rules file updated; OWNER MUST
+  PASTE it). Until pasted, that first upload shows a clear "ask Staff" message.
+- **Preview** = ASD Quick Look (`previewPapers`/`qlShow`, `#qlOverlay`): pdf.js 3.11.174
+  with Range requests through **GET /api/content** (gatekeeper streams Dropbox
+  /files/download, passes Range, exposes Content-Range/Accept-Ranges; a 60-s per-token user
+  cache so range bursts don't re-read Firestore), docx-preview 0.3.5 (+JSZip) for Word,
+  images as blobs; prev/next through the papers in shown order; Esc/arrows. Tap a paper's
+  name/icon to preview.
+- **Edit in Word** (`editInWordForm`): with Dropbox, people without their own Dropbox can't
+  have Word save back in place, so: Open in Word (`ms-word:ofe|u|<4-h link>`) or Download →
+  edit/save → **Replace with edited version** = upload with `X-Mode: overwrite` (same name &
+  number; Dropbox keeps the prior version). Every other upload stays add + autorename.
+- **Rename / renumber** (`renamePaperForm`): change "what it is" or the letter (new letter
+  → next number of that kind via `planNumber`, .1/.2 rule); numbers "Not yet numbered"
+  papers dropped in from Dropbox.
+- **Find duplicates** (admin, `duplicatesForm`, register "Find duplicates" + a 3-step banner
+  "1 Find duplicates → 2 Import serial list → 3 Number the rest"): union-find over same
+  case no. / same diary no. / same normalised title / similar title (≥2 significant shared
+  words, Jaccard ≥0.6). Admin ticks the keeper (suggested = most listings → colleagues on
+  it → oldest; NOT "has a serial", since new briefs get one automatically); merge = existing
+  `_mergeBriefInto` per dup, lowest serial first so it carries to a serial-less keeper; a
+  dup's Dropbox folder is MOVED INTO the keeper's folder as an older sub-folder first.
+  "Not duplicates" → `config/dupreview.pairs` (admin write, config catch-all).
+- **Cause list → Dropbox** (`saveCauselistToDropbox`): day-sheet "Save to Dropbox" builds
+  the same jsPDF as Share, uploads to top-level `Causelists/Causelist DD.MM.YYYY
+  (Weekday).pdf` with overwrite (re-saving a day replaces it). "Saved" opens the virtual
+  folder `@Causelists` (`VIRTUAL_FOLDERS`, `fvTarget()`): list newest first, preview/open/
+  share/remove, no add.
+- Tested: gatekeeper 64/64 (colleague rights, inactive/outsider still refused, Range
+  pass-through, preview path guard/401/403/404, overwrite vs add, user cache); demo: dup
+  review (3-way group, correct keeper, serial carry-over + vacancy warning, papers moved),
+  colleague add/rename/replace/remove, previews (2-page PDF via pdf.js, PNG, real .docx via
+  docx-preview), Edit-in-Word steps + replace, cause-list save ×2 → one file, previewed;
+  375 px.
+
 ## Serial numbers, ASD-style register + Files screen (Oct 2026)
 
 Owner: "full redone of the brief register… learn from ASD… files button on all the briefs…
