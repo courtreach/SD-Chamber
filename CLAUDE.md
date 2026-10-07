@@ -47,6 +47,24 @@ Dropbox is reachable, enforced by Dropbox itself) and **one folder per brief**.
   `sd-chamber-files` with KV + both secrets, and connected from the app. Verified from
   outside: home page, 401 without sign-in, CORS for the app origin, KV-backed callback guard.
 
+## Read saving — Firestore free quota ran out (Oct 2026)
+
+The Spark plan allows ~50k reads/day; on 7 Oct it ran out ("Quota exceeded" on every read).
+Symptom: Files refused every non-admin as "not an active member" — the gatekeeper's read of
+users/{uid} failed (429) and only the admin passes by email. Cuts made:
+- **Device copy**: `initializeFirestore(... persistentLocalCache(persistentMultipleTabManager))`
+  (falls back to getFirestore). Sign-out = signOut → terminate → clearIndexedDbPersistence →
+  reload, so a shared computer keeps nothing.
+- `db.watchCollection(path, cb, order, where)` → `cb(rows, {fromCache})`, with
+  includeMetadataChanges so the server answer always follows the cached one.
+- **Automatic writers act only on server data**: `_briefsLoaded/_dsLoaded` (→ syncRegister,
+  selfMigrateMine, mergeDuplicateBriefs, matchAwaitingListings) and `_usersFresh`
+  (repairActiveFlags) are set only by non-cache snapshots. NEVER let a background rewrite of
+  daysheet `entries` run on cached data (see the Firestore write-hazard memory).
+- `notifs` filtered to `uid == me.uid`; `confstatus` to `date == today` (`watchConfToday`,
+  re-subscribed when the date changes).
+Still advised: Blaze plan (keeps the 50k/day free; ~₹5 per 100k beyond) + a budget alert.
+
 ## Registers on phones (Oct 2026)
 
 All phone rules sit in one `@media (max-width:600px)` block ("registers on phones"):

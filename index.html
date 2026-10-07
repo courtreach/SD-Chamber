@@ -1516,15 +1516,16 @@ if(DEMO){
   const store=new Map();
   const C=p=>{ if(!store.has(p)) store.set(p,new Map()); return store.get(p); };
   const subs=[];
-  const emitColl=p=>subs.filter(s=>!s.doc&&s.path===p).forEach(s=>s.cb(rows(p,s.order)));
+  const emitColl=p=>subs.filter(s=>!s.doc&&s.path===p).forEach(s=>s.cb(rows(p,s.order,s.where),{fromCache:false}));
   const emitDoc =p=>subs.filter(s=>s.doc&&s.path===p).forEach(s=>{const [cp,id]=split(p);s.cb(exists(cp,id)?{id,...C(cp).get(id)}:null);});
   const split=p=>{const a=p.split("/");const id=a.pop();return [a.join("/"),id];};
   const exists=(cp,id)=>C(cp).has(id);
-  function rows(p,order){ let r=[...C(p).entries()].map(([id,d])=>({id,...d}));
+  function rows(p,order,where){ let r=[...C(p).entries()].map(([id,d])=>({id,...d}));
+    (where||[]).forEach(([f,op,v])=>{ if(op==="==") r=r.filter(x=>x[f]===v); });
     if(order){const[f,dir]=order; r.sort((a,b)=>{const av=a[f]?._t??a[f]??0,bv=b[f]?._t??b[f]??0; return dir==="desc"?(av<bv?1:av>bv?-1:0):(av>bv?1:av<bv?-1:0);});}
     return r; }
   db={
-    watchCollection(path,cb,order){ const s={path,cb,order,doc:false}; subs.push(s); cb(rows(path,order)); return ()=>subs.splice(subs.indexOf(s),1); },
+    watchCollection(path,cb,order,where){ const s={path,cb,order,where,doc:false}; subs.push(s); cb(rows(path,order,where),{fromCache:false}); return ()=>subs.splice(subs.indexOf(s),1); },
     watchDoc(path,cb){ const s={path,cb,doc:true}; subs.push(s); const[cp,id]=split(path); cb(exists(cp,id)?{id,...C(cp).get(id)}:null); return ()=>subs.splice(subs.indexOf(s),1); },
     async set(path,data,merge){ const[cp,id]=split(path); const m=C(cp); m.set(id, merge?{...(m.get(id)||{}),...data}:{...data}); emitColl(cp); emitDoc(path); },
     async add(path,data){ const id=gid(); C(path).set(id,{...data}); emitColl(path); return id; },
@@ -1543,17 +1544,25 @@ if(DEMO){
   seedDemo(db);
 } else {
   const [{initializeApp},{getAuth,signInWithEmailAndPassword,createUserWithEmailAndPassword,onAuthStateChanged,signOut,sendPasswordResetEmail},
-    {getFirestore,collection,doc,getDoc,setDoc,addDoc,updateDoc,deleteDoc,onSnapshot,query,orderBy,serverTimestamp,runTransaction}] =
+    {getFirestore,initializeFirestore,persistentLocalCache,persistentMultipleTabManager,clearIndexedDbPersistence,terminate,collection,doc,getDoc,setDoc,addDoc,updateDoc,deleteDoc,onSnapshot,query,orderBy,where,serverTimestamp,runTransaction}] =
     await Promise.all([
       import("https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"),
       import("https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js"),
       import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js")
     ]);
-  const app=initializeApp(firebaseConfig); const fa=getAuth(app); const fs=getFirestore(app);
+  const app=initializeApp(firebaseConfig); const fa=getAuth(app);
+  // READ SAVING (owner, Oct 2026 — the free daily read allowance ran out): keep a copy of the
+  // data on the device, so reopening asks the server only for what changed. Falls back to
+  // the old memory-only mode wherever the browser can't store it (e.g. private windows).
+  let fs; try{ fs=initializeFirestore(app,{localCache:persistentLocalCache({tabManager:persistentMultipleTabManager()})}); }catch(e){ fs=getFirestore(app); }
   const ref=path=>{const a=path.split("/"); return a.length%2? collection(fs,...a): doc(fs,...a);};
   db={
-    watchCollection(path,cb,order){ const c=collection(fs,...path.split("/")); const q=order?query(c,orderBy(order[0],order[1])):c;
-      return onSnapshot(q,s=>{const r=[];s.forEach(d=>r.push({id:d.id,...d.data()}));cb(r);}); },
+    // cb(rows, {fromCache}) — the first answer may come from the device's copy; a second, from
+    // the server, follows (includeMetadataChanges makes sure it arrives even when nothing changed).
+    watchCollection(path,cb,order,wh){ const c=collection(fs,...path.split("/"));
+      const parts=[...(wh||[]).map(([f,op,v])=>where(f,op,v)), ...(order?[orderBy(order[0],order[1])]:[])];
+      const q=parts.length?query(c,...parts):c;
+      return onSnapshot(q,{includeMetadataChanges:true},s=>{const r=[];s.forEach(d=>r.push({id:d.id,...d.data()}));cb(r,{fromCache:s.metadata.fromCache});}); },
     watchDoc(path,cb){ return onSnapshot(doc(fs,...path.split("/")),s=>cb(s.exists()?{id:s.id,...s.data()}:null)); },
     async set(path,data,merge){ await setDoc(doc(fs,...path.split("/")),data,{merge:!!merge}); },
     async add(path,data){ const r=await addDoc(collection(fs,...path.split("/")),data); return r.id; },
@@ -1595,7 +1604,8 @@ if(DEMO){
     signIn(email,pass){ return signInWithEmailAndPassword(fa,email,pass); },
     signUp(email,pass){ return createUserWithEmailAndPassword(fa,email,pass); },
     resetPassword(email){ return sendPasswordResetEmail(fa,email); },
-    signOut(){ return signOut(fa); }, setUser(){},
+    // signing out also wipes this device's copy of the chamber's data
+    async signOut(){ await signOut(fa); try{ await terminate(fs); await clearIndexedDbPersistence(fs); }catch(e){} location.reload(); }, setUser(){},
     // The signed-in user's Firebase ID token — the Dropbox gatekeeper verifies it to
     // know who is asking (and reads their role) before touching any file.
     idToken(){ return fa.currentUser ? fa.currentUser.getIdToken() : Promise.reject(new Error("Not signed in")); } };
@@ -1934,6 +1944,8 @@ let userDocUnsub=null;
 auth.onChange(async user=>{
   // Tear down everything from the previous session/user…
   unsub.forEach(u=>u()); unsub=[]; if(dsUnsub){dsUnsub();dsUnsub=null;}
+  if(_confUnsub){ try{ _confUnsub(); }catch(_){} _confUnsub=null; _confDay=""; }
+  _usersFresh=false; _activeRepaired=false;
   if(userDocUnsub){userDocUnsub();userDocUnsub=null;}
   me=null;
   if(!user){ showView("authView"); return; }
@@ -1954,26 +1966,36 @@ auth.onChange(async user=>{
 
 // Older member records may lack `active` — the app treats that as active, but the Files
 // gatekeeper (and the security rules) need it recorded as true. The admin's device fills it in.
-let _activeRepaired=false;
+let _activeRepaired=false, _usersFresh=false;
+// Conference records: only TODAY's (the tab shows nothing else; every note is also kept on its
+// brief). Re-subscribed when the date changes while the app stays open.
+let _confUnsub=null, _confDay="";
+function watchConfToday(){
+  const t=todayISO(); if(_confUnsub&&_confDay===t) return;
+  if(_confUnsub){ try{ _confUnsub(); }catch(_){} }
+  _confDay=t; confStatus={};
+  _confUnsub=db.watchCollection("confstatus", rows=>{ confStatus={}; rows.forEach(s=>confStatus[s.id]=s); if(curTab==="now")renderNow(); }, null, [["date","==",t]]);
+}
+setInterval(()=>{ if(me&&_confUnsub&&todayISO()!==_confDay) watchConfToday(); },60000);
 async function repairActiveFlags(){
-  if(_activeRepaired||!isAdmin()||DEMO) return; _activeRepaired=true;
+  if(_activeRepaired||!_usersFresh||!isAdmin()||DEMO) return; _activeRepaired=true;
   for(const u of Object.values(users)) if(["senior","clerk","pa","junior"].includes(u.role)&&typeof u.active!=="boolean"){
     try{ await db.update("users/"+u.id,{active:true}); }catch(_){} }
 }
 function startApp(){
   showView("app"); paintChrome();
-  unsub.push(db.watchCollection("users", rows=>{ users={}; rows.forEach(u=>users[u.id]=u); _scanVer++; renderActive(); paintChrome(); repairActiveFlags(); }));
-  unsub.push(db.watchCollection("briefs", rows=>{ briefs={}; rows.forEach(b=>briefs[b.id]=b); _scanVer++; $("cntBriefs").textContent=Object.values(briefs).filter(b=>b.status!=="disposed").length; renderActive(); _briefsLoaded=true; maybeSyncRegister(); }, ["updatedAt","desc"]));
+  unsub.push(db.watchCollection("users", (rows,m)=>{ users={}; rows.forEach(u=>users[u.id]=u); _scanVer++; renderActive(); paintChrome(); if(!m||!m.fromCache){ _usersFresh=true; repairActiveFlags(); } }));
+  unsub.push(db.watchCollection("briefs", (rows,m)=>{ briefs={}; rows.forEach(b=>briefs[b.id]=b); _scanVer++; $("cntBriefs").textContent=Object.values(briefs).filter(b=>b.status!=="disposed").length; renderActive(); if(!m||!m.fromCache){ _briefsLoaded=true; maybeSyncRegister(); } }, ["updatedAt","desc"]));
   unsub.push(db.watchDoc("config/roster", d=>{ roster = d || {order:[],pointer:0}; renderActive(); }));
   unsub.push(db.watchDoc("config/holidays", d=>{ holidays=d||{}; delete holidays.id; renderActive(); }));
   unsub.push(db.watchDoc("config/vacation", d=>{ vacation=d&&Array.isArray(d.ranges)?d:{ranges:[]}; renderActive(); }));
   unsub.push(db.watchDoc("config/senioravail", d=>{ seniorAvail=d||{}; delete seniorAvail.id; renderActive(); }));
-  unsub.push(db.watchCollection("daysheets", rows=>{ dsAll={}; rows.forEach(d=>dsAll[d.id]=d); _scanVer++; renderActive(); _dsLoaded=true; maybeSyncRegister(); }));
+  unsub.push(db.watchCollection("daysheets", (rows,m)=>{ dsAll={}; rows.forEach(d=>dsAll[d.id]=d); _scanVer++; renderActive(); if(!m||!m.fromCache){ const first=!_dsLoaded; _dsLoaded=true; maybeSyncRegister(); if(first&&courtUpdates) matchAwaitingListings(); } }));
   unsub.push(db.watchCollection("approvals", rows=>{ approvals={}; rows.forEach(a=>approvals[a.id]=a); if(curTab==="team")renderTeam(); }));
   unsub.push(db.watchCollection("leaves", rows=>{ leaves={}; rows.forEach(l=>leaves[l.id]=l); renderActive(); }));   // leave affects roster/board too
-  unsub.push(db.watchCollection("notifs", rows=>{ notifs={}; rows.forEach(nn=>notifs[nn.id]=nn); updateBell(); }));
+  unsub.push(db.watchCollection("notifs", rows=>{ notifs={}; rows.forEach(nn=>notifs[nn.id]=nn); updateBell(); }, null, [["uid","==",me.uid]]));
   unsub.push(db.watchDoc("config/live", d=>{ live=d||{}; delete live.id; renderActive(); }));   // doc shared with the SD Court App
-  unsub.push(db.watchCollection("confstatus", rows=>{ confStatus={}; rows.forEach(s=>confStatus[s.id]=s); if(curTab==="now")renderNow(); }));
+  watchConfToday();
   loadCourtUpdates();
   watchDaysheet();
 }
@@ -3568,6 +3590,7 @@ function findListingByDetails(dateISO, {title, caseNo, diaryNo}){
 // Once a day's (supplementary) list is out, fill court+item+bench for any matter
 // the clerk entered "unlisted" (name / number only). Runs after each causelist fetch.
 async function matchAwaitingListings(){
+  if(!_dsLoaded) return;   // never rewrite a day sheet from the device's copy — wait for the server
   if(!courtUpdates||!canManage()) return; let any=false;
   for(const [date,ds] of Object.entries(dsAll)){
     if(!courtUpdates.by_date?.[date]) continue;
