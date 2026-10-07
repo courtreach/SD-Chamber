@@ -403,6 +403,113 @@ label{display:block;font-size:11.5px;font-weight:500;color:var(--ink-2);letter-s
 .file-acts{display:flex;gap:2px;flex-shrink:0}
 .files-up{display:inline-flex;align-items:center;gap:6px;margin-top:8px;cursor:pointer}
 .files-note{font-size:12.5px;color:var(--ink-3)}
+/* ===== Brief register (ASD-style, Oct 2026) ===== */
+.rg-head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+.rg-title{font-family:var(--serif);font-size:24px;font-weight:450;letter-spacing:-.01em;line-height:1.15}
+.rg-sub{font-size:12.5px;color:var(--ink-2);margin-top:4px}
+.rg-sub b{font-family:var(--mono);color:var(--accent-ink);font-weight:600}
+.rg-warn{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:0 0 12px}
+.rg-warn .chip{background:var(--warn-bg);color:var(--warn);cursor:pointer;border:none;font-family:inherit}
+.rg-tools{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+.rg-search{flex:1;min-width:220px;position:relative}
+.rg-search input{width:100%;padding:10px 12px 10px 34px;border:1px solid var(--line-2);border-radius:10px;background:var(--surface);font-size:14px}
+.rg-search .ti{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--ink-3);font-size:16px}
+.rg-chips{display:flex;gap:6px;flex-wrap:wrap}
+.rg-chip{border:1px solid var(--line-2);background:var(--surface);color:var(--ink-2);border-radius:20px;padding:5px 11px;font-size:12.5px;cursor:pointer;white-space:nowrap;font-family:inherit}
+.rg-chip b{font-weight:600;margin-left:4px;color:var(--ink-3)}
+.rg-chip.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.rg-chip.on b{color:#fff;opacity:.75}
+.rg-table{width:100%;border-collapse:separate;border-spacing:0;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;box-shadow:var(--sh-1)}
+.rg-table th{text-align:left;font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3);font-weight:600;padding:10px 12px;border-bottom:1px solid var(--line);background:var(--surface-2)}
+.rg-table td{padding:12px;border-bottom:1px solid var(--line);vertical-align:top;font-size:13px}
+.rg-table tr:last-child td{border-bottom:none}
+.rg-table tr.rg-row:hover td{background:var(--surface-2)}
+.rg-table tr.dim td{opacity:.62}
+.rg-serial{font-family:var(--mono);font-weight:700;font-size:14.5px;color:var(--accent-ink);background:none;border:none;padding:0;cursor:pointer}
+.rg-serial.none{font-weight:500;font-size:11px;color:var(--warn);font-family:var(--sans);white-space:nowrap}
+.rg-name{font-family:var(--serif);font-size:15px;font-weight:450;color:var(--ink);background:none;border:none;padding:0;text-align:left;cursor:pointer;line-height:1.3;letter-spacing:-.005em}
+.rg-name:hover{color:var(--accent-ink)}
+.rg-nums{font-family:var(--mono);font-size:11.5px;color:var(--ink-3);margin-top:3px}
+.rg-meta{font-size:12px;color:var(--ink-2);margin-top:2px}
+.rg-when{font-size:12.5px;color:var(--ink-2);white-space:nowrap}
+.rg-listed{display:inline-block;margin-top:4px;font-size:11px;font-weight:600;color:var(--s-listed);background:var(--s-listed-bg);border-radius:6px;padding:2px 7px;white-space:nowrap}
+.rg-team{display:flex;gap:3px;flex-wrap:wrap;align-items:center}
+.rg-acts{display:flex;gap:6px;justify-content:flex-end;white-space:nowrap}
+.rg-tag{font-size:10.5px;font-weight:600;color:var(--ink-3);background:var(--surface-2);border:1px solid var(--line);border-radius:5px;padding:1px 6px;margin-left:6px;vertical-align:2px}
+.btn-files{display:inline-flex;align-items:center;justify-content:center;gap:6px;background:var(--accent);color:#fff;border:none;border-radius:8px;padding:7px 12px;font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap}
+.btn-files:hover{opacity:.92}
+.btn-files .ti{font-size:15px}
+.btn-files.off{background:var(--surface-2);color:var(--ink-3);border:1px dashed var(--line-2)}
+.btn-files.big{padding:10px 16px;font-size:13.5px}
+.rg-cards{display:none}
+.rg-card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 13px;margin-bottom:9px;box-shadow:var(--sh-1)}
+.rg-card.dim{opacity:.62}
+.rg-card .top{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:5px}
+.rg-card .acts{margin-top:11px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.rg-card .acts .btn-files,.rg-card .acts .btn{justify-content:center;padding:10px}
+@media (max-width:1100px){ .rg-table{display:none} .rg-cards{display:block} }
+@media (min-width:640px) and (max-width:1100px){ .rg-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;align-items:start} .rg-card{margin:0} }
+/* brief detail: a files summary card */
+.ob-files{display:flex;align-items:center;gap:12px;justify-content:space-between;flex-wrap:wrap;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:12px 14px}
+.ob-files .sum{font-size:13px;color:var(--ink-2)}
+.ob-files .sum b{color:var(--ink);font-weight:600}
+/* ===== Files screen (ASD-style) ===== */
+.sheet.sheet-wide{max-width:880px}
+.fv-serial{font-family:var(--mono);font-weight:700;color:var(--accent-ink)}
+.fv-path{font-size:12px;color:var(--ink-3);word-break:break-word;margin-top:3px}
+.fv-tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:2px 0 10px}
+.fv-search{flex:1;min-width:180px;padding:10px 12px 10px 34px;border:1px solid var(--line-2);border-radius:10px;font-size:14.5px;background:var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%238b9096' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='M21 21l-4.3-4.3'/%3E%3C/svg%3E") no-repeat 11px center}
+.fv-search:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.fv-chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.fv-chip{border:1px solid var(--line-2);background:var(--surface);color:var(--ink);border-radius:20px;padding:5px 11px;font-size:13px;cursor:pointer;white-space:nowrap;font-family:inherit}
+.fv-chip b{font-weight:600;color:var(--ink-3);margin-left:3px}
+.fv-chip.on{background:var(--accent);border-color:var(--accent);color:#fff;cursor:default}
+.fv-chip.on b{color:#fff;opacity:.85}
+.fv-group{font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3);font-weight:700;margin:14px 2px 6px}
+.fv-row{display:flex;align-items:center;gap:12px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--surface);margin-bottom:7px}
+.fv-row:hover{border-color:var(--line-2)}
+.fv-ic{flex:none;width:40px;height:46px;border-radius:7px;color:#fff;font-size:11px;font-weight:800;display:flex;align-items:flex-end;justify-content:center;padding-bottom:7px;position:relative;letter-spacing:.02em}
+.fv-ic:after{content:"";position:absolute;top:0;right:0;border-style:solid;border-width:0 11px 11px 0;border-color:transparent var(--bg) rgba(255,255,255,.35) transparent}
+.fv-ic.dir{background:#e9e4d6 !important;color:#7a6a45;font-size:20px;align-items:center;padding:0}
+.fv-ic.dir:after{display:none}
+.fv-main{flex:1;min-width:0;cursor:pointer}
+.fv-name{font-size:14.5px;font-weight:600;color:var(--ink);line-height:1.35;word-break:break-word}
+.fv-meta{font-size:12px;color:var(--ink-3);margin-top:2px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.fv-num{font-family:var(--mono);font-size:11.5px;font-weight:700;color:var(--accent-ink);background:var(--accent-soft);border-radius:5px;padding:1px 6px}
+.fv-num.none{color:var(--ink-3);background:var(--surface-2)}
+.fv-acts{display:flex;gap:6px;flex:none}
+.fv-acts button{border:1px solid var(--line-2);background:var(--surface-2);color:var(--accent-ink);border-radius:8px;padding:6px 10px;font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit}
+.fv-acts button:hover{background:var(--accent-soft);border-color:var(--accent)}
+.fv-acts button.del{color:var(--danger)}
+.fv-empty{padding:26px 10px;text-align:center;color:var(--ink-3);font-size:14px}
+.fv-hit{background:#fff1b8;border-radius:2px}
+.fv-isls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.fv-isl{display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:14px;padding:14px 14px 12px;cursor:pointer;font-family:inherit;min-height:112px;transition:border-color .15s,box-shadow .15s}
+.fv-isl:hover{border-color:var(--accent);box-shadow:var(--sh-2)}
+.fv-isl:active{transform:scale(.98)}
+.fv-isl .ti{font-size:22px;color:var(--accent-ink)}
+.fv-isl-n{font-size:28px;font-weight:700;color:var(--accent-ink);line-height:1.1;margin-top:6px;font-family:var(--serif)}
+.fv-isl-l{font-size:13.5px;font-weight:600;color:var(--ink)}
+.fv-isl-d{font-size:11.5px;color:var(--ink-3)}
+@media (max-width:600px){ .fv-isls{grid-template-columns:repeat(2,minmax(0,1fr))} .fv-acts button{padding:7px 9px} .fv-row{flex-wrap:wrap} .fv-acts{width:100%;justify-content:flex-end} }
+.fv-note{font-size:12.5px;color:var(--ink-2);background:var(--accent-soft);border-radius:10px;padding:10px 12px;margin-bottom:10px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.fv-note.warn{background:var(--warn-bg);color:var(--warn)}
+/* add-papers form */
+.ap-row{border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:11px 12px;margin-bottom:9px}
+.ap-orig{font-size:12px;color:var(--ink-3);word-break:break-all;margin-bottom:7px}
+.ap-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:8px}
+.ap-final{font-family:var(--mono);font-size:11.5px;color:var(--accent-ink);margin-top:7px;word-break:break-word}
+@media (max-width:600px){ .ap-grid{grid-template-columns:1fr} }
+/* serial-list import */
+.sl-table{width:100%;border-collapse:collapse;font-size:12.5px}
+.sl-table td,.sl-table th{padding:7px 6px;border-bottom:1px solid var(--line);vertical-align:top;text-align:left}
+.sl-table th{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+.sl-st{font-size:11px;font-weight:600;border-radius:5px;padding:1px 6px;white-space:nowrap}
+.sl-st.ok{color:var(--ok);background:var(--ok-bg)} .sl-st.warn{color:var(--warn);background:var(--warn-bg)} .sl-st.mute{color:var(--ink-3);background:var(--surface-2)}
+/* day sheet: the prominent files button */
+.rail-actions .btn-files{order:-1}
+td.tfiles{white-space:nowrap}
+
 .dir-row{display:flex;align-items:flex-start;gap:9px;padding:8px 0;border-bottom:1px solid var(--line)}
 .dir-row:last-child{border-bottom:none}
 .dir-row.done .dir-text{text-decoration:line-through;color:var(--ink-3)}
@@ -1769,7 +1876,7 @@ async function syncRegister(force){
         const existing=findBriefForListing({...e,caseTitle:title},refs.caseNo,refs.diaryNo);
         if(existing){ e.briefId=existing.id; changed=true; }
         else if(title||refs.caseNo){ const jr=e.juniorUids||jrsOf(e)||[];
-          const id=await db.add("briefs",{caseTitle:title||"(from causelist)",caseNo:refs.caseNo,diaryNo:refs.diaryNo,
+          const id=await addBrief({caseTitle:title||"(from causelist)",caseNo:refs.caseNo,diaryNo:refs.diaryNo,
             matterType:guessMatterType(refs.caseNo),appearingFor:e.appearingFor||"",aor:e.counsel||"",chamberNo:"",
             assignedTo:jr.slice(),everAssigned:jr.slice(),ackBy:jr.slice(),declinedBy:[],
             assignHistory:jr.map(u=>({uid:u,at:Date.now(),by:me.uid,mode:"listed"})),
@@ -2480,7 +2587,7 @@ function assignMsg(b, uid){
   const le=soonestListing(b.id);
   const nd=b.nextDate||le?.date;
   const L=[`Hi ${first},`, `You've been assigned a matter in ${CHAMBER.seniorName}'s chambers:`, `• ${labelOf(b)}`];
-  const nums=[b.chamberNo?`File #${b.chamberNo}`:"", b.caseNo, b.diaryNo?`Dy. ${b.diaryNo}`:""].filter(Boolean).join("  ·  ");
+  const nums=[serialNum(b)!=null?`Serial ${pad3(serialNum(b))}`:"", b.caseNo, b.diaryNo?`Dy. ${b.diaryNo}`:""].filter(Boolean).join("  ·  ");
   if(nums) L.push(`• ${nums}`);
   if(nd) L.push(`• Next date: ${fmtDateY(nd)}`);
   if(le&&le.courtNo) L.push(`• Court ${le.courtNo}${le.itemNo?`, Item ${le.itemNo}`:""}`);
@@ -3178,6 +3285,7 @@ function renderToday(){
             ${e.remarks?`<span>·</span><span class="rail-remark">${esc(e.remarks)}</span>`:''}
           </div>
           <div class="rail-actions">
+            ${filesBtn(e.briefId)}
             ${(canManage()||isSenior())?`<button class="tbtn done-btn" data-dsdone="${i}"><span class="ic ti ${e.done?'ti-arrow-back-up':'ti-circle-check'}"></span>${e.done?'Undo':'Done'}</button>`:''}
             ${b?`<button class="tbtn" data-brief="${b.id}"><span class="ic ti ti-folder"></span>Brief</button>`:''}
             ${canManage()?`<span class="rail-ext"></span>
@@ -3191,7 +3299,7 @@ function renderToday(){
   // ---- desktop: the clerk's paper as a table; mobile keeps the card rail ----
   const nextUndone=entries.findIndex(x=>!x.done);
   const table = entries.length? `<div class="ds-table"><table>
-    <thead><tr><th></th><th>Ct / Item</th><th>Time</th><th>Case &amp; Bench</th><th>Counsel — Colleagues</th><th>Remarks</th><th></th></tr></thead>
+    <thead><tr><th></th><th>Ct / Item</th><th>Time</th><th>Case &amp; Bench</th><th>Counsel — Colleagues</th><th>Remarks</th><th>Papers</th><th></th></tr></thead>
     <tbody>${entries.map((e,i)=>{
       const b=e.briefId?briefs[e.briefId]:null;
       const R=resolveEntry(e,dsDate);
@@ -3203,6 +3311,7 @@ function renderToday(){
         <td><div class="tcase">${renderTitle(R.title,R.appearingFor,"html")}${b?.priority?' <span class="ti ti-flag-3" style="color:var(--urgent);font-size:13px"></span>':''}</div>${R.bench?`<div class="tbench muted">${esc(shortBench(R.bench))}</div>`:''}</td>
         <td>${e.counsel?`<div>${esc(e.counsel)}</div>`:''}<div class="${e.counsel?'muted':''}">${jrs.length?jrs.map(u=>esc(nameOf(u))+(onLeaveOn(u,dsDate)?' <span class="ti ti-plane-departure" style="color:var(--warn)" title="On leave this day"></span>':'')).join(" / "):'<span class="muted">no colleague marked</span>'}</div></td>
         <td class="muted" style="font-size:12.5px">${esc(e.remarks||'')}</td>
+        <td class="tfiles">${filesBtn(e.briefId)}</td>
         <td class="tact">${(canManage()||isSenior())?`<button class="tbtn icon-only" data-dsdone="${i}" title="${e.done?'Undo':'Mark done'}"><span class="ic ti ${e.done?'ti-arrow-back-up':'ti-circle-check'}"></span></button>`:''}${b?`<button class="tbtn icon-only" data-brief="${b.id}" title="Open brief"><span class="ic ti ti-folder"></span></button>`:''}${canManage()?`<button class="tbtn icon-only" data-dsedit="${i}" title="Edit"><span class="ic ti ti-pencil"></span></button><button class="tbtn icon-only" data-dsdel="${i}" title="Remove"><span class="ic ti ti-trash"></span></button>`:''}</td>
       </tr>`;}).join("")}</tbody></table></div>`:"";
 
@@ -3522,7 +3631,7 @@ function dsForm(idx=null, preset=null){
       <p class="muted" style="font-size:11.5px;margin:4px 0 12px"><span class="ti ti-info-circle"></span> Date → type → court → item is all you need — the case name &amp; bench fill from the SC causelist (now, or automatically once that day's list is out). Everything below is optional.</p>
       <div id="dsNewFields">
         <label>Case title <span class="muted" style="font-weight:400">(auto-fills from the SC list — edit freely; your text is kept)</span></label><input id="f_title" value="${esc(e.caseTitle||'')}" placeholder="fills from the causelist — or type it">
-        <label>Chamber file no. <span class="muted" style="font-weight:400">(assign one — the register is ordered by it)</span></label><input id="f_chno" class="mono" value="${esc(e.briefId&&briefs[e.briefId]?.chamberNo||'')}" placeholder="e.g. 101" style="max-width:140px">
+        <label>Serial no. <span class="muted" style="font-weight:400">(automatic — leave blank)</span></label><input id="f_chno" class="mono" value="${esc(e.briefId&&briefs[e.briefId]?.chamberNo||'')}" placeholder="next: ${pad3(nextSerial())}" style="max-width:140px">
         <label>Diary / Case no. <span class="muted" style="font-weight:400">(so an unlisted matter auto-matches once it\'s out)</span></label><input id="f_dno" class="mono" value="${esc((e.briefId&&(briefs[e.briefId]?.diaryNo||briefs[e.briefId]?.caseNo))||e.diaryNo||e.caseNo||'')}" placeholder="e.g. SLP(C) 18036/2026 or D. 12345/2026">
       </div>
       <label>Appearing for <span class="muted" style="font-weight:400">(bolds that party on the list)</span></label>
@@ -3724,7 +3833,7 @@ function dsForm(idx=null, preset=null){
           status:"listed", priority:false, nextDate:listDate, detailsAwaited:!(refs.caseNo||refs.diaryNo),
           conferenceAt:(entry.confTime||entry.confDate)?(entry.confDate||listDate):null,
           fromListing:true, createdBy:me.uid, createdAt:db.now(), updatedAt:db.now() };
-        entry.briefId = await db.add("briefs", nb);
+        entry.briefId = await addBrief(nb);
         notifyBrief={...nb, id:entry.briefId};
       }
     }
@@ -4296,7 +4405,7 @@ async function applyWordImport(){
         status:"listed", priority:false, nextDate:date, detailsAwaited:true,
         conferenceAt:entry.confTime?date:null, fromListing:true, wordImport:true,
         createdBy:me.uid, createdAt:db.now(), updatedAt:db.now() };
-      try{ entry.briefId=await db.add("briefs",nb); }catch(_){}
+      try{ entry.briefId=await addBrief(nb); }catch(_){}
     }
     arr.push(entry);
   }
@@ -4347,44 +4456,89 @@ function importCauseList(){
    BRIEFS
    ============================================================ */
 let briefFilter="", briefSearch="";
+// The next day-sheet listing of a brief, today or later (court/item come from the sheet).
+function nextListingOf(id){
+  const t=todayISO(); let best=null;
+  for(const [d,ds] of Object.entries(dsAll)){ if(d<t) continue;
+    for(const e of (ds.entries||[])) if(e.briefId===id && (!best||d<best.date)) best={date:d,court:e.courtNo,item:e.itemNo}; }
+  return best;
+}
+/* ===== BRIEF REGISTER — rebuilt on ASD's case register (owner, Oct 2026) =====
+   Serial first and prominent, newest at the top; a Files button on EVERY brief (owner:
+   "files button on all the briefs whether they have or does not have one"); a table on
+   desktop, one card per brief on phones; warnings for briefs without a serial and for a
+   serial used twice; the admin imports the serial list (privately) from here. */
 function renderBriefs(){
   $("topbarAction").innerHTML = canManage()? `<button class="btn ghost sm" id="tbLegalAid" title="Record a legal-aid opinion given to a colleague"><span class="ic ti ti-scale"></span>Legal aid</button> <button class="btn ghost sm" id="tbSyncReg" title="Add any listed matter that isn't in the register yet"><span class="ic ti ti-refresh"></span>Sync listings</button> <button class="btn" id="tbNewBrief2"><span class="ic ti ti-plus"></span>New brief</button>`:"";
-  const filters=[["","Active"],["mine","Mine"],["urgent","Urgent"],["awaited","Incomplete"],["listed","Listed"],["disposed","Disposed"]];
-  const bar=`<div class="filters">
-    <div class="search"><span class="ic ti ti-search"></span><input id="bSearch" placeholder="Search title, diary or case number" value="${esc(briefSearch)}"></div>
-    <div class="seg">${filters.map(([k,l])=>`<button data-bf="${k}" class="${briefFilter===k?'active':''}">${l}</button>`).join("")}</div>
-  </div>`;
-  let list=Object.values(briefs);
-  if(briefFilter==="mine")list=list.filter(b=>idIn(b.assignedTo,me.uid));
-  else if(briefFilter==="urgent")list=list.filter(b=>b.priority&&b.status!=="disposed");
-  else if(briefFilter==="awaited")list=list.filter(b=>b.detailsAwaited&&b.status!=="disposed");
-  else if(briefFilter==="listed")list=list.filter(b=>b.status==="listed");
-  else if(briefFilter==="disposed")list=list.filter(b=>b.status==="disposed");
-  else list=list.filter(b=>b.status!=="disposed");
-  const q=briefSearch.trim().toLowerCase();
-  if(q)list=list.filter(b=>(b.caseTitle||"").toLowerCase().includes(q)||(b.diaryNo||"").includes(q)||(b.caseNo||"").toLowerCase().includes(q)||(b.chamberNo||"").toLowerCase().includes(q));
-  // the register is ordered by chamber file number (numeric), unnumbered files last
-  const chNum=b=>{ const n=parseInt(String(b.chamberNo||"").replace(/[^0-9]/g,""),10); return isNaN(n)?Infinity:n; };
-  list.sort((a,b)=> chNum(a)-chNum(b) || (a.chamberNo||"~").localeCompare(b.chamberNo||"~") || (a.caseTitle||"").localeCompare(b.caseTitle||""));
-  const myUnacked=Object.values(briefs).filter(needsMyAck);
+  const all=Object.values(briefs);
+  const cases=all.filter(isCaseBrief);
+  const today=todayISO();
+  const noSerial=cases.filter(b=>serialNum(b)==null);
+  const clashes=serialClashes();
+  const counts={
+    "":cases.filter(b=>b.status!=="disposed").length,
+    listed:cases.filter(b=>b.status!=="disposed"&&(nextListingOf(b.id)||(b.nextDate&&b.nextDate>=today))).length,
+    mine:cases.filter(b=>idIn(b.assignedTo,me.uid)&&b.status!=="disposed").length,
+    urgent:cases.filter(b=>b.priority&&b.status!=="disposed").length,
+    awaited:cases.filter(b=>b.detailsAwaited&&b.status!=="disposed").length,
+    noserial:noSerial.length,
+    disposed:cases.filter(b=>b.status==="disposed").length,
+    all:all.length };
+  const filters=[["","Active"],["listed","Listed"],["mine","Mine"],["urgent","Urgent"],["awaited","Incomplete"],["noserial","No serial"],["disposed","Disposed"],["all","All"]]
+    .filter(([k])=>k===""||k==="all"||counts[k]||briefFilter===k);
+  let list=briefFilter==="all"?all:cases;
+  if(briefFilter==="mine") list=list.filter(b=>idIn(b.assignedTo,me.uid)&&b.status!=="disposed");
+  else if(briefFilter==="urgent") list=list.filter(b=>b.priority&&b.status!=="disposed");
+  else if(briefFilter==="awaited") list=list.filter(b=>b.detailsAwaited&&b.status!=="disposed");
+  else if(briefFilter==="listed") list=list.filter(b=>b.status!=="disposed"&&(nextListingOf(b.id)||(b.nextDate&&b.nextDate>=today)));
+  else if(briefFilter==="noserial") list=list.filter(b=>serialNum(b)==null);
+  else if(briefFilter==="disposed") list=list.filter(b=>b.status==="disposed");
+  else if(briefFilter==="") list=list.filter(b=>b.status!=="disposed");
+  const q=briefSearch.trim().toLowerCase(), qd=q.replace(/\D/g,"");
+  if(q) list=list.filter(b=>{ const n=serialNum(b);
+    if(n!=null&&(String(n)===q||pad3(n)===q)) return true;
+    return (labelOf(b).toLowerCase().includes(q))||(b.aor||"").toLowerCase().includes(q)||(b.caseNo||"").toLowerCase().includes(q)
+      ||(qd.length>=3&&((b.diaryNo||"").replace(/\D/g,"").includes(qd)||(b.caseNo||"").replace(/\D/g,"").includes(qd))); });
+  // newest serial first (as in ASD); briefs without a serial at the end, newest of them first
+  list.sort((a,z)=>{ const x=serialNum(a), y=serialNum(z); if(x==null&&y==null) return labelOf(a).localeCompare(labelOf(z)); if(x==null) return 1; if(y==null) return -1; return y-x; });
+  const myUnacked=all.filter(needsMyAck);
   const notice=(!canManage()&&!isSenior()&&myUnacked.length)?`<div class="notice"><span class="ti ti-bell"></span><div><b>${myUnacked.length} new assignment${myUnacked.length>1?'s':''}</b> awaiting your acknowledgment — open and acknowledge.</div></div>`:"";
-  const rows = list.length? `<div class="brief-table">`+list.map((b,i)=>{
-    const st=STATUS[b.status];
-    const mineNew=needsMyAck(b);
-    return `<div class="brief-row">
-      <div class="br-sn">${i+1}</div>
-      <button class="br-open" data-brief="${b.id}">
-        <div class="br-title-row">${b.chamberNo?`<span class="file-badge">#${esc(b.chamberNo)}</span>`:''}${b.priority?'<span class="ti ti-flag-3" style="color:var(--urgent);font-size:14px" title="Urgent"></span>':''}<span class="br-title">${esc(labelOf(b))}</span>${mineNew?'<span class="new-chip">New</span>':''}</div>
-        <div class="br-nums">${b.caseNo||b.diaryNo?`<span>${esc(b.caseNo||('Dy. '+b.diaryNo))}</span>`:'<span class="muted">no case no.</span>'}${(b.creditClaim&&idIn(b.assignedTo,b.creditClaim.uid))?`<span class="claim-chip"><span class="ti ti-award" style="font-size:10px"></span> ${esc(nameOf(b.creditClaim.uid).split(' ')[0])} claimed</span>`:''}${b.detailsAwaited?'<span style="color:var(--warn)">details awaited</span>':''}</div>
-      </button>
-      <span class="chip ${st.cls}"><span class="dot"></span>${st.label}</span>
-      ${canManage()?`<button class="tbtn icon-only" data-editbrief="${b.id}" title="Edit this entry"><span class="ic ti ti-pencil"></span></button>`:'<span></span>'}
-    </div>`;
-  }).join("")+`</div>` : `<div class="empty"><span class="ic ti ti-folder-open"></span>No briefs match this view.</div>`;
-  $("tab-briefs").innerHTML=notice+bar+rows;
+  const head=`<div class="rg-head"><div><div class="rg-title">Brief register</div>
+      <div class="rg-sub">${cases.length} files · ${counts[""]} active · next serial <b>${pad3(nextSerial())}</b></div></div>
+      ${isAdmin()?`<div class="row" style="gap:8px"><button class="btn ghost sm" id="rgImport"><span class="ic ti ti-file-import"></span>Import serial list</button>${noSerial.length?`<button class="btn ghost sm" id="rgNumber"><span class="ic ti ti-hash"></span>Number the rest</button>`:""}</div>`:""}</div>
+    ${(noSerial.length||clashes.length)?`<div class="rg-warn">${noSerial.length?`<button class="chip" data-bf="noserial"><span class="ti ti-hash"></span>${noSerial.length} without a serial</button>`:""}${clashes.map(c=>`<span class="chip"><span class="ti ti-alert-triangle"></span>${pad3(c.n)} used ${c.ids.length}×: ${c.ids.map(id=>esc(labelOf(briefs[id]))).join(" / ")}</span>`).join("")}</div>`:""}`;
+  const tools=`<div class="rg-tools"><div class="rg-search"><span class="ti ti-search"></span><input id="bSearch" placeholder="Search serial, title, diary or case no., AoR" value="${esc(briefSearch)}" autocomplete="off"></div>
+    <div class="rg-chips">${filters.map(([k,l])=>`<button class="rg-chip ${briefFilter===k?'on':''}" data-bf="${k}">${l}<b>${counts[k]}</b></button>`).join("")}</div></div>`;
+  const serialCell=b=>{ const n=serialNum(b); return n!=null?`<button class="rg-serial" data-brief="${b.id}">${pad3(n)}</button>`:`<span class="rg-serial none">no serial</span>`; };
+  const tag=b=>b.legalAid?`<span class="rg-tag">Legal aid</span>`:b.confCredit?`<span class="rg-tag">Conference</span>`:b.fromSerialList?`<span class="rg-tag">from the list</span>`:"";
+  const nums=b=>[b.caseNo, b.diaryNo?"Dy. "+b.diaryNo:""].filter(Boolean).join(" · ");
+  const when=b=>{ const L=nextListingOf(b.id);
+    if(L) return `<div class="rg-when">${fmtDateY(L.date)}</div><span class="rg-listed">Listed${L.court?` · Ct ${esc(L.court)}`:""}${L.item?` · Item ${esc(L.item)}`:""}</span>`;
+    if(b.nextDate) return `<div class="rg-when">${fmtDateY(b.nextDate)}</div>`;
+    return `<span class="muted" style="font-size:12px">—</span>`; };
+  const team=b=>(b.assignedTo||[]).map(u=>`<span class="mini-ava" title="${esc(nameOf(u))}">${esc(initials(nameOf(u)))}</span>`).join("")||`<span class="muted" style="font-size:12px">unassigned</span>`;
+  const status=b=>{ const st=STATUS[b.status]||STATUS.received; return `<span class="chip ${st.cls}"><span class="dot"></span>${st.label}</span>${b.priority?' <span class="ti ti-flag-3" style="color:var(--urgent)" title="Urgent"></span>':''}${needsMyAck(b)?' <span class="new-chip">new</span>':''}`; };
+  const table=list.length?`<table class="rg-table"><thead><tr><th style="width:74px">Serial</th><th>Matter</th><th style="width:150px">Next hearing</th><th style="width:110px">Colleagues</th><th style="width:120px">Status</th><th style="width:150px;text-align:right">Papers</th></tr></thead><tbody>
+    ${list.map(b=>`<tr class="rg-row ${b.status==='disposed'?'dim':''}">
+      <td>${serialCell(b)}</td>
+      <td><button class="rg-name" data-brief="${b.id}">${esc(labelOf(b))}</button>${tag(b)}${nums(b)?`<div class="rg-nums">${esc(nums(b))}</div>`:""}${b.aor?`<div class="rg-meta">AoR ${esc(b.aor)}</div>`:""}</td>
+      <td>${when(b)}</td><td><div class="rg-team">${team(b)}</div></td><td>${status(b)}</td>
+      <td><div class="rg-acts">${isCaseBrief(b)?filesBtn(b.id):""}${canManage()?`<button class="tbtn icon-only" data-editbrief="${b.id}" title="Edit"><span class="ic ti ti-pencil"></span></button>`:""}</div></td></tr>`).join("")}
+    </tbody></table>`:"";
+  const cards=list.length?`<div class="rg-cards">${list.map(b=>`<div class="rg-card ${b.status==='disposed'?'dim':''}">
+      <div class="top">${serialCell(b)}${status(b)}${tag(b)}</div>
+      <button class="rg-name" data-brief="${b.id}" style="font-size:16px">${esc(labelOf(b))}</button>
+      ${nums(b)?`<div class="rg-nums">${esc(nums(b))}</div>`:""}
+      <div class="row" style="gap:10px;align-items:center;margin-top:6px;flex-wrap:wrap">${when(b)}<div class="rg-team">${team(b)}</div></div>
+      <div class="acts">${isCaseBrief(b)?filesBtn(b.id):"<span></span>"}<button class="btn ghost" data-brief="${b.id}"><span class="ic ti ti-folder-open"></span>Open</button></div>
+    </div>`).join("")}</div>`:"";
+  const empty=list.length?"":`<div class="empty"><span class="ic ti ti-folder-open"></span>No briefs match this view.</div>`;
+  $("tab-briefs").innerHTML=notice+head+tools+table+cards+empty;
   $("bSearch").oninput=e=>{briefSearch=e.target.value; renderBriefs(); $("bSearch").focus(); const v=$("bSearch").value;$("bSearch").setSelectionRange(v.length,v.length);};
-  document.querySelectorAll("[data-bf]").forEach(x=>x.onclick=()=>{briefFilter=x.dataset.bf;renderBriefs();});
+  document.querySelectorAll("#tab-briefs [data-bf]").forEach(x=>x.onclick=()=>{briefFilter=x.dataset.bf;renderBriefs();});
   document.querySelectorAll("#tab-briefs [data-editbrief]").forEach(x=>x.onclick=e=>{e.stopPropagation();briefForm(briefs[x.dataset.editbrief]);});
+  if($("rgImport")) $("rgImport").onclick=serialImportForm;
+  if($("rgNumber")) $("rgNumber").onclick=numberRemainingForm;
   if($("tbNewBrief2"))$("tbNewBrief2").onclick=()=>briefForm();
   if($("tbLegalAid"))$("tbLegalAid").onclick=()=>legalAidForm();
   if($("tbSyncReg"))$("tbSyncReg").onclick=async()=>{ $("tbSyncReg").disabled=true; await syncRegister(true); toast("Register synced with the listings","ti-check"); renderBriefs(); };
@@ -4396,8 +4550,8 @@ function briefForm(b=null){
   openSheet(`<div class="sheet-head"><div><h3>${b?'Edit brief':'New brief'}</h3></div><button class="x-btn"><span class="ti ti-x"></span></button></div>
     <div class="sheet-body">
       <label>Case title</label><input id="b_title" value="${esc(b?.caseTitle||'')}" placeholder="Petitioner vs Respondent">
-      <label>Chamber file no. <span class="muted" style="font-weight:400">(the register is ordered by this)</span></label>
-      <input id="b_chno" class="mono" value="${esc(b?.chamberNo||'')}" placeholder="e.g. 101">
+      <label>Serial no. <span class="muted" style="font-weight:400">(automatic if left blank — fixed once given)</span></label>
+      <input id="b_chno" class="mono" value="${esc(b?.chamberNo||'')}" placeholder="next: ${pad3(nextSerial())}" ${(b&&serialNum(b)!=null&&!isAdmin())?'disabled title="Only the admin can change a serial once given"':''}>
       <div class="grid2"><div><label>Diary no.</label><input id="b_dy" class="mono" value="${esc(b?.diaryNo||'')}" placeholder="12345/2026"></div>
         <div><label>Case no.</label><input id="b_cn" class="mono" value="${esc(b?.caseNo||'')}" placeholder="SLP(C) 123/2026"></div></div>
       <div class="grid2"><div><label>Matter type</label><select id="b_type">${MATTER_TYPES.map(t=>`<option ${b?.matterType===t?'selected':''}>${t}</option>`).join("")}</select></div>
@@ -4457,6 +4611,9 @@ function briefForm(b=null){
     }
     const directed = asgnMode==="manual" && $("b_directed") && $("b_directed").checked && assigned.length>0;
     const asgHistMode = autoPick ? (autoPick.forced?"forced":"auto") : (directed?"directed":"manual");
+    // a serial is unique and fixed: refuse one already on another brief
+    const _sn=parseInt(($("b_chno").value||"").replace(/\D/g,""),10);
+    if(!isNaN(_sn)){ const h=serialTakenBy(_sn,b&&b.id); if(h){ toast(`Serial ${pad3(_sn)} is already on “${labelOf(h)}”`,"ti-alert-triangle"); return; } }
     const data={caseTitle:$("b_title").value.trim(),chamberNo:$("b_chno").value.trim(),diaryNo:$("b_dy").value.trim(),caseNo:$("b_cn").value.trim(),matterType:$("b_type").value,appearingFor:$("b_for").value.trim(),aor:$("b_aor").value.trim(),aorPhone:$("b_aorph").value.trim(),contactPerson:$("b_cperson").value.trim(),contactPhone:$("b_cphone").value.trim(),conferenceAt:$("b_conf").value||null,nextDate:$("b_next").value||null,weight:Number($("b_weight").value)||null,assignedTo:assigned,priority:$("b_prio").checked,directed,updatedAt:db.now()};
     if(!data.caseTitle){toast("A case title is needed","ti-alert-triangle");return;}
     // Senior unavailable on the next date -> block (owner's rule Jul 2026).
@@ -4478,7 +4635,7 @@ function briefForm(b=null){
     else { data.status=assigned.length?"assigned":"received"; data.createdBy=me.uid; data.createdAt=db.now();
       data.everAssigned=assigned.slice(); data.declinedBy=[];
       data.assignHistory=assigned.map(u=>({uid:u,at:Date.now(),by:me.uid,mode:asgHistMode}));
-      savedId=await db.add("briefs",data); }
+      savedId=await addBrief(data); }
     // keep every cause-list row of this matter in step: team + (upcoming) title
     if(b) await syncListingJrs(b.id, assigned, data.caseTitle);
     // an auto-assignment consumes a roster turn, just like the standalone auto-assign
@@ -4512,11 +4669,20 @@ const FILES_GATEKEEPER = "https://sd-chamber-files.sdentertainmentservices.worke
 let _filesStatus=null, _filesStatusAt=0, _filesStatusUid="";
 const _demoFiles={};                      // DEMO only: an in-memory stand-in for Dropbox
 async function filesApi(action, body, raw){
-  if(DEMO){
-    const f=(body&&body.folder)||(raw&&raw.folder), bag=f?(_demoFiles[f]=_demoFiles[f]||[]):null;
+  if(DEMO){                               // an in-memory stand-in for Dropbox, same behaviour as the gatekeeper
+    const f=(body&&body.folder)||(raw&&raw.folder), sb=(body&&body.sub)||(raw&&raw.sub)||"";
+    const key=(a,b)=>a+(b?"/"+b:""), k=f?key(f,sb):"", bag=f?(_demoFiles[k]=_demoFiles[k]||[]):null;
     if(action==="status") return {connected:true, account:{name:"Demo Dropbox"}, admin:isAdmin(), manage:canManage()};
-    if(action==="list") return {files:bag.slice()};
-    if(action==="upload"){ let n=raw.name, k=1; while(bag.some(x=>x.name===n)) n=raw.name.replace(/(\.[^.]*)?$/,m=>` (${k++})${m}`); bag.push({name:n,size:raw.file.size,modified:new Date().toISOString()}); return {name:n}; }
+    if(action==="list") return {files:bag.slice(), dirs:Object.keys(_demoFiles).filter(x=>x.startsWith(k+"/")&&!x.slice(k.length+1).includes("/")).map(x=>({name:x.slice(k.length+1)}))};
+    if(action==="upload"){ let n=raw.name, c=1; while(bag.some(x=>x.name===n)) n=raw.name.replace(/(\.[^.]*)?$/,m=>` (${c++})${m}`); bag.push({name:n,size:raw.file.size,modified:new Date().toISOString()}); return {name:n}; }
+    if(action==="move"){
+      if(body.name){ const tk=key(body.toFolder||f,body.toSub!=null?body.toSub:sb); const tb=(_demoFiles[tk]=_demoFiles[tk]||[]);
+        if(tb.some(x=>x.name===body.toName)) throw new Error("Something with that name already exists — nothing was changed.");
+        const i=bag.findIndex(x=>x.name===body.name); if(i<0) throw new Error("Dropbox: from_lookup/not_found/"); const [it]=bag.splice(i,1); tb.push({...it,name:body.toName}); return {ok:true}; }
+      const nk=key(body.toFolder,sb); if(_demoFiles[nk]&&_demoFiles[nk].length) throw new Error("Something with that name already exists — nothing was changed.");
+      if(!Object.keys(_demoFiles).some(x=>(x===k||x.startsWith(k+"/"))&&x!==nk)) throw new Error("Dropbox: from_lookup/not_found/");
+      for(const x of Object.keys(_demoFiles)) if(x===k||x.startsWith(k+"/")){ _demoFiles[nk+x.slice(k.length)]=_demoFiles[x]; delete _demoFiles[x]; }
+      return {ok:true}; }
     if(action==="link") return {link:"about:blank"};
     if(action==="delete"){ const i=bag.findIndex(x=>x.name===body.name); if(i>=0) bag.splice(i,1); return {ok:true}; }
     if(action==="connect") return {url:"about:blank"};
@@ -4524,7 +4690,7 @@ async function filesApi(action, body, raw){
   }
   const tok=await auth.idToken();
   const init={method:"POST", headers:{Authorization:"Bearer "+tok}};
-  if(raw){ init.headers["Content-Type"]="application/octet-stream"; init.headers["X-Folder"]=encodeURIComponent(raw.folder); init.headers["X-File-Name"]=encodeURIComponent(raw.name); init.body=raw.file; }
+  if(raw){ init.headers["Content-Type"]="application/octet-stream"; init.headers["X-Folder"]=encodeURIComponent(raw.folder); init.headers["X-File-Name"]=encodeURIComponent(raw.name); if(raw.sub) init.headers["X-Sub"]=encodeURIComponent(raw.sub); init.body=raw.file; }
   else { init.headers["Content-Type"]="application/json"; init.body=JSON.stringify(body||{}); }
   const r=await fetch(FILES_GATEKEEPER+"/api/"+action, init);
   const d=await r.json().catch(()=>({}));
@@ -4541,85 +4707,376 @@ async function filesStatus(force){
   catch(e){ _filesStatus={unreachable:true, error:e.message}; }
   _filesStatusAt=Date.now(); return _filesStatus;
 }
-// A Dropbox-safe folder name, fixed once per brief: "101 - Sharma vs State", or the title
-// plus a short id when there is no chamber file number (keeps two same-named briefs apart).
-function briefFolderName(b){
-  const clean=s=>String(s||"").replace(/[\\/:*?"<>|\u0000-\u001f]/g," ").replace(/\s+/g," ").trim();
-  let n=b.chamberNo ? `${clean(b.chamberNo)} - ${clean(labelOf(b))}` : `${clean(labelOf(b))} (${String(b.id).slice(0,5)})`;
-  n=n.slice(0,100).replace(/[. ]+$/,"");
-  return n || ("Brief "+String(b.id).slice(0,8));
-}
 const fmtSize=n=>!n?"":n<1024?n+" B":n<1048576?Math.round(n/1024)+" KB":(n/1048576).toFixed(n<10485760?1:0)+" MB";
-const fileIcon=name=>{ const x=(String(name).split(".").pop()||"").toLowerCase();
-  return x==="pdf"?"ti-file-type-pdf":/^(doc|docx|rtf|odt)$/.test(x)?"ti-file-type-doc":/^(xls|xlsx|csv)$/.test(x)?"ti-file-spreadsheet":/^(jpg|jpeg|png|heic|gif|webp)$/.test(x)?"ti-photo":"ti-file"; };
+// Brief detail: a summary card with a big "Open files" button; the papers themselves live on
+// the Files screen (openFiles), laid out the ASD way.
 async function loadBriefFiles(id){
-  const box=$("ob_files"); if(!box) return;
+  const box=$("ob_files"); if(!box) return; const b=briefs[id]; if(!b) return;
+  const card=sum=>`<div class="ob-files"><div class="sum">${sum}</div><button class="btn-files big" data-files="${esc(id)}"><span class="ti ti-folder"></span>Open files</button></div>`;
+  box.innerHTML=card("Loading…"); wireFilesBtns(box);
+  const st=await filesStatus(); if(!$("ob_files")) return;
+  let sum;
+  if(st.unreachable) sum="Files aren't reachable right now.";
+  else if(!st.connected) sum=st.admin?"Dropbox isn't connected yet.":"Files aren't set up yet.";
+  else if(!b.dropboxFolder) sum=serialNum(b)==null?"No serial yet, so no folder.":`No papers yet · the folder will be <b>${esc(caseFolderName(b))}</b>`;
+  else { try{ const d=await filesApi("list",{folder:b.dropboxFolder}); const f=d.files||[], dr=d.dirs||[];
+      const last=f.map(x=>String(x.modified||"")).sort().pop();
+      sum=(f.length||dr.length)?`<b>${f.length} paper${f.length===1?"":"s"}</b>${dr.length?` · ${dr.length} older folder${dr.length>1?"s":""}`:""}${last?` · latest ${fmtDateY(last.slice(0,10))}`:""}`:"The folder is empty."; }
+    catch(e){ sum="Couldn't read the papers — "+esc(e.message); } }
+  if(!$("ob_files")) return; box.innerHTML=card(sum); wireFilesBtns(box);
+}
+/* ============================================================
+   SERIAL NUMBERS + CASE FILES, the ASD way (owner, Oct 2026)
+   "All cases should be numbered serially and should carry that serial number for the
+   files filed under that case. Learn how to number the case folder, and files under it
+   from ASD." So, exactly the owner's filing rules (iCloud "Filing system notes"):
+     - the serial is the brief's `chamberNo` (the field the register was already ordered
+       by); fixed once given — never renumbered by the app.
+     - a new brief takes the next number after the highest in use (addBrief).
+     - case folder:  "<Short title> (NNN)"  — title first so folders sort by name.
+     - papers:       "<L>NNN[.n] <Short title> - <what it is>.<ext>", L one of
+                     N note · L list of dates · S submissions · C compilation ·
+                     F file received (PDF) · D draft / other Word.
+       A lone paper of a letter has no sub-number (F045); when a second arrives the
+       first becomes .1 and the new one .2 (planNumber renames it — never overwrites).
+   Folders live in Dropbox/Apps/SD Master Case File/ through the files gatekeeper.
+   ============================================================ */
+const serialNum=b=>{ const n=parseInt(String((b&&b.chamberNo)||"").replace(/[^0-9]/g,""),10); return isNaN(n)?null:n; };
+const pad3=n=>String(n).padStart(3,"0");
+const isCaseBrief=b=>!!b&&!b.legalAid&&!b.confCredit;
+let _serialIssued=0;                      // numbers handed out this session, ahead of the Firestore echo
+function nextSerial(){ let m=_serialIssued; for(const b of Object.values(briefs)){ const n=serialNum(b); if(n!=null&&n>m) m=n; } return m+1; }
+function takeSerial(){ const n=nextSerial(); _serialIssued=n; return n; }
+// Every brief is created through here, so every new case gets the next serial.
+async function addBrief(data){
+  if(isCaseBrief(data) && !String(data.chamberNo||"").trim()) data.chamberNo=String(takeSerial());
+  return db.add("briefs",data);
+}
+function serialClashes(){
+  const by={};
+  for(const b of Object.values(briefs)){ if(!isCaseBrief(b)) continue; const n=serialNum(b); if(n==null) continue; (by[n]=by[n]||[]).push(b.id); }
+  return Object.entries(by).filter(([,ids])=>ids.length>1).map(([n,ids])=>({n:+n,ids}));
+}
+function serialTakenBy(n, exceptId){ return Object.values(briefs).find(b=>b.id!==exceptId&&isCaseBrief(b)&&serialNum(b)===n)||null; }
+
+// "Sharma vs. State of Maharashtra" -> "Sharma v State of Maharashtra", safe for Dropbox/OneDrive.
+function shortTitle(b){
+  let t=String(labelOf(b)||"").replace(/\s+(?:vs\.?|v\/s\.?|versus|v\.)\s+/gi," v ")
+    .replace(/["*:<>?\/\\|\u0000-\u001f]/g," ").replace(/\s+/g," ").trim();
+  if(t.length>80) t=t.slice(0,80).trim();
+  return t.replace(/[. ]+$/,"")||"Untitled";
+}
+function caseFolderName(b){ const n=serialNum(b); return n==null?"":`${shortTitle(b)} (${pad3(n)})`; }
+const briefFolder=b=>(b&&b.dropboxFolder)||caseFolderName(b);
+const PAPER_LETTERS=[["N","Note"],["L","List of dates / synopsis"],["S","Written submissions"],["C","Compilation"],["F","File received — PDF, order, paper book"],["D","Draft / other Word document"]];
+const PAPER_GROUP={N:"Notes",L:"Lists of dates & synopsis",S:"Written submissions",C:"Compilations",F:"Files — PDFs, orders, paper books",D:"Drafts & other Word documents",X:"Not yet numbered",dir:"Older folders"};
+const PAPER_RE=/^([NLSCFD])(\d{3,})(?:\.(\d+))? (.+)$/;
+function paperInfo(name,b){
+  const ext=(String(name).match(/\.[^.\s]+$/)||[""])[0];
+  const m=PAPER_RE.exec(name);
+  if(!m) return {t:"X",num:"",desc:String(name).replace(/\.[^.\s]+$/,""),ext};
+  let rest=m[4].replace(/\.[^.\s]+$/,"");
+  const st=b?shortTitle(b):""; if(st && rest.startsWith(st+" - ")) rest=rest.slice(st.length+3);
+  return {t:m[1],serial:+m[2],sub:m[3]?+m[3]:null,num:m[1]+m[2]+(m[3]?"."+m[3]:""),desc:rest,ext};
+}
+const FK={word:["W","#2b579a"],pdf:["PDF","#b3261e"],img:["IMG","#3d7a46"],xls:["X","#1d6f42"],file:["FILE","#7b746a"]};
+function fileKindOf(ext){ ext=String(ext||"").toLowerCase(); if(/^\.(docx?|rtf|odt)$/.test(ext)) return "word"; if(ext===".pdf") return "pdf"; if(/^\.(jpe?g|png|heic|gif|webp|tiff?)$/.test(ext)) return "img"; if(/^\.(xlsx?|csv)$/.test(ext)) return "xls"; return "file"; }
+const guessLetter=name=>/\.(docx?|rtf|odt)$/i.test(name)?"D":"F";
+const cleanDesc=name=>String(name).replace(/\.[^.\s]+$/,"").replace(/["*:<>?\/\\|\u0000-\u001f_]+/g," ").replace(/\s+/g," ").trim().slice(0,90)||"Document";
+const ddmmyyyy=d=>{ const x=d||new Date(); return `${String(x.getDate()).padStart(2,"0")}.${String(x.getMonth()+1).padStart(2,"0")}.${x.getFullYear()}`; };
+const paperName=(b,L,sub,desc,ext)=>`${L}${pad3(serialNum(b))}${sub?"."+sub:""} ${shortTitle(b)} - ${desc}${ext}`;
+// Where a new paper of letter L goes: no sub-number if it is the first; if exactly one
+// un-numbered paper of that letter exists it becomes .1 and the new one .2; else max+1.
+function planNumber(b,files,L){
+  const n=serialNum(b);
+  const same=files.map(f=>({f,p:paperInfo(f.name,b)})).filter(x=>x.p.t===L&&x.p.serial===n);
+  if(!same.length) return {sub:null,rename:null};
+  const maxSub=Math.max(0,...same.map(x=>x.p.sub||0));
+  const unsub=same.filter(x=>x.p.sub==null);
+  if(maxSub===0 && unsub.length===1){ const x=unsub[0]; return {sub:2,rename:{from:x.f.name,to:paperName(b,L,1,x.p.desc,x.p.ext)}}; }
+  return {sub:Math.max(maxSub,unsub.length?1:0)+1,rename:null};
+}
+
+/* ---------------- the Files screen ---------------- */
+let _fv={id:null,sub:"",files:[],dirs:[],q:"",type:"all",loading:false,err:"",st:null};
+const _hl=(s,q)=>{ s=esc(s); if(!q) return s; const i=s.toLowerCase().indexOf(esc(q).toLowerCase()); return i<0?s:s.slice(0,i)+`<span class="fv-hit">${s.slice(i,i+esc(q).length)}</span>`+s.slice(i+esc(q).length); };
+function filesBtn(briefId, big){
+  if(!briefId||!briefs[briefId]) return `<button class="btn-files off${big?" big":""}" data-files="" title="This listing isn't linked to a brief yet"><span class="ti ti-folder"></span>Files</button>`;
+  return `<button class="btn-files${big?" big":""}" data-files="${esc(briefId)}"><span class="ti ti-folder"></span>Files</button>`;
+}
+function wireFilesBtns(root){
+  (root||document).querySelectorAll("[data-files]").forEach(x=>x.onclick=e=>{ e.stopPropagation();
+    if(!x.dataset.files){ toast("This listing isn't linked to a brief yet — open it and link or add the brief","ti-info-circle"); return; }
+    openFiles(x.dataset.files); });
+}
+async function openFiles(id, sub){
   const b=briefs[id]; if(!b) return;
-  const st=await filesStatus();
-  if(!$("ob_files")) return;                                  // sheet closed meanwhile
-  if(st.unreachable){
-    box.innerHTML=`<div class="files-note">${isAdmin()?"Files aren't set up yet — the Dropbox gatekeeper isn't reachable (see files-gatekeeper/SETUP.md).":"Files aren't set up yet."}</div>`; return; }
-  if(!st.connected){
-    box.innerHTML=st.admin
-      ? `<div class="files-note">Dropbox isn't connected yet.</div><button class="btn sm" id="ob_dbxconnect" style="margin-top:8px"><span class="ic ti ti-brand-dropbox"></span>Connect Dropbox</button>`
-      : `<div class="files-note">Files aren't set up yet — the admin needs to connect Dropbox.</div>`;
-    if($("ob_dbxconnect")) $("ob_dbxconnect").onclick=async()=>{
-      const w=window.open("","_blank");
-      try{ const d=await filesApi("connect"); if(w) w.location=d.url; else location.href=d.url; _filesStatus=null; }
-      catch(e){ if(w) w.close(); toast(e.message,"ti-alert-triangle"); }
-    };
-    return;
+  _fv={id, sub:sub||"", files:[], dirs:[], q:"", type:"all", loading:true, err:"", st:null};
+  renderFilesSheet();
+  _fv.st=await filesStatus();
+  if(_fv.id!==id) return;
+  const folder=briefFolder(briefs[id]||b);
+  if(_fv.st.connected && folder && b.dropboxFolder){
+    try{ const d=await filesApi("list",{folder, sub:_fv.sub}); _fv.files=d.files||[]; _fv.dirs=d.dirs||[]; }
+    catch(e){ _fv.err=e.message; }
   }
-  const folder=b.dropboxFolder||"";
-  let files=[];
-  if(folder){ try{ files=(await filesApi("list",{folder})).files||[]; }
-    catch(e){ box.innerHTML=`<div class="files-note">Couldn't read the files — ${esc(e.message)}</div>`; return; } }
-  if(!$("ob_files")) return;
-  files.sort((a,z)=>String(a.name).localeCompare(String(z.name),undefined,{numeric:true,sensitivity:"base"}));
-  const canEdit=st.manage;
-  box.innerHTML=(files.length?files.map((f,i)=>`<div class="file-row">
-      <span class="file-ic ti ${fileIcon(f.name)}"></span>
-      <div class="file-main"><div class="file-name">${esc(f.name)}</div><div class="file-meta">${[fmtSize(f.size), f.modified?new Date(f.modified).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}):""].filter(Boolean).join(" · ")}</div></div>
-      <div class="file-acts">
-        <button class="tbtn icon-only" data-fopen="${i}" title="Open"><span class="ic ti ti-external-link"></span></button>
-        <button class="tbtn icon-only" data-fshare="${i}" title="Share a link (works for 4 hours)"><span class="ic ti ti-share"></span></button>
-        ${canEdit?`<button class="tbtn icon-only" data-fdel="${i}" title="Remove"><span class="ic ti ti-trash"></span></button>`:""}
-      </div></div>`).join("")
-    :`<div class="files-note">No files yet.</div>`)
-    +(canEdit?`<label class="tbtn files-up"><span class="ic ti ti-upload"></span>Add files<input type="file" id="ob_fup" multiple hidden></label>`:"");
-  const linkFor=f=>filesApi("link",{folder,name:f.name}).then(d=>d.link);
-  box.querySelectorAll("[data-fopen]").forEach(x=>x.onclick=async()=>{
-    const f=files[+x.dataset.fopen]; const w=window.open("","_blank");   // opened inside the tap, or iPhone blocks it
-    try{ const l=await linkFor(f); if(w) w.location=l; else location.href=l; }
-    catch(e){ if(w) w.close(); toast(e.message,"ti-alert-triangle"); }
-  });
-  box.querySelectorAll("[data-fshare]").forEach(x=>x.onclick=async()=>{
-    const f=files[+x.dataset.fshare];
+  _fv.loading=false;
+  if(_fv.id===id) renderFilesSheet();
+}
+function renderFilesSheet(){
+  const b=briefs[_fv.id]; if(!b) return;
+  const st=_fv.st, manage=!!(st&&st.manage), n=serialNum(b), folder=briefFolder(b);
+  const crumbs=["Dropbox","Apps","SD Master Case File"].concat(folder?[folder]:[]).concat(_fv.sub?_fv.sub.split("/"):[]);
+  let notes="";
+  if(st&&st.unreachable) notes+=`<div class="fv-note warn"><span class="ti ti-plug-off"></span>Files aren't reachable right now${isAdmin()?" — the Dropbox gatekeeper didn't answer":""}.</div>`;
+  else if(st&&!st.connected) notes+=`<div class="fv-note warn"><span class="ti ti-brand-dropbox"></span>${st.admin?"Dropbox isn't connected.":"Files aren't set up yet — the admin needs to connect Dropbox."}${st.admin?` <button class="btn sm" id="fv_connect">Connect Dropbox</button>`:""}</div>`;
+  if(n==null) notes+=`<div class="fv-note warn"><span class="ti ti-hash"></span><span>This brief has no serial number yet, so its folder can't be named.</span>${manage?` <button class="btn sm" id="fv_giveSerial">Give it serial ${pad3(nextSerial())}</button>`:""}</div>`;
+  const want=caseFolderName(b);
+  if(manage && b.dropboxFolder && want && b.dropboxFolder!==want && !_fv.sub)
+    notes+=`<div class="fv-note"><span class="ti ti-folder-cog"></span><span>Folder is named “${esc(b.dropboxFolder)}”. Rename it to “${esc(want)}” to match the serial and title?</span> <button class="btn sm" id="fv_renameFolder">Rename folder</button></div>`;
+  const canAdd=manage && st&&st.connected && n!=null;
+  openSheet(`<div class="sheet-head"><div><h3>${n!=null?`<span class="fv-serial">${pad3(n)}</span> · `:""}${esc(labelOf(b))}</h3>
+      <div class="fv-path"><span class="ti ti-folder"></span> ${crumbs.map(esc).join(" › ")}</div></div>
+      <button class="x-btn"><span class="ti ti-x"></span></button></div>
+    <div class="sheet-body">
+      ${notes}
+      <div class="fv-tools">
+        <input class="fv-search" id="fvQ" placeholder="Search papers — name, number, date" value="${esc(_fv.q)}" autocomplete="off">
+        ${_fv.sub?`<button class="btn ghost sm" id="fv_up"><span class="ic ti ti-arrow-up"></span>Up</button>`:""}
+        <button class="btn ghost sm" id="fv_refresh" title="Refresh"><span class="ic ti ti-refresh"></span></button>
+        ${canAdd?`<label class="btn sm" style="cursor:pointer"><span class="ic ti ti-upload"></span>Add papers<input type="file" id="fv_add" multiple hidden></label>`:""}
+      </div>
+      <div id="fvChips" class="fv-chips"></div>
+      <div id="fvList">${_fv.loading?`<div class="fv-empty">Loading papers…</div>`:""}</div>
+      <div class="row" style="margin-top:14px;gap:8px"><button class="btn ghost sm" id="fv_back"><span class="ic ti ti-arrow-left"></span>Back to the brief</button></div>
+    </div>`);
+  document.querySelector("#modalRoot .sheet")?.classList.add("sheet-wide");
+  if(!_fv.loading) fvRenderList();
+  const id=_fv.id;
+  $("fvQ").oninput=e=>{ _fv.q=e.target.value; fvRenderList(); };
+  $("fv_back").onclick=()=>openBrief(id);
+  $("fv_refresh").onclick=()=>{ _filesStatus=null; openFiles(id,_fv.sub); };
+  if($("fv_up")) $("fv_up").onclick=()=>openFiles(id,_fv.sub.split("/").slice(0,-1).join("/"));
+  if($("fv_connect")) $("fv_connect").onclick=async()=>{ const w=window.open("","_blank"); try{ const d=await filesApi("connect"); if(w) w.location=d.url; else location.href=d.url; _filesStatus=null; }catch(e){ if(w) w.close(); toast(e.message,"ti-alert-triangle"); } };
+  if($("fv_giveSerial")) $("fv_giveSerial").onclick=async()=>{ const s=takeSerial(); await db.update("briefs/"+id,{chamberNo:String(s),updatedAt:db.now()}); toast(`Serial ${pad3(s)} given`,"ti-hash"); setTimeout(()=>openFiles(id),250); };
+  if($("fv_renameFolder")) $("fv_renameFolder").onclick=async()=>{
+    const bb=briefs[id]; const to=caseFolderName(bb);
+    try{ await filesApi("move",{folder:bb.dropboxFolder,toFolder:to}); }
+    catch(e){ if(!/not_found/.test(e.message)){ toast(e.message,"ti-alert-triangle"); return; } }
+    await db.update("briefs/"+id,{dropboxFolder:to,updatedAt:db.now()}); toast("Folder renamed","ti-folder-check"); setTimeout(()=>openFiles(id),250);
+  };
+  if($("fv_add")) $("fv_add").onchange=e=>{ const list=[...e.target.files]; if(list.length) addPapersForm(id,list,_fv.sub); };
+}
+function fvRows(){
+  const b=briefs[_fv.id];
+  const files=_fv.files.map(f=>{ const p=paperInfo(f.name,b); return {...f,...p,_label:p.desc||f.name}; });
+  return {files, dirs:_fv.dirs};
+}
+function fvRenderList(){
+  const box=$("fvList"); if(!box) return;
+  const b=briefs[_fv.id]; const st=_fv.st||{};
+  if(_fv.err){ box.innerHTML=`<div class="fv-empty">${esc(_fv.err)}</div>`; return; }
+  const {files,dirs}=fvRows();
+  const q=_fv.q.trim().toLowerCase(), t=_fv.type;
+  const dateOf=x=>x.modified?fmtDateY(String(x.modified).slice(0,10)):"";
+  const match=x=>!q||(`${x._label} ${x.num||""} ${x.name} ${dateOf(x)}`).toLowerCase().includes(q);
+  const inType=x=>t==="all"||x.t===t||(t==="LS"&&(x.t==="L"||x.t==="S"));
+  const chips=$("fvChips");
+  const KLAB={N:"Notes",F:"PDF files",LS:"Lists & Submissions",C:"Compilations",D:"Drafts",X:"Not yet numbered",dir:"Older folders"};
+  const cnt=k=>k==="dir"?dirs.length:files.filter(x=>k==="LS"?(x.t==="L"||x.t==="S"):x.t===k).length;
+  if(chips) chips.innerHTML=t==="all"?"":`<button class="fv-chip" data-fvtype="all">‹ All kinds</button><span class="fv-chip on">${esc(KLAB[t]||"")}<b>${cnt(t)}</b></span>`;
+  const row=(x,i)=>{ const kind=fileKindOf(x.ext); const [lab,col]=FK[kind];
+    return `<div class="fv-row"><div class="fv-ic" style="background:${col}">${lab}</div>
+      <div class="fv-main" data-fvopen="${i}" title="Open"><div class="fv-name">${_hl(x._label,q)}</div>
+        <div class="fv-meta">${x.num?`<span class="fv-num">${_hl(x.num,q)}</span>`:`<span class="fv-num none">no number</span>`}<span>${esc(dateOf(x))}</span><span>${esc(fmtSize(x.size))}</span></div></div>
+      <div class="fv-acts"><button data-fvopen="${i}">Open</button><button data-fvshare="${i}">Share</button>${st.manage?`<button class="del" data-fvdel="${i}" title="Remove"><span class="ti ti-trash"></span></button>`:""}</div></div>`; };
+  const drow=d=>`<div class="fv-row"><div class="fv-ic dir"><span class="ti ti-folder"></span></div><div class="fv-main" data-fvdir="${esc(d.name)}"><div class="fv-name">${_hl(d.name,q)}</div><div class="fv-meta"><span>older folder, kept as it was</span></div></div><div class="fv-acts"><button data-fvdir="${esc(d.name)}">Open</button></div></div>`;
+  const idx=new Map(files.map((x,i)=>[x,i]));
+  let h="";
+  if(t==="all"&&!q){
+    if(!files.length&&!dirs.length){
+      h=`<div class="fv-empty">${!b.dropboxFolder?"No papers yet — this brief's folder is created when the first paper is added.":"The folder is empty."}</div>`;
+    } else {
+      const kinds=[["N","ti-notes","Notes"],["F","ti-file-type-pdf","PDF files"],["LS","ti-list-details","Lists & Submissions"],["C","ti-books","Compilations"],["D","ti-pencil","Drafts"],["X","ti-file-unknown","Not yet numbered"],["dir","ti-folder","Older folders"]];
+      const tiles=kinds.map(([k,ic,lab])=>{ const n=cnt(k); if(!n) return "";
+        const g=k==="dir"?[]:files.filter(x=>k==="LS"?(x.t==="L"||x.t==="S"):x.t===k);
+        const last=g.map(x=>String(x.modified||"")).sort().pop();
+        return `<button class="fv-isl" data-fvtype="${k}"><span class="ti ${ic}"></span><span class="fv-isl-n">${n}</span><span class="fv-isl-l">${lab}</span><span class="fv-isl-d">${last?"latest "+esc(fmtDateY(last.slice(0,10))):(k==="dir"?"kept as they were":"")}</span></button>`; }).join("");
+      const latest=files.slice().sort((a,z)=>String(z.modified||"").localeCompare(String(a.modified||""))).slice(0,3);
+      h=`<div class="fv-isls">${tiles}</div>`+(latest.length?`<div class="fv-group" style="margin-top:18px">Latest papers</div>`+latest.map(x=>row(x,idx.get(x))).join(""):"");
+    }
+  } else {
+    const fl=files.filter(x=>inType(x)&&match(x)), dl=dirs.filter(d=>(t==="all"||t==="dir")&&match({_label:d.name,name:d.name}));
+    ["N","L","S","C","F","D","X"].forEach(k=>{ const g=fl.filter(x=>x.t===k).sort((a,z)=>(a.sub||0)-(z.sub||0)||String(a.name).localeCompare(String(z.name),undefined,{numeric:true}));
+      if(!g.length) return; h+=`<div class="fv-group">${PAPER_GROUP[k]} · ${g.length}</div>`+g.map(x=>row(x,idx.get(x))).join(""); });
+    if(dl.length) h+=`<div class="fv-group">${PAPER_GROUP.dir} · ${dl.length}</div>`+dl.map(drow).join("");
+    if(!h) h=`<div class="fv-empty">${q?`Nothing matches “${esc(_fv.q)}”.`:"No papers of this kind."}</div>`;
+  }
+  box.innerHTML=h;
+  const folder=briefFolder(b), sub=_fv.sub;
+  const linkFor=f=>filesApi("link",{folder,sub,name:f.name}).then(d=>d.link);
+  document.querySelectorAll("#modalRoot [data-fvtype]").forEach(x=>x.onclick=()=>{ _fv.type=x.dataset.fvtype; fvRenderList(); });
+  box.querySelectorAll("[data-fvdir]").forEach(x=>x.onclick=()=>openFiles(_fv.id,(sub?sub+"/":"")+x.dataset.fvdir));
+  box.querySelectorAll("[data-fvopen]").forEach(x=>x.onclick=async()=>{ const f=files[+x.dataset.fvopen]; const w=window.open("","_blank");
+    try{ const l=await linkFor(f); if(w) w.location=l; else location.href=l; }catch(e){ if(w) w.close(); toast(e.message,"ti-alert-triangle"); } });
+  box.querySelectorAll("[data-fvshare]").forEach(x=>x.onclick=async()=>{ const f=files[+x.dataset.fvshare];
     try{ const l=await linkFor(f);
-      if(navigator.share){ try{ await navigator.share({title:f.name, text:`${f.name} — ${labelOf(b)} (link works for 4 hours)`, url:l}); return; }catch(e){ if(e&&e.name==="AbortError") return; } }
-      await navigator.clipboard?.writeText(l); toast("Link copied — it works for 4 hours","ti-copy");
-    }catch(e){ toast(e.message,"ti-alert-triangle"); }
-  });
-  box.querySelectorAll("[data-fdel]").forEach(x=>x.onclick=()=>{
-    const f=files[+x.dataset.fdel];
-    confirmAsk({title:"Remove this file?",danger:true,confirmLabel:"Remove file",
-      body:`<b>${esc(f.name)}</b> will be removed from this brief's Dropbox folder. Dropbox keeps deleted files for 30 days, so it can still be restored from dropbox.com.`,
-      onYes:async()=>{ try{ await filesApi("delete",{folder,name:f.name}); toast("File removed"); }catch(e){ toast(e.message,"ti-alert-triangle"); } openBrief(id); }});
-  });
-  const up=$("ob_fup");
-  if(up) up.onchange=async()=>{
-    const list=[...up.files]; if(!list.length) return;
-    const big=list.find(f=>f.size>95*1024*1024);
-    if(big){ toast(`${big.name} is over 95 MB — add it straight into Dropbox instead`,"ti-alert-triangle"); return; }
-    let fold=briefs[id]?.dropboxFolder;
-    if(!fold){ fold=briefFolderName(briefs[id]||b); await db.update("briefs/"+id,{dropboxFolder:fold,updatedAt:db.now()}); }
-    box.insertAdjacentHTML("beforeend",`<div class="files-note" id="ob_fupmsg" style="margin-top:6px">Uploading ${list.length} file${list.length>1?"s":""}…</div>`);
-    let ok=0;
-    for(const f of list){ try{ await filesApi("upload",null,{folder:fold,name:f.name,file:f}); ok++; }catch(e){ toast(`${f.name}: ${e.message}`,"ti-alert-triangle"); } }
-    if(ok) toast(`${ok} file${ok>1?"s":""} added`,"ti-check");
-    if(briefs[id]) openBrief(id);
+      if(navigator.share){ try{ await navigator.share({title:f.name,text:`${f.name} (link works for 4 hours)`,url:l}); return; }catch(e){ if(e&&e.name==="AbortError") return; } }
+      await navigator.clipboard?.writeText(l); toast("Link copied — it works for 4 hours","ti-copy"); }
+    catch(e){ toast(e.message,"ti-alert-triangle"); } });
+  box.querySelectorAll("[data-fvdel]").forEach(x=>x.onclick=()=>{ const f=files[+x.dataset.fvdel]; const id=_fv.id;
+    confirmAsk({title:"Remove this paper?",danger:true,confirmLabel:"Remove",
+      body:`<b>${esc(f.name)}</b> will be removed from this brief's folder. Dropbox keeps deleted files for 30 days, so it can still be restored from dropbox.com.`,
+      onYes:async()=>{ try{ await filesApi("delete",{folder,sub,name:f.name}); toast("Paper removed"); }catch(e){ toast(e.message,"ti-alert-triangle"); } openFiles(id,sub); }}); });
+}
+
+/* ---------------- adding papers: name each one the ASD way ---------------- */
+function addPapersForm(id, list, sub){
+  const b=briefs[id]; if(!b) return;
+  const rows=list.map(f=>{ const L=guessLetter(f.name); return {f, L, desc:L==="N"?`Note - ${ddmmyyyy()}`:cleanDesc(f.name), ext:(f.name.match(/\.[^.\s]+$/)||[""])[0]}; });
+  const big=list.find(f=>f.size>95*1024*1024);
+  if(big){ toast(`${big.name} is over 95 MB — put it straight into the Dropbox folder instead`,"ti-alert-triangle"); return; }
+  const preview=r=>paperName(b,r.L,null,r.desc||"Document",r.ext);
+  openSheet(`<div class="sheet-head"><div><h3>Add ${rows.length} paper${rows.length>1?"s":""}</h3><div class="sub">${pad3(serialNum(b))} · ${esc(shortTitle(b))}</div></div><button class="x-btn"><span class="ti ti-x"></span></button></div>
+    <div class="sheet-body">
+      <div class="muted" style="font-size:12px;margin-bottom:10px">Each paper is named with the case serial: the letter says what it is, the number orders papers of that kind. Sub-numbers (.1, .2…) are added automatically.</div>
+      ${rows.map((r,i)=>`<div class="ap-row"><div class="ap-orig"><span class="ti ti-file"></span> ${esc(r.f.name)} · ${esc(fmtSize(r.f.size))}</div>
+        <div class="ap-grid"><select data-apl="${i}">${PAPER_LETTERS.map(([k,v])=>`<option value="${k}" ${r.L===k?"selected":""}>${k} — ${esc(v)}</option>`).join("")}</select>
+          <input data-apd="${i}" value="${esc(r.desc)}" placeholder="What it is — e.g. SLP paper book, Counter affidavit"></div>
+        <div class="ap-final" id="apf${i}">${esc(preview(r))}</div></div>`).join("")}
+      <div id="ap_msg" class="muted" style="font-size:12.5px;min-height:18px;margin-top:6px"></div>
+      <div class="row" style="gap:8px;margin-top:10px"><button class="btn" id="ap_go"><span class="ic ti ti-upload"></span>Add ${rows.length} paper${rows.length>1?"s":""}</button><button class="btn ghost" id="ap_cancel">Cancel</button></div>
+    </div>`);
+  const upd=i=>{ $("apf"+i).textContent=preview(rows[i]); };
+  document.querySelectorAll("[data-apl]").forEach(x=>x.onchange=()=>{ const i=+x.dataset.apl, r=rows[i]; const was=r.L; r.L=x.value;
+    if(r.L==="N"&&was!=="N"&&r.desc===cleanDesc(r.f.name)){ r.desc=`Note - ${ddmmyyyy()}`; document.querySelector(`[data-apd="${i}"]`).value=r.desc; }
+    upd(i); });
+  document.querySelectorAll("[data-apd]").forEach(x=>x.oninput=()=>{ const i=+x.dataset.apd; rows[i].desc=cleanDesc(x.value+".x"); upd(i); });
+  $("ap_cancel").onclick=()=>openFiles(id,sub);
+  $("ap_go").onclick=async()=>{
+    $("ap_go").disabled=true; $("ap_cancel").disabled=true;
+    let bb=briefs[id];
+    if(!bb.dropboxFolder){ const fold=caseFolderName(bb); await db.update("briefs/"+id,{dropboxFolder:fold,updatedAt:db.now()}); bb={...bb,dropboxFolder:fold}; }
+    const folder=bb.dropboxFolder; let ok=0;
+    for(let i=0;i<rows.length;i++){ const r=rows[i];
+      $("ap_msg").textContent=`Adding ${i+1} of ${rows.length} — ${r.f.name}…`;
+      try{
+        const cur=(await filesApi("list",{folder,sub})).files||[];
+        const plan=planNumber(bb,cur,r.L);
+        if(plan.rename) await filesApi("move",{folder,sub,name:plan.rename.from,toName:plan.rename.to});
+        await filesApi("upload",null,{folder,sub,name:paperName(bb,r.L,plan.sub,r.desc||"Document",r.ext),file:r.f});
+        ok++;
+      }catch(e){ toast(`${r.f.name}: ${e.message}`,"ti-alert-triangle"); }
+    }
+    if(ok) toast(`${ok} paper${ok>1?"s":""} added`,"ti-check");
+    openFiles(id,sub);
   };
 }
+
+/* ---------------- the serial list (Word), read privately in the browser ----------------
+   Owner: the list is sensitive. It is read HERE, on the admin's own device — nothing is
+   uploaded anywhere; only the serial numbers chosen on the matching screen are written onto
+   the briefs (and, if asked, the entries not in the app are added as disposed files).
+   Matching follows ASD's lesson: only an EXACT title match is pre-ticked; everything else
+   is the admin's choice. */
+async function readSerialList(file){
+  const buf=new Uint8Array(await file.arrayBuffer());
+  const raw=await _zipEntry(buf,"word/document.xml");
+  if(!raw) throw new Error("That doesn't look like a Word (.docx) file.");
+  const xml=new TextDecoder().decode(raw).replace(/&(?!(?:amp|lt|gt|quot|apos|#\d+|#x[0-9a-fA-F]+);)/g,"&amp;");
+  const doc=new DOMParser().parseFromString(xml,"application/xml");
+  const textOf=n=>{ let s=""; for(const t of n.getElementsByTagName("w:t")) s+=t.textContent; return s.replace(/\s+/g," ").trim(); };
+  const out=[], seen=new Set();
+  const push=(serial,title)=>{ const n=parseInt(serial,10); title=String(title||"").trim(); if(isNaN(n)||n<1||n>99999||title.length<3) return; out.push({serial:n,title,dup:seen.has(n)}); seen.add(n); };
+  for(const tr of doc.getElementsByTagName("w:tr")){
+    const cells=[...tr.childNodes].filter(x=>x.nodeName==="w:tc").map(textOf);
+    const si=cells.findIndex(c=>/^\(?\d{1,5}\)?[.)]?$/.test(c)); if(si<0) continue;
+    const title=cells.filter((c,i)=>i!==si && !/^\d{1,2}[.\/-]\d{1,2}[.\/-]\d{2,4}$/.test(c)).sort((a,z)=>z.length-a.length)[0];
+    push(cells[si].replace(/\D/g,""),title);
+  }
+  for(const p of doc.getElementsByTagName("w:p")){
+    let a=p.parentNode, inTable=false; while(a){ if(a.nodeName==="w:tc"){ inTable=true; break; } a=a.parentNode; }
+    if(inTable) continue;
+    const m=textOf(p).match(/^\(?(\d{1,5})\)?\s*[.)\-–:]?\s+(.{3,})$/); if(m) push(m[1],m[2]);
+  }
+  return out;
+}
+function serialImportForm(){
+  if(!isAdmin()) return;
+  openSheet(`<div class="sheet-head"><div><h3>Import the serial list</h3><div class="sub">Read on this device only — the file is not uploaded anywhere</div></div><button class="x-btn"><span class="ti ti-x"></span></button></div>
+    <div class="sheet-body">
+      <div class="notice" style="margin-bottom:12px"><span class="ti ti-lock"></span><div>The Word file stays on this device. The app reads it here, shows you each entry against the briefs, and saves <b>only the serial numbers you approve</b>.</div></div>
+      <label>Word list (.docx)</label><input type="file" id="sl_file" accept=".docx">
+      <div id="sl_out" style="margin-top:14px"></div>
+    </div>`);
+  $("sl_file").onchange=async e=>{ const f=e.target.files[0]; if(!f) return;
+    $("sl_out").innerHTML=`<div class="muted">Reading…</div>`;
+    try{ const entries=await readSerialList(f);
+      if(!entries.length){ $("sl_out").innerHTML=`<div class="notice warn"><span class="ti ti-alert-triangle"></span><div>No numbered entries found. The list needs each entry to start with its number (in its own table column, or as “12. Title”).</div></div>`; return; }
+      renderSerialMatch(entries); }
+    catch(err){ $("sl_out").innerHTML=`<div class="notice warn"><span class="ti ti-alert-triangle"></span><div>${esc(err.message)}</div></div>`; }
+  };
+}
+function renderSerialMatch(entries){
+  const cases=Object.values(briefs).filter(isCaseBrief);
+  const byNorm={}; cases.forEach(b=>{ const k=_normTitle(labelOf(b)); (byNorm[k]=byNorm[k]||[]).push(b); });
+  const opt=b=>`${serialNum(b)!=null?pad3(serialNum(b))+" · ":""}${labelOf(b)}`;
+  const optToId={}; cases.forEach(b=>{ optToId[opt(b)]=b.id; });
+  const rows=entries.map(en=>{
+    const cand=byNorm[_normTitle(en.title)]||[];
+    const holder=serialTakenBy(en.serial,null);
+    let pick=cand.length===1?cand[0]:null, st, tick=false;
+    if(en.dup){ st=["warn","number repeated in the list"]; pick=null; }
+    else if(pick&&serialNum(pick)===en.serial){ st=["mute","already numbered"]; }
+    else if(pick&&holder&&holder.id!==pick.id){ st=["warn",`${pad3(en.serial)} is already on “${labelOf(holder)}”`]; }
+    else if(pick&&serialNum(pick)!=null){ st=["warn",`brief has ${pad3(serialNum(pick))}`]; }
+    else if(pick){ st=["ok","exact title match"]; tick=true; }
+    else if(holder){ st=["mute",`on “${labelOf(holder)}”`]; }
+    else { st=["mute",cand.length>1?"several briefs have this title — pick one":"not in the app"]; }
+    return {...en, pickId:pick?pick.id:"", st, tick};
+  });
+  const nOk=rows.filter(r=>r.tick).length, nNone=rows.filter(r=>!r.pickId&&!serialTakenBy(r.serial,null)&&!r.dup).length;
+  $("sl_out").innerHTML=`<div style="font-size:13px;margin-bottom:8px"><b>${rows.length}</b> entries read · <b>${nOk}</b> matched exactly (ticked) · <b>${nNone}</b> not in the app</div>
+    <datalist id="sl_briefs">${cases.map(b=>`<option value="${esc(opt(b))}"></option>`).join("")}</datalist>
+    <div style="max-height:46vh;overflow:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)">
+    <table class="sl-table"><thead><tr><th></th><th>No.</th><th>In the list</th><th>Brief in the app</th></tr></thead><tbody>
+    ${rows.map((r,i)=>`<tr><td><input type="checkbox" data-slt="${i}" ${r.tick?"checked":""} ${r.dup?"disabled":""}></td>
+      <td class="mono"><b>${pad3(r.serial)}</b></td><td>${esc(r.title)}</td>
+      <td><input list="sl_briefs" data-slp="${i}" value="${esc(r.pickId?opt(briefs[r.pickId]):"")}" placeholder="— not in the app —" style="font-size:12.5px;padding:6px 8px">
+        <div style="margin-top:3px"><span class="sl-st ${r.st[0]}">${esc(r.st[1])}</span></div></td></tr>`).join("")}
+    </tbody></table></div>
+    <label class="chk-row" style="margin-top:12px"><input type="checkbox" id="sl_addmissing"> Also add the entries that aren't in the app, as disposed files (keeps the register complete — every chamber member will see them)</label>
+    <div class="row" style="gap:8px;margin-top:12px"><button class="btn" id="sl_apply"><span class="ic ti ti-check"></span>Apply</button></div>`;
+  document.querySelectorAll("[data-slp]").forEach(x=>x.onchange=()=>{ const r=rows[+x.dataset.slp]; r.pickId=optToId[x.value]||""; const t=document.querySelector(`[data-slt="${x.dataset.slp}"]`); if(t&&r.pickId) t.checked=true; });
+  document.querySelectorAll("[data-slt]").forEach(x=>x.onchange=()=>{ rows[+x.dataset.slt].tick=x.checked; });
+  $("sl_apply").onclick=()=>{
+    document.querySelectorAll("[data-slt]").forEach(x=>{ rows[+x.dataset.slt].tick=x.checked; });
+    const sets=rows.filter(r=>r.tick&&r.pickId);
+    const clash=sets.find(r=>{ const h=serialTakenBy(r.serial,r.pickId); return h&&!sets.some(o=>o.pickId===h.id); });
+    if(clash){ toast(`${pad3(clash.serial)} is already used by “${labelOf(serialTakenBy(clash.serial,clash.pickId))}” — untick it or fix that brief first`,"ti-alert-triangle"); return; }
+    const addMissing=$("sl_addmissing").checked;
+    const missing=addMissing?rows.filter(r=>!r.pickId&&!r.dup&&!serialTakenBy(r.serial,null)):[];
+    confirmAsk({title:"Apply the serial numbers?",confirmLabel:"Apply",
+      body:`${sets.length} brief${sets.length===1?"":"s"} will get ${sets.length===1?"its":"their"} serial number${missing.length?`, and ${missing.length} list entr${missing.length===1?"y":"ies"} will be added as disposed files`:""}. Serial numbers are fixed once given.`,
+      onYes:async()=>{
+        for(const r of sets) await db.update("briefs/"+r.pickId,{chamberNo:String(r.serial),updatedAt:db.now()});
+        for(const r of missing) await addBrief({caseTitle:r.title,chamberNo:String(r.serial),status:"disposed",fromSerialList:true,matterType:"",appearingFor:"",aor:"",
+          assignedTo:[],everAssigned:[],ackBy:[],declinedBy:[],assignHistory:[],detailsAwaited:false,createdBy:me.uid,createdAt:db.now(),updatedAt:db.now()});
+        toast(`Serial numbers saved — ${sets.length} updated${missing.length?`, ${missing.length} added`:""}`,"ti-check"); closeSheet(); renderActive();
+      }});
+  };
+}
+// Admin: give every remaining case brief without a serial the next numbers, oldest first.
+function numberRemainingForm(){
+  const left=Object.values(briefs).filter(b=>isCaseBrief(b)&&serialNum(b)==null)
+    .sort((a,z)=>((a.createdAt?._t??a.createdAt?.toMillis?.()??0)-(z.createdAt?._t??z.createdAt?.toMillis?.()??0)));
+  if(!left.length){ toast("Every brief already has a serial","ti-check"); return; }
+  const from=nextSerial();
+  confirmAsk({title:`Number ${left.length} brief${left.length>1?"s":""}?`,confirmLabel:"Give them numbers",
+    body:`They get ${pad3(from)}${left.length>1?` to ${pad3(from+left.length-1)}`:""}, oldest first. <b>If they are in your serial list, import the list first</b> — numbers are fixed once given.`,
+    onYes:async()=>{ for(const b of left){ await db.update("briefs/"+b.id,{chamberNo:String(takeSerial()),updatedAt:db.now()}); } toast("Numbers given","ti-hash"); renderActive(); }});
+}
+
 
 function openBrief(id){
   const b=briefs[id]; if(!b)return;
@@ -4631,7 +5088,7 @@ function openBrief(id){
     <div class="row" style="flex-wrap:wrap;gap:4px;margin-top:8px;align-items:center">${stKeys.slice(0,stIdx+1).map((k,i)=>`${i?'<span class="ti ti-chevron-right" style="font-size:11px;color:var(--ink-3)"></span>':''}<span class="chip ${STATUS[k].cls}" style="${k===b.status?'':'opacity:.55'}"><span class="dot"></span>${STATUS[k].label}</span>`).join("")}</div>`;
   openSheet(`<div class="sheet-head">
       <div><h3>${b.priority?'<span class="ti ti-flag-3" style="color:var(--urgent);font-size:16px;vertical-align:baseline"></span> ':''}${esc(labelOf(b))}</h3>
-      <div class="sub">${esc([b.chamberNo?`File #${b.chamberNo}`:'',b.diaryNo?`Dy. ${b.diaryNo}`:'',b.caseNo,b.matterType].filter(Boolean).join("  ·  "))}</div></div>
+      <div class="sub">${esc([serialNum(b)!=null?`Serial ${pad3(serialNum(b))}`:'',b.diaryNo?`Dy. ${b.diaryNo}`:'',b.caseNo,b.matterType].filter(Boolean).join("  ·  "))}</div></div>
       <button class="x-btn"><span class="ti ti-x"></span></button></div>
     <div class="sheet-body">
       <div style="font-size:13px;color:var(--ink-2)">${b.appearingFor?`For ${esc(b.appearingFor)}`:''}${b.aor?` · AoR ${esc(b.aor)}`:''}${b.nextDate?` · Next date ${fmtDateY(b.nextDate)}`:''}</div>
@@ -4712,7 +5169,7 @@ function openBrief(id){
   document.querySelectorAll("[data-adddir]").forEach(x=>x.onclick=()=>dirForm(id));
   if($("ob_status"))$("ob_status").onchange=async()=>{await db.update("briefs/"+id,{status:$("ob_status").value,updatedAt:db.now()});closeSheet();openBrief(id);};
   document.querySelectorAll("[data-editbrief]").forEach(x=>x.onclick=()=>{closeSheet();briefForm(b);});
-  document.querySelectorAll("[data-brnoteexport]").forEach(x=>x.onclick=()=>{ exportNotesDoc(labelOf(b), `Conference notes${b.chamberNo?` · File #${b.chamberNo}`:''}`, b.confNotes||[], "Conference notes - "+labelOf(b)); });
+  document.querySelectorAll("[data-brnoteexport]").forEach(x=>x.onclick=()=>{ exportNotesDoc(labelOf(b), `Conference notes${serialNum(b)!=null?` · Serial ${pad3(serialNum(b))}`:''}`, b.confNotes||[], "Conference notes - "+labelOf(b)); });
   document.querySelectorAll("[data-delbrief]").forEach(x=>x.onclick=()=>{ const ld=listingDatesOf(id);
     confirmAsk({title:"Delete this matter?",danger:true,confirmLabel:"Delete matter",
       body:`<b>${esc(labelOf(b))}</b> will be removed from the register for the whole chamber${ld.length?`, along with its ${ld.length} day-sheet listing${ld.length>1?'s':''} and any conference tied to it`:''}. Colleagues' credit for it is cleared.`,
@@ -4747,7 +5204,7 @@ function mergeDuplicateForm(dupId){
   const rowHtml=b=>{ const nd=listingDatesOf(b.id).length;
     return `<button class="mg-row" data-keep="${b.id}">
       <span class="mg-title">${esc(labelOf(b))}</span>
-      <span class="mg-sub muted">${esc([b.chamberNo?`File #${b.chamberNo}`:'',b.diaryNo?`Dy. ${b.diaryNo}`:'',b.caseNo,nd?`${nd} listing${nd>1?'s':''}`:''].filter(Boolean).join("  ·  "))||'no case number'}</span>
+      <span class="mg-sub muted">${esc([serialNum(b)!=null?`Serial ${pad3(serialNum(b))}`:'',b.diaryNo?`Dy. ${b.diaryNo}`:'',b.caseNo,nd?`${nd} listing${nd>1?'s':''}`:''].filter(Boolean).join("  ·  "))||'no case number'}</span>
     </button>`; };
   openSheet(`<div class="sheet-head"><div><h3>Merge duplicate</h3><div class="sub">${esc(labelOf(dup))}</div></div><button class="x-btn"><span class="ti ti-x"></span></button></div>
     <div class="sheet-body">
@@ -5337,6 +5794,7 @@ function renderRosterBody(){
    shared click binding
    ============================================================ */
 function bindClicks(root){
+  wireFilesBtns(root);
   root.querySelectorAll("[data-brief]").forEach(x=>x.onclick=e=>{e.stopPropagation();openBrief(x.dataset.brief);});
   root.querySelectorAll("[data-dstools]").forEach(x=>x.onclick=()=>{const el=$("dstools-"+x.dataset.dstools);if(el)el.classList.toggle("show");});
   root.querySelectorAll("[data-dsup]").forEach(x=>x.onclick=()=>dsMove(+x.dataset.dsup,-1));

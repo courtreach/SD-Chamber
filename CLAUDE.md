@@ -47,6 +47,64 @@ Dropbox is reachable, enforced by Dropbox itself) and **one folder per brief**.
   `sd-chamber-files` with KV + both secrets, and connected from the app. Verified from
   outside: home page, 401 without sign-in, CORS for the app origin, KV-backed callback guard.
 
+## Serial numbers, ASD-style register + Files screen (Oct 2026)
+
+Owner: "full redone of the brief register… learn from ASD… files button on all the briefs…
+all cases numbered serially and carry that serial for the files… presentation of the files
+learned from ASD… the day sheet should have a prominent files button against all the cases."
+
+- **Serial = `chamberNo`** (the field the register was already ordered by; no new field, no
+  rules change). `serialNum(b)`, `pad3`, `nextSerial()` = highest in use + 1 (plus a session
+  counter `_serialIssued` so a batch of creations in one tick can't share a number).
+  **Every brief is created through `addBrief(data)`**, which fills the next serial when blank
+  — 4 creation sites (syncRegister, dsForm f_save, Word import, briefForm). Legal-aid and
+  conference-credit briefs (`isCaseBrief` false) are NOT cases and get no serial.
+  `serialClashes()` → red-ish warning chips in the register; `serialTakenBy()` blocks saving
+  a brief with a serial already on another; a non-admin can't change a serial once given.
+- **Naming = the owner's ASD filing rules** (iCloud "Filing system notes for Claude Code"):
+  folder `<Short title> (NNN)` (`caseFolderName`, "vs" → "v", OneDrive/Dropbox-unsafe
+  characters stripped, ≤80 chars); papers `<L>NNN[.n] <Short title> - <what>.<ext>`,
+  L ∈ N note / L list of dates / S submissions / C compilation / F file received / D draft.
+  A lone paper of a letter has no sub-number; when a second arrives the first is RENAMED to
+  `.1` (gatekeeper `/api/move`, never overwrites) and the new one is `.2` (`planNumber`).
+  `brief.dropboxFolder` fixes the folder name at first upload; if title/serial later differ,
+  the Files screen offers **Rename folder** (manage roles). Papers are NOT renamed when a
+  title changes (they keep their names; `paperInfo` falls back to the full remainder).
+- **Files screen** `openFiles(briefId, sub)` (wide sheet, `.fv-*` CSS ported from ASD):
+  path crumbs, search with highlight, kind ISLANDS (count + latest date) + "Latest papers",
+  grouped list by letter when a kind is chosen, coloured file-type icons (W/PDF/IMG/X/FILE),
+  number badges, Open / Share (4-h link) / Remove (manage), older sub-folders browsable
+  (gatekeeper `sub`, ≤3 deep). Add papers → `addPapersForm`: per file a letter (auto F for
+  PDF/images, D for Word) + "what it is", live preview of the final name. No serial → notice
+  + "Give it serial NNN" (manage). `filesBtn(briefId)` + `wireFilesBtns` (called from
+  `bindClicks`) put a Files button on every register row/card, every day-sheet listing
+  (rail card first action + a "Papers" column in the desktop table), and the brief detail
+  (summary card "N papers · latest …" + big Open files).
+- **Register** `renderBriefs` rebuilt: header (files · active · next serial), warning chips
+  (N without a serial → filter; serial used twice), search (serial/title/diary/case/AoR),
+  filter chips with counts (Active/Listed/Mine/Urgent/Incomplete/No serial/Disposed/All),
+  newest serial first; table ≥1100px (Serial · Matter · Next hearing [day-sheet court/item
+  via `nextListingOf`] · Colleagues · Status · Papers), cards below (2-up on tablets).
+- **Serial list import** (admin, `serialImportForm`): the owner's Word list is SENSITIVE, so
+  it is read IN THE BROWSER (`readSerialList`: our own ZIP + WordML reader — every table row
+  with a number cell, plus "12. Title" paragraphs; dates/header rows skipped) and never
+  uploaded; only approved serials are written. Matching = ASD lesson: only an EXACT
+  `_normTitle` match to a single brief is pre-ticked; repeated numbers locked; a brief that
+  already has another serial, or a number already on another brief, is flagged unticked;
+  the rest picked from a shared datalist. Optional "add entries not in the app as disposed
+  files" (`fromSerialList:true`). **Number the rest** (admin) gives remaining briefs the next
+  numbers oldest-first — warns to import the list first.
+- **Gatekeeper** gained `/api/move` (file or whole-folder rename, manage, `autorename:false`
+  so it refuses rather than overwrites) and `sub` paths (`X-Sub` on upload) + `dirs` in list.
+  51/51 browser checks with real RS256 tokens. **Needs re-pasting into Cloudflare** — until
+  then a second paper of the same letter fails (old worker has no /move).
+- Tested in demo (desktop 1024/1440 + 375 px): register, import with a generated test .docx
+  (header skipped, table + paragraph entries, exact-match ticks, duplicate lock, clash flags,
+  apply + add-missing → next serial 106), Files add/renumber (F101 → F101.1 + F101.2), batch
+  of 4, no-serial → give serial, folder rename after a title change, colleague = open/share
+  only, day-sheet buttons. test.html NOT regenerated this time (it is publicly served and
+  leaks colleagues' names — owner's decision pending).
+
 ## Notes from court + Senior's calendar (Sep 2026)
 
 - **Notes from court** (`courtNoteForm` / `courtNotesPanel` / `wireCourtNotes`, block
