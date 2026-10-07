@@ -47,6 +47,19 @@ Dropbox is reachable, enforced by Dropbox itself) and **one folder per brief**.
   `sd-chamber-files` with KV + both secrets, and connected from the app. Verified from
   outside: home page, 401 without sign-in, CORS for the app origin, KV-backed callback guard.
 
+## Phone bar by role · Files tab (Oct 2026)
+
+- Bottom bar on phones (`mobileTabs()`, applied in `paintChrome`): **Staff (clerk/pa)** —
+  Calendar · Day sheet · Files; **colleagues** — Calendar · Day sheet · Briefs · Files;
+  admin/Senior unchanged (Calendar · Board · Day · Briefs · More). A phone user on a tab
+  outside their set is sent to the Calendar. Desktop sidebar unchanged.
+- **Files tab** (`tab-files`, `renderFilesHome`): search any case, or pick from today's day
+  sheet / (colleagues) My cases / recently updated. Each row: **Add** (a `<label>` around a
+  file input so the phone's picker opens on the tap itself → `openFiles` then
+  `addPapersForm`) and **Share** (opens the full-page Files, where each paper has Share).
+- Admin "Download case list" (register) exports the register as JSON — used to match the
+  owner's OneDrive folders; 37 cases' papers were copied into Dropbox from it (see memory).
+
 ## Files as a full page · minimal calendar · start-up safety net (Oct 2026)
 
 - **Files is a page, not a pop-up**: `renderFilesSheet` still uses openSheet but marks the

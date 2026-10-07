@@ -1156,7 +1156,8 @@ body.demo .topbar{top:34px}
 .cal-dot.lg{background:#4e7a5e}.cal-dot.ly{background:#c99a2e}.cal-dot.lr{background:#b4472e}
 @media (max-width:900px){ .cal-top .cal-tag{display:none} .cal-cell{height:76px} }
 @media (max-width:600px){
-  .cal-cell{height:64px;padding:6px 5px;border-radius:10px}
+  .cal-cell{height:78px;padding:7px 5px 6px;border-radius:10px}
+  .cal-num{font-size:17px}
   .cal-l .w{display:none}
   .cal-l{font-size:10.5px;gap:3px}.cal-l b{font-size:11px}
   .cal-cell.today .cal-num{min-width:22px;height:22px;font-size:12.5px}
@@ -1215,6 +1216,34 @@ body.demo .topbar{top:34px}
 .fv-backbtn{align-self:flex-start;display:inline-flex;align-items:center;gap:6px;background:none;border:none;padding:6px 0;font-family:inherit;font-size:14px;font-weight:600;color:var(--accent-ink);cursor:pointer}
 .fv-backbtn .ti{font-size:18px}
 .sheet-full .fv-titlebox h3{font-size:22px}
+
+/* --- phone: bottom bar by role, Files screen --- */
+@media(max-width:860px){
+  #mobileNav button.hidden{display:none}
+  #mobileNav[data-n="3"] button,#mobileNav[data-n="4"] button{font-size:11.5px;gap:3px;padding:6px 2px}
+  #mobileNav[data-n="3"] button .ic,#mobileNav[data-n="4"] button .ic{font-size:24px}
+}
+.fh-wrap{max-width:760px}
+.fh-search{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line-2);border-radius:12px;padding:0 12px;box-shadow:var(--sh-1)}
+.fh-search .ti{color:var(--ink-3);font-size:18px}
+.fh-search input{border:none;background:none;box-shadow:none;padding:13px 0;font-size:16px;flex:1;min-width:0;outline:none}
+.fh-hint{font-size:12.5px;color:var(--ink-3);margin:10px 2px 4px;line-height:1.45}
+.fh-sec{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);font-weight:700;margin:18px 2px 8px;display:flex;gap:7px;align-items:center}
+.fh-sec b{background:var(--surface-2);border-radius:99px;padding:1px 8px;letter-spacing:0;color:var(--ink-2)}
+.fh-list{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.fh-row{display:flex;align-items:center;gap:8px;padding:10px 10px 10px 0;border-bottom:1px solid var(--line)}
+.fh-row:last-child{border-bottom:none}
+.fh-main{flex:1;min-width:0;display:flex;align-items:center;gap:10px;background:none;border:none;text-align:left;padding:0 0 0 10px;font-family:inherit;cursor:pointer}
+.fh-ser{font-family:var(--mono);font-weight:700;font-size:13px;color:var(--accent-ink);background:var(--accent-soft);border-radius:7px;padding:3px 6px;flex-shrink:0}
+.fh-txt{display:flex;flex-direction:column;min-width:0}
+.fh-t{font-size:14px;font-weight:600;color:var(--ink);line-height:1.3;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.fh-m{font-size:11.5px;color:var(--ink-3);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fh-acts{display:flex;gap:6px;flex-shrink:0}
+.fh-add,.fh-open{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-width:56px;padding:7px 8px;border-radius:10px;font-size:11.5px;font-weight:600;cursor:pointer;font-family:inherit}
+.fh-add{background:var(--accent);color:#fff;border:none}
+.fh-open{background:var(--surface);color:var(--ink-2);border:1px solid var(--line-2)}
+.fh-add .ti,.fh-open .ti{font-size:19px}
+.fh-empty{font-size:13px;color:var(--ink-3);padding:14px;border:1px dashed var(--line-2);border-radius:12px;text-align:center}
 </style>
 </head>
 <body>
@@ -1319,6 +1348,7 @@ body.demo .topbar{top:34px}
       <section id="tab-briefs" class="hidden"></section>
       <section id="tab-leave" class="hidden"></section>
       <section id="tab-team" class="hidden"></section>
+      <section id="tab-files" class="hidden"></section>
     </div>
   </div>
   <nav class="mobile-nav" id="mobileNav">
@@ -1326,6 +1356,7 @@ body.demo .topbar{top:34px}
     <button data-tab="board"><span class="ic ti ti-layout-grid"></span>Board</button>
     <button data-tab="today"><span class="ic ti ti-list-check"></span>Day</button>
     <button data-tab="briefs"><span class="ic ti ti-folders"></span>Briefs</button>
+    <button data-tab="files"><span class="ic ti ti-folder-up"></span>Files</button>
     <button id="navMore"><span class="ic ti ti-dots-circle-horizontal"></span>More</button>
   </nav>
 </div>
@@ -1870,7 +1901,21 @@ function paintChrome(){
   const boardLabel=me.role==="junior"?"My work":"Work board";
   document.querySelectorAll('#sbNav button[data-tab="board"]').forEach(b=>{ const s=b.querySelector('span:last-child')||b.lastChild; b.innerHTML=`<span class="ic ti ti-layout-grid"></span>${boardLabel}`; });
   document.querySelectorAll('#mobileNav button[data-tab="board"]').forEach(b=>{ b.innerHTML=`<span class="ic ti ti-layout-grid"></span>${me.role==="junior"?"My work":"Board"}`; });
+  // The phone's bottom bar, by role (owner, Oct 2026): Staff — Calendar · Day sheet · Files;
+  // colleagues — Calendar · Day sheet · Briefs · Files; admin/Senior keep the full bar + More.
+  const set=mobileTabs();
+  document.querySelectorAll("#mobileNav button").forEach(b=>{ const k=b.dataset.tab||"more"; b.classList.toggle("hidden",!set.includes(k)); });
+  $("mobileNav").dataset.n=set.length;
+  document.querySelectorAll('#mobileNav button[data-tab="today"]').forEach(b=>{ b.innerHTML=`<span class="ic ti ti-list-check"></span>${set.length<=4?"Day sheet":"Day"}`; });
+  if(isPhone()&&!set.includes(curTab)&&curTab!=="files") selectTab("cal");
 }
+function mobileTabs(){
+  if(!me) return ["cal"];
+  if(me.role==="clerk"||me.role==="pa") return ["cal","today","files"];
+  if(me.role==="junior") return ["cal","today","briefs","files"];
+  return ["cal","board","today","briefs","more"];
+}
+const isPhone=()=>window.matchMedia&&window.matchMedia("(max-width:860px)").matches&&!document.body.classList.contains("force-desktop");
 
 /* ---- tab routing ---- */
 let curTab="cal";
@@ -1883,12 +1928,13 @@ const TITLES={cal:["Calendar","Court days, holidays and the chamber's diary"],
   now:["Conference tracking","Live conference status, timers and notes"],
   board:["Work board","Distribution and workload across the chamber"],
   today:["Day sheet",""], briefs:["Briefs","The chamber's matter register"],
-  leave:["Leave","Chamber leave — logged openly for everyone"], team:["Chamber","Workload, roster, people and availability"]};
+  leave:["Leave","Chamber leave — logged openly for everyone"], team:["Chamber","Workload, roster, people and availability"],
+  files:["Files","Add or share a case's papers"]};
 document.querySelectorAll("#sbNav button, #mobileNav button").forEach(b=>{ if(b.dataset.tab) b.onclick=()=>selectTab(b.dataset.tab); });   // navMore keeps its own handler
 function selectTab(t){ curTab=t;
   document.querySelectorAll("#sbNav button, #mobileNav button").forEach(x=>x.classList.toggle("active",x.dataset.tab===t));
   if($("navMore")) $("navMore").classList.toggle("active",["now","leave","team"].includes(t));   // More holds these (mobile)
-  ["cal","now","board","today","briefs","leave","team"].forEach(s=>$("tab-"+s).classList.toggle("hidden",s!==t));
+  ["cal","now","board","today","briefs","leave","team","files"].forEach(s=>$("tab-"+s).classList.toggle("hidden",s!==t));
   $("pageTitle").textContent=TITLES[t][0]; $("pageSub").textContent=TITLES[t][1];
   if((t==="today"||t==="cal")&&me&&courtUpdatesStale()) loadCourtUpdates();
   if(t!=="now") stopConfTimer();
@@ -1902,7 +1948,7 @@ const _raf=(typeof requestAnimationFrame==="function")?requestAnimationFrame:(f=
 function renderActive(){ if(_rafPending)return; _rafPending=_raf(()=>{ _rafPending=0; renderActiveNow(); }); }
 function renderActiveNow(){ if(!me)return;
   if(curTab==="cal")renderCal(); else if(curTab==="now")renderNow(); else if(curTab==="board")renderBoard(); else if(curTab==="today")renderToday();
-  else if(curTab==="briefs")renderBriefs(); else if(curTab==="leave")renderLeave(); else if(curTab==="team")renderTeam(); }
+  else if(curTab==="briefs")renderBriefs(); else if(curTab==="leave")renderLeave(); else if(curTab==="team")renderTeam(); else if(curTab==="files")renderFilesHome(); }
 
 /* ---- mobile sidebar ---- */
 $("hamburger").onclick=()=>{ $("sidebar").classList.add("open"); $("scrim").classList.add("show"); };
@@ -5444,6 +5490,49 @@ function wireFilesBtns(root){
     _fvRet=x.closest("#modalRoot")?null:{id:x.dataset.files, label:"Back", fn:closeSheet};
     if(!x.dataset.files){ toast("This listing isn't linked to a brief yet — open it and link or add the brief","ti-info-circle"); return; }
     openFiles(x.dataset.files); });
+}
+/* ===== Files (phone tab, owner Oct 2026): "a button to add or share files" =====
+   Pick the case — today's listings first, then your own cases, or search — then either
+   ADD papers straight from the phone (photos, scans, PDFs, Word: the file picker opens at once)
+   or OPEN its folder, where every paper has Preview / Open / Share. */
+let _fhQ="";
+function renderFilesHome(){
+  $("topbarAction").innerHTML="";
+  const t=todayISO(), cases=Object.values(briefs).filter(isCaseBrief);
+  const q=_fhQ.trim().toLowerCase(), qd=q.replace(/\D/g,"");
+  const row=(b,meta)=>{ const n=serialNum(b);
+    return `<div class="fh-row">
+      <button class="fh-main" data-files="${b.id}"><span class="fh-ser">${n!=null?pad3(n):"—"}</span><span class="fh-txt"><span class="fh-t">${esc(labelOf(b))}</span>${meta?`<span class="fh-m">${meta}</span>`:""}</span></button>
+      <div class="fh-acts"><label class="fh-add" title="Add papers from this phone"><span class="ti ti-upload"></span>Add<input type="file" multiple hidden data-fhadd="${b.id}"></label>
+        <button class="fh-open" data-files="${b.id}" title="Open the folder — preview or share a paper"><span class="ti ti-share"></span>Share</button></div>
+    </div>`; };
+  const nums=b=>[b.caseNo, b.diaryNo?"Dy. "+b.diaryNo:""].filter(Boolean).map(esc).join(" · ");
+  let body="";
+  if(q){
+    const hits=cases.filter(b=>{ const n=serialNum(b); if(n!=null&&(String(n)===q||pad3(n)===q)) return true;
+      return labelOf(b).toLowerCase().includes(q)||(b.caseNo||"").toLowerCase().includes(q)||(qd.length>=3&&((b.diaryNo||"").replace(/\D/g,"").includes(qd)||(b.caseNo||"").replace(/\D/g,"").includes(qd))); })
+      .sort((a,z)=>(a.status==="disposed")-(z.status==="disposed")||(serialNum(z)??0)-(serialNum(a)??0)).slice(0,40);
+    body=`<div class="fh-sec">Search results <b>${hits.length}</b></div>${hits.length?`<div class="fh-list">${hits.map(b=>row(b,nums(b))).join("")}</div>`:`<div class="fh-empty">No case matches “${esc(_fhQ)}”.</div>`}`;
+  } else {
+    const today=dayItems(t).filter(x=>x.b&&!x.next);
+    const mine=me.role==="junior"?cases.filter(b=>idIn(b.assignedTo,me.uid)&&b.status!=="disposed"&&!today.some(x=>x.b.id===b.id)).sort((a,z)=>(serialNum(z)??0)-(serialNum(a)??0)):[];
+    const shown=new Set([...today.map(x=>x.b.id),...mine.map(b=>b.id)]);
+    const recent=cases.filter(b=>!shown.has(b.id)&&b.status!=="disposed").sort((a,z)=>(_ms(z.updatedAt)||0)-(_ms(a.updatedAt)||0)).slice(0,12);
+    body=`<div class="fh-sec">On today's day sheet <b>${today.length}</b></div>
+      ${today.length?`<div class="fh-list">${today.map(x=>row(x.b,[x.e?.courtNo?`Ct ${esc(x.e.courtNo)}${x.e.itemNo?` · Item ${esc(x.e.itemNo)}`:""}`:"",nums(x.b)].filter(Boolean).join(" · "))).join("")}</div>`:`<div class="fh-empty">Nothing listed today.</div>`}
+      ${me.role==="junior"?`<div class="fh-sec">My cases <b>${mine.length}</b></div>${mine.length?`<div class="fh-list">${mine.map(b=>row(b,nums(b))).join("")}</div>`:`<div class="fh-empty">No other cases assigned to you.</div>`}`:""}
+      <div class="fh-sec">Recently updated</div><div class="fh-list">${recent.map(b=>row(b,nums(b))).join("")}</div>`;
+  }
+  $("tab-files").innerHTML=`<div class="fh-wrap">
+    <div class="fh-search"><span class="ti ti-search"></span><input id="fhQ" type="search" placeholder="Find the case — title, serial, diary or case no." value="${esc(_fhQ)}" autocomplete="off"></div>
+    <div class="fh-hint"><b>Add</b> puts papers from this phone (photos, scans, PDFs, Word) into the case folder. <b>Share</b> opens the folder — tap Share on any paper to send it.</div>
+    ${body}</div>`;
+  $("fhQ").oninput=e=>{ _fhQ=e.target.value; renderFilesHome(); const i=$("fhQ"); i.focus(); i.setSelectionRange(i.value.length,i.value.length); };
+  $("tab-files").querySelectorAll("[data-files]").forEach(x=>x.onclick=e=>{ e.stopPropagation(); _fvRet={id:x.dataset.files,label:"Back",fn:closeSheet}; openFiles(x.dataset.files); });
+  $("tab-files").querySelectorAll("[data-fhadd]").forEach(inp=>inp.onchange=async e=>{ const id=inp.dataset.fhadd, list=[...e.target.files]; inp.value=""; if(!list.length) return;
+    _fvRet={id,label:"Back",fn:closeSheet}; await openFiles(id);
+    if(!canEditPapers(_fv.st)){ toast(_fv.st&&_fv.st.unreachable?"Files aren't reachable right now":"You can't add papers yet — ask the admin","ti-alert-triangle"); return; }
+    addPapersForm(id,list,""); });
 }
 async function openFiles(id, sub){
   const b=briefs[id]||VIRTUAL_FOLDERS[id]; if(!b) return;
