@@ -372,7 +372,30 @@ label{display:block;font-size:11.5px;font-weight:500;color:var(--ink-2);letter-s
 .tbtn{background:none;border:1px solid transparent;border-radius:6px;padding:5px 9px;font-size:12px;color:var(--ink-2);display:inline-flex;align-items:center;gap:5px;transition:background .1s,border-color .1s}
 .tbtn:hover{background:var(--surface-2);border-color:var(--line)}
 .tbtn .ic{font-size:14px}
-.tbtn.done-btn{color:var(--ok)}
+.ds-act{display:inline-flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--line-2);border-radius:8px;padding:9px 14px;font-size:13.5px;font-weight:500;color:var(--ink-2);cursor:pointer;font-family:inherit;white-space:nowrap}
+.ds-act .ic{font-size:16px}
+.ds-act:hover{background:var(--surface-2)}
+.ds-act.del{color:var(--danger,#b42318)}
+.tact-in{display:flex;flex-direction:column;gap:6px;align-items:stretch}.tact-in .ds-act{justify-content:flex-start}
+.rail-actions:has(.ds-act){display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.rail-actions .ds-act,.rail-actions .btn-files.big{justify-content:center;padding:10px 6px}
+.ds-open{cursor:pointer}.ds-open:hover{text-decoration:underline;text-decoration-color:var(--line-2)}
+.rg-lst{font-size:12.5px;line-height:1.35}
+.lst-up{display:flex;flex-wrap:wrap;gap:2px 8px;align-items:baseline;color:var(--ink);margin-bottom:3px}
+.lst-up b{font-weight:600;white-space:nowrap}
+.lst-ci{display:inline-block;font-size:11px;font-weight:600;color:var(--s-listed);background:var(--s-listed-bg);border-radius:6px;padding:1px 7px;white-space:nowrap}
+.lst-h{font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);margin:5px 0 3px}
+.lst-pasts,.lst-more{display:flex;flex-wrap:wrap;gap:4px}
+.lst-more.hidden{display:none}
+.lst-past{font-size:11.5px;color:var(--ink-2);background:var(--surface-2);border:1px solid var(--line);border-radius:6px;padding:1px 6px;white-space:nowrap}
+.lst-exp{font-size:11.5px;color:var(--accent);background:none;border:none;padding:1px 4px;cursor:pointer;font-family:inherit;font-weight:600}
+.rg-card-lst{margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
+.conf-join{align-self:flex-start;width:max-content;display:inline-flex;align-items:center;gap:6px;margin-top:6px;background:#1a73e8;color:#fff;border-radius:8px;padding:6px 12px;font-size:12.5px;font-weight:600;text-decoration:none;white-space:nowrap}
+.conf-join:hover{opacity:.92}.conf-join.big{margin-top:0;padding:9px 16px;font-size:14px}
+.conf-video{margin:10px 0;padding:10px;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+.conf-video .conf-updates-h{display:flex;align-items:center;gap:5px}
+.conf-video-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.conf-video-url{flex:1;min-width:120px;font-size:12px;color:var(--ink-3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .tbtn.icon-only{padding:5px 7px}
 .rail-ext{margin-left:auto}
 
@@ -1481,7 +1504,7 @@ let live={};
 // per-conference live status: confstatus/{confKey}={date,time,label,onNow,endEst,
 // endAt,notes:[{text,by,at}],by,at} — broadcast to all so colleagues see whether a
 // conference is on, how long it may run, and the notes taken during it.
-let confStatus={};
+let confStatus={}, _editVideo=null;
 // bumped whenever users / briefs / daysheets change — invalidates the derived
 // caches below (listing scans) so a render never rescans stale, and repeated
 // look-ups within one render reuse the result instead of re-walking every sheet.
@@ -1498,14 +1521,6 @@ let approvals={};
 let courtUpdates=null, courtUpdatesAt=0;
 const COURT_UPDATES_STALE=10*60e3;   // re-fetch if older than 10 minutes
 const CAUSELIST_TYPES=["Miscellaneous","Regular","Chamber","Single Judge","Registrar","Curative & Review"];
-// --- Word-causelist import (owner Jul 2026) --------------------------------
-// Read the clerk's own daily-causelist Word (.docx) and lift each Ct-x#y matter
-// with its briefing counsel, chamber colleague(s) and conference time. Everything
-// for it lives in ONE isolated block (search "WORD-CAUSELIST IMPORT") plus this
-// flag and one button in renderToday — so it fully regresses to the prior state by
-// setting WORD_IMPORT=false (button vanishes; no data-model change) or deleting the
-// block. Nothing else in the app depends on it.
-const WORD_IMPORT = true;
 // Suggestions for the briefing-counsel field (a datalist — Staff can still type
 // any AoR / individual advocate). Firms that brief at the SC, ordered roughly.
 const LAW_FIRMS=["Karanjawala & Co.","AZB & Partners","Cyril Amarchand Mangaldas",
@@ -2546,6 +2561,16 @@ function renderNow(){
   wireFilesBtns($("tab-now"));
   if(document.querySelector("#tab-now [data-since]")) _confTimerId=setInterval(_tickConfTimers,1000);
 }
+// A video-call link on a conference (Zoom / Meet / Teams …) — pasted once by whoever runs it,
+// joined by anyone with one tap. Stored on confstatus/{key}.video, which every member may write.
+function videoUrlFrom(txt){
+  let m=String(txt||"").match(/https?:\/\/[^\s<>"']+/i); let u=m?m[0]:null;
+  if(!u){ const d=String(txt||"").trim().match(/^[a-z0-9-]+(\.[a-z0-9-]+)+\/[^\s]*$/i); if(d) u="https://"+d[0]; }
+  if(!u) return null; u=u.replace(/[).,;]+$/,"");
+  try{ const x=new URL(u); return /^https?:$/.test(x.protocol)?x.href:null; }catch(e){ return null; }
+}
+function videoKind(u){ const h=(()=>{try{return new URL(u).hostname;}catch(e){return "";}})();
+  return /zoom\.us$/.test(h)?"Zoom":/meet\.google\.com$/.test(h)?"Google Meet":/teams\.(microsoft|live)\.com$/.test(h)?"Teams":/webex\.com$/.test(h)?"Webex":/meet\.jit\.si$/.test(h)?"Jitsi":"video call"; }
 function confSectionHtml(){
   const confs=conferencesOn(todayISO());
   const d=new Date(), nowMin=d.getHours()*60+d.getMinutes();
@@ -2591,6 +2616,7 @@ function confSectionHtml(){
         <div class="conf-main">
           <div class="conf-line1"><span class="conf-t mono">${esc(fmtConfTime(c.time)||"—")}</span><span class="conf-name">${esc(c.label||"—")}</span>${(infer&&idle)?`<span class="conf-tag maybe">likely now</span>`:""}</div>
           ${c.title?`<div class="conf-sub">${esc(c.title)}</div>`:""}
+          ${st.video?.url?`<a class="conf-join" href="${esc(st.video.url)}" target="_blank" rel="noopener"><span class="ic ti ti-video"></span>Join ${esc(videoKind(st.video.url))}</a>`:""}
           ${started?`<div class="conf-meta"><span class="ic ti ti-clock-play"></span>Started ${esc(fmtClock(started))}${ended?` · ended ${esc(fmtClock(st.endedAt))} · total <b>${esc(fmtElapsed(elapsed))}</b>`:paused?" · paused":""}</div>`:""}
           ${statusPop}${asksPop}
         </div>
@@ -2599,6 +2625,11 @@ function confSectionHtml(){
       </div>
       <div class="conf-body${open?"":" hidden"}">
         ${whoNames.length?`<div class="conf-who"><span class="ic ti ti-user"></span>${esc(whoNames.join(", "))}</div>`:(c.isManual?`<div class="conf-who"><span class="ic ti ti-user"></span>Chamber conference</div>`:"")}
+        ${canEdit?`<div class="conf-video">
+          <div class="conf-updates-h"><span class="ic ti ti-video"></span> Video conference link</div>
+          ${st.video?.url&&_editVideo!==c.key?`<div class="conf-video-row"><a class="conf-join big" href="${esc(st.video.url)}" target="_blank" rel="noopener"><span class="ic ti ti-video"></span>Join ${esc(videoKind(st.video.url))}</a><span class="conf-video-url" title="${esc(st.video.url)}">${esc(st.video.url.replace(/^https?:\/\//,""))}</span><button class="tbtn sm" data-vidcopy="${esc(c.key)}"><span class="ic ti ti-copy"></span>Copy</button><button class="tbtn sm" data-videdit="${esc(c.key)}"><span class="ic ti ti-pencil"></span>Change</button><button class="tbtn sm" data-viddel="${esc(c.key)}"><span class="ic ti ti-x"></span>Remove</button></div>`
+            :`<div class="conf-inrow"><input type="text" inputmode="url" autocomplete="off" placeholder="Paste the Zoom / Google Meet / Teams link (or the whole invite)" data-vidin="${esc(c.key)}" value="${esc(st.video?.url||"")}"><button class="tbtn sm go" data-vidsave="${esc(c.key)}"><span class="ic ti ti-link"></span>Add link</button></div>`}
+        </div>`:""}
         <div class="conf-updates">
           <div class="conf-updates-h">${canEdit?"Post an update or estimate":"Ask for a status"}</div>
           <div class="conf-inrow">${canEdit?`<input type="text" placeholder="e.g. ~20 min more" data-statusin="${esc(c.key)}"><button class="tbtn sm go" data-statusbtn="${esc(c.key)}">Post</button>`:`<input type="text" placeholder="Ask the attending colleague…" data-askin="${esc(c.key)}"><button class="tbtn sm" data-askbtn="${esc(c.key)}">Ask</button>`}</div>
@@ -2628,7 +2659,18 @@ function wireConf(){
   const findC=k=>conferencesOn(todayISO()).find(z=>z.key===k);
   const base=k=>({...(()=>{const c=findC(k);return{date:todayISO(),time:c?.time||"",label:c?.label||"",owners:c?.jrs||[]};})()});
   const cur=k=>confStatus[k]||{};
-  T("[data-conftoggle]").forEach(x=>x.onclick=e=>{ if(e.target.closest("button,input,textarea"))return; const k=x.dataset.conftoggle; nowConfOpen.has(k)?nowConfOpen.delete(k):nowConfOpen.add(k); renderNow(); });
+  // video link: add / change / remove / copy
+  T("[data-vidsave]").forEach(x=>x.onclick=async()=>{ const k=x.dataset.vidsave, inp=document.querySelector(`#tab-now [data-vidin="${k}"]`);
+    const url=videoUrlFrom(inp?.value); if(!url){ toast("That doesn't look like a meeting link — paste the https://… link","ti-alert-triangle"); inp?.focus(); return; }
+    _editVideo=null; nowConfOpen.add(k);
+    await db.set("confstatus/"+k,{...base(k),video:{url,by:me.uid,at:Date.now()}},true); toast(`${videoKind(url)} link added — tap Join to enter`,"ti-video"); });
+  // a pasted Zoom/Teams invite is several lines; a one-line box would glue them together — keep just the link
+  T("[data-vidin]").forEach(inp=>inp.onpaste=e=>{ const t=(e.clipboardData||window.clipboardData)?.getData("text"); if(!t) return; e.preventDefault(); inp.value=videoUrlFrom(t)||t.replace(/\s+/g," ").trim(); });
+  T("[data-vidin]").forEach(inp=>inp.onkeydown=e=>{ if(e.key==="Enter"){ e.preventDefault(); document.querySelector(`#tab-now [data-vidsave="${inp.dataset.vidin}"]`)?.click(); } });
+  T("[data-videdit]").forEach(x=>x.onclick=()=>{ _editVideo=x.dataset.videdit; renderNow(); document.querySelector(`#tab-now [data-vidin="${x.dataset.videdit}"]`)?.select(); });
+  T("[data-viddel]").forEach(x=>x.onclick=async()=>{ _editVideo=null; await db.set("confstatus/"+x.dataset.viddel,{video:null},true); toast("Link removed"); });
+  T("[data-vidcopy]").forEach(x=>x.onclick=async()=>{ const u=cur(x.dataset.vidcopy).video?.url; if(!u) return; try{ await navigator.clipboard.writeText(u); toast("Link copied","ti-copy"); }catch(e){ toast(u); } });
+  T("[data-conftoggle]").forEach(x=>x.onclick=e=>{ if(e.target.closest("a,button,input,textarea"))return; const k=x.dataset.conftoggle; nowConfOpen.has(k)?nowConfOpen.delete(k):nowConfOpen.add(k); renderNow(); });
   // Start / Resume
   T("[data-confstart]").forEach(x=>x.onclick=async()=>{ const k=x.dataset.confstart, s=cur(k); nowConfOpen.add(k);
     if(s.state==="paused"){ await db.set("confstatus/"+k,{state:"running",runningSince:Date.now(),by:me.uid,at:Date.now()},true); toast("Resumed — timer running","ti-broadcast"); }
@@ -2750,7 +2792,7 @@ const isPartial=iso=>{ for(const r of (vacation.ranges||[])){ if(iso>=r[0]&&iso<
 function renderCal(){
   // Staff (both of them) get the two things they actually feed here: a note from the
   // court, and the Senior's own diary. Admin keeps the once-a-year calendar tools.
-  $("topbarAction").innerHTML = (canManage()? `<button class="btn ghost sm" id="calNote"><span class="ic ti ti-message-2-share"></span>Note for office</button> <button class="btn ghost sm" id="calSenior"><span class="ic ti ti-user-off"></span>Senior's calendar</button> `:"")
+  $("topbarAction").innerHTML = (canManage()? `<button class="btn ghost sm" id="calSenior"><span class="ic ti ti-user-off"></span>Senior's calendar</button> `:"")
     + (canAdmin()? `<button class="btn ghost sm" id="calImport"><span class="ic ti ti-calendar-plus"></span>Import SC calendar</button> <button class="btn ghost sm" id="calRange"><span class="ic ti ti-beach"></span>Mark holidays</button>`:"");
   const [y,m]=calMonth.split("-").map(Number);
   const first=new Date(y,m-1,1);
@@ -2782,7 +2824,6 @@ function renderCal(){
     // one calm neutral mute for any non-working day; a thin left accent marks WHICH kind.
     const kind=hol?'day-hol':part?'day-vac':wknd?'day-off':'';
     const senOff=seniorOff(iso);
-    const toEnter=canManage()?openNotesOn(iso).length:0;   // chits from court still to be entered
     cells.push(`<button class="cal-cell ${senOff?'sen-away':kind} ${iso===today?'today':''}" data-cald="${iso}">
       <div class="cal-top"><span class="cal-num">${d}</span>${senOff?`<span class="cal-sen ti ti-user-off" title="Senior not available${seniorAvail[iso]?' — '+esc(seniorAvail[iso]):''}"></span>`:''}</div>
       ${senOff?`<div class="cal-tag t-sen" title="Senior not available${seniorAvail[iso]?' — '+esc(seniorAvail[iso]):''}">Senior away</div>`:hol?`<div class="cal-tag t-hol" title="${esc(holidays[iso])}">${esc(holidays[iso])}</div>`:part?`<div class="cal-tag t-vac" title="${esc(part)}">Vacation</div>`:''}
@@ -2790,12 +2831,11 @@ function renderCal(){
         ${load?`<span class="cal-load"><span class="ld ${loadCls}"></span>${load}</span>`:''}
         ${me.role==="junior"&&mine?`<span class="cal-chip mine">${mine} mine</span>`:''}
         ${conf?`<span class="cal-chip conf">${conf}</span>`:''}
-        ${toEnter?`<span class="cal-chip note" title="From court — still to be entered">${toEnter} to enter</span>`:''}
       </div>
     </button>`);
   }
   const monthName=first.toLocaleDateString('en-IN',{month:'long',year:'numeric'});
-  $("tab-cal").innerHTML=(canManage()?courtNotesPanel(null):"")+`<div class="cal-toolbar">
+  $("tab-cal").innerHTML=`<div class="cal-toolbar">
       <div class="row" style="gap:6px;align-items:center">
         <button class="tbtn icon-only" id="calPrev" aria-label="Previous month"><span class="ic ti ti-chevron-left"></span></button>
         <div class="cal-month">${monthName}</div>
@@ -2811,9 +2851,7 @@ function renderCal(){
   $("calToday").onclick=()=>{calMonth=todayISO().slice(0,7);renderCal();};
   if($("calRange"))$("calRange").onclick=holidayRangeForm;
   if($("calImport"))$("calImport").onclick=importCalForm;
-  if($("calNote"))$("calNote").onclick=()=>courtNoteForm();
   if($("calSenior"))$("calSenior").onclick=seniorCalendarForm;
-  wireCourtNotes($("tab-cal"));
   document.querySelectorAll("[data-cald]").forEach(x=>x.onclick=()=>dayDetail(x.dataset.cald));
 }
 
@@ -3363,10 +3401,7 @@ function renderToday(){
   $("pageSub").textContent = isToday? "Today · "+fmtDateY(dsDate) : fmtDateY(dsDate);
   // No Add / Import when the senior is unavailable (owner's rule) — nothing may be
   // listed for a day he isn't sitting.
-  $("topbarAction").innerHTML = (canManage()&&!senOff)? `${WORD_IMPORT?`<button class="btn ghost sm" id="tbWordImport" title="Import the clerk's Word causelist"><span class="ic ti ti-file-type-docx"></span>Import Word list</button> `:''}<button class="btn ghost sm" id="tbImport"><span class="ic ti ti-file-import"></span>Import cause list</button> <button class="btn" id="tbAddDs"><span class="ic ti ti-plus"></span>Add matter</button>`:"";
-  // A note can be sent for ANY day, senior-away included — that is how the office finds out
-  // a brief has come in; the listing itself is still refused by the form on such a day.
-  if(canManage()) $("topbarAction").innerHTML = `<button class="btn ghost sm" id="tbNote"><span class="ic ti ti-message-2-share"></span>Note for office</button> `+$("topbarAction").innerHTML;
+  $("topbarAction").innerHTML = (canManage()&&!senOff)? `<button class="btn" id="tbAddDs"><span class="ic ti ti-plus"></span>Add matter</button>`:"";
 
   const clDay=courtUpdates?.by_date?.[dsDate];
   const clStatus = clDay
@@ -3381,15 +3416,13 @@ function renderToday(){
 
   let rail;
   if(!entries.length){
-    rail=`<div class="empty"><span class="ic ti ti-clipboard-list"></span>No matters on the day sheet for this date.${canManage()?" Add one, or import from the cause list.":""}</div>`;
+    rail=`<div class="empty"><span class="ic ti ti-clipboard-list"></span>No matters on the day sheet for this date.${canManage()?" Use “Add matter” to list one.":""}</div>`;
   } else {
     rail=`<div class="rail">`+entries.map((e,i)=>{
       const b=e.briefId?briefs[e.briefId]:null;
       const R=resolveEntry(e,dsDate);
-      const nextUndone=entries.findIndex(x=>!x.done);
-      const isNow=(i===nextUndone);
-      return `<div class="rail-item ${e.done?'done':''} ${isNow?'now':''}">
-        <div class="rail-gutter"><div class="rail-num">${e.done?'<span class="ti ti-check"></span>':i+1}</div></div>
+      return `<div class="rail-item">
+        <div class="rail-gutter"><div class="rail-num">${i+1}</div></div>
         <div class="rail-body">
           <div class="rail-top">
             <span class="court-badge">Court ${esc(e.courtNo||"—")}</span>
@@ -3399,7 +3432,7 @@ function renderToday(){
             ${e.time?`<span class="mono muted" style="font-size:12px">${esc(e.time)}</span>`:''}
             ${b?.priority?'<span class="chip urgent-tag"><span class="dot"></span>Urgent</span>':''}
           </div>
-          <div class="rail-case">${renderTitle(R.title,R.appearingFor,"html")}</div>
+          <div class="rail-case${b?" ds-open":""}" ${b?`data-brief="${b.id}" title="Open the brief"`:""}>${renderTitle(R.title,R.appearingFor,"html")}</div>
           ${R.bench?`<div class="rail-meta" style="margin-top:2px"><span class="muted">Bench:</span><span>${esc(shortBench(R.bench))}</span></div>`:''}
           <div class="rail-meta">
             ${e.counsel?`<span>${esc(e.counsel)}</span><span>·</span>`:''}
@@ -3407,34 +3440,30 @@ function renderToday(){
             ${e.remarks?`<span>·</span><span class="rail-remark">${esc(e.remarks)}</span>`:''}
           </div>
           <div class="rail-actions">
-            ${filesBtn(e.briefId)}
-            ${(canManage()||isSenior())?`<button class="tbtn done-btn" data-dsdone="${i}"><span class="ic ti ${e.done?'ti-arrow-back-up':'ti-circle-check'}"></span>${e.done?'Undo':'Done'}</button>`:''}
-            ${b?`<button class="tbtn" data-brief="${b.id}"><span class="ic ti ti-folder"></span>Brief</button>`:''}
-            ${canManage()?`<span class="rail-ext"></span>
-              <button class="tbtn icon-only" data-dsedit="${i}" aria-label="Edit"><span class="ic ti ti-pencil"></span></button>
-              <button class="tbtn icon-only" data-dsdel="${i}" aria-label="Remove"><span class="ic ti ti-trash"></span></button>`:''}
+            ${filesBtn(e.briefId,true)}
+            ${canManage()?`<button class="ds-act" data-dsedit="${i}"><span class="ic ti ti-pencil"></span>Edit</button>
+              <button class="ds-act del" data-dsdel="${i}"><span class="ic ti ti-trash"></span>Remove</button>`:''}
           </div>
         </div>
       </div>`;
     }).join("")+`</div>`;
   }
   // ---- desktop: the clerk's paper as a table; mobile keeps the card rail ----
-  const nextUndone=entries.findIndex(x=>!x.done);
   const table = entries.length? `<div class="ds-table"><table>
-    <thead><tr><th></th><th>Ct / Item</th><th>Time</th><th>Case &amp; Bench</th><th>Counsel — Colleagues</th><th>Remarks</th><th>Papers</th><th></th></tr></thead>
+    <thead><tr><th></th><th>Ct / Item</th><th>Time</th><th>Case &amp; Bench</th><th>Counsel — Colleagues</th><th>Remarks</th><th>Papers</th>${canManage()?"<th></th>":""}</tr></thead>
     <tbody>${entries.map((e,i)=>{
       const b=e.briefId?briefs[e.briefId]:null;
       const R=resolveEntry(e,dsDate);
       const jrs=jrsOf(e);
-      return `<tr class="${e.done?'done':''} ${i===nextUndone?'now':''}">
-        <td class="num">${e.done?'<span class="ti ti-check"></span>':i+1}</td>
+      return `<tr>
+        <td class="num">${i+1}</td>
         <td class="mono ctitem">Ct-${esc(e.courtNo||'?')}#${esc(e.itemNo||'?')}${R.listType?`<div class="muted" style="font-size:10.5px;font-family:Inter,sans-serif">${esc(R.listType)}</div>`:''}</td>
         <td class="mono time">${esc(e.time||'')}</td>
-        <td><div class="tcase">${renderTitle(R.title,R.appearingFor,"html")}${b?.priority?' <span class="ti ti-flag-3" style="color:var(--urgent);font-size:13px"></span>':''}</div>${R.bench?`<div class="tbench muted">${esc(shortBench(R.bench))}</div>`:''}</td>
+        <td><div class="tcase${b?" ds-open":""}" ${b?`data-brief="${b.id}" title="Open the brief"`:""}>${renderTitle(R.title,R.appearingFor,"html")}${b?.priority?' <span class="ti ti-flag-3" style="color:var(--urgent);font-size:13px"></span>':''}</div>${R.bench?`<div class="tbench muted">${esc(shortBench(R.bench))}</div>`:''}</td>
         <td>${e.counsel?`<div>${esc(e.counsel)}</div>`:''}<div class="${e.counsel?'muted':''}">${jrs.length?jrs.map(u=>esc(nameOf(u))+(onLeaveOn(u,dsDate)?' <span class="ti ti-plane-departure" style="color:var(--warn)" title="On leave this day"></span>':'')).join(" / "):'<span class="muted">no colleague marked</span>'}</div></td>
         <td class="muted" style="font-size:12.5px">${esc(e.remarks||'')}</td>
-        <td class="tfiles">${filesBtn(e.briefId)}</td>
-        <td class="tact">${(canManage()||isSenior())?`<button class="tbtn icon-only" data-dsdone="${i}" title="${e.done?'Undo':'Mark done'}"><span class="ic ti ${e.done?'ti-arrow-back-up':'ti-circle-check'}"></span></button>`:''}${b?`<button class="tbtn icon-only" data-brief="${b.id}" title="Open brief"><span class="ic ti ti-folder"></span></button>`:''}${canManage()?`<button class="tbtn icon-only" data-dsedit="${i}" title="Edit"><span class="ic ti ti-pencil"></span></button><button class="tbtn icon-only" data-dsdel="${i}" title="Remove"><span class="ic ti ti-trash"></span></button>`:''}</td>
+        <td class="tfiles">${filesBtn(e.briefId,true)}</td>
+        ${canManage()?`<td class="tact"><div class="tact-in"><button class="ds-act" data-dsedit="${i}" title="Edit"><span class="ic ti ti-pencil"></span>Edit</button><button class="ds-act del" data-dsdel="${i}" title="Remove"><span class="ic ti ti-trash"></span>Remove</button></div></td>`:''}
       </tr>`;}).join("")}</tbody></table></div>`:"";
 
   // ---- conferences & meetings — built from each matter's conference time,
@@ -3454,13 +3483,9 @@ function renderToday(){
     ${canManage()?`<div style="margin-top:12px"><button class="tbtn" id="tbAddConf"><span class="ic ti ti-plus"></span>Add conference</button></div>`:''}`;
 
   const senNotice=senOff?`<div class="notice warn" style="margin-bottom:12px"><span class="ti ti-user-off"></span><div><b>Senior not available on ${fmtDateY(dsDate)}</b>${seniorAvail[dsDate]?` — ${esc(seniorAvail[dsDate])}`:''}. No matter can be listed for this day.</div></div>`:"";
-  $("tab-today").innerHTML=senNotice+toolbar+(canManage()?courtNotesPanel(dsDate):"")+table+rail+confSec;
+  $("tab-today").innerHTML=senNotice+toolbar+table+rail+confSec;
   $("dsDateInp").onchange=e=>{ dsDate=e.target.value||todayISO(); watchDaysheet(); renderToday(); };
   if($("tbAddDs"))$("tbAddDs").onclick=()=>dsForm();
-  if($("tbNote"))$("tbNote").onclick=()=>courtNoteForm(dsDate);
-  wireCourtNotes($("tab-today"));
-  if($("tbImport"))$("tbImport").onclick=importCauseList;
-  if($("tbWordImport"))$("tbWordImport").onclick=wordImportForm;
   if($("tbShare"))$("tbShare").onclick=shareDaySheet;
   if($("tbPrint"))$("tbPrint").onclick=()=>printCauseList(dsDate);
   if($("tbSaveDbx"))$("tbSaveDbx").onclick=()=>saveCauselistToDropbox(dsDate);
@@ -3472,7 +3497,6 @@ function renderToday(){
 }
 async function saveDaysheet(entries,conferences){ await db.set("daysheets/"+dsDate,{date:dsDate,entries,conferences:conferences??(daysheet?.conferences||[]),updatedAt:db.now(),updatedBy:me.uid},true); }
 function dsMove(i,d){const e=[...daysheet.entries];const j=i+d;if(j<0||j>=e.length)return;[e[i],e[j]]=[e[j],e[i]];saveDaysheet(e);}
-function dsDone(i){const e=[...daysheet.entries];e[i]={...e[i],done:!e[i].done};saveDaysheet(e);}
 function dsDel(i){ const ent=daysheet.entries[i]; if(!ent)return; const R=resolveEntry(ent,dsDate);
   const b=ent.briefId?briefs[ent.briefId]:null;
   // A case ADDED via the listing (which auto-created its register brief) that
@@ -4005,107 +4029,6 @@ function dsForm(idx=null, preset=null){
 
 
 /* ============================================================
-   NOTES FROM COURT  (owner Sep 2026)
-   Two office staff, one problem: the one in court hears which briefs have come in and
-   for which day, but is on his feet and never at a computer; the one in the office has the
-   computer and the time but never hears. So cases went unentered. This is the paper chit
-   between them, done on the phone: the court-side staff taps "Note for office", picks the
-   day, and types court + item and whatever else he knows — thirty seconds, no more than a
-   WhatsApp message. The office-side staff sees it the moment he opens the app (Calendar
-   home panel, a "to enter" chip on the day, and on that day's sheet), presses "Enter this
-   matter", and the ordinary Add-matter form opens already filled in. Saving the listing
-   strikes the note. Nothing is entered twice and nothing is forgotten.
-
-   Stored as `notes[]` on the day's OWN daysheets/{date} document — the same document, the
-   same canManage() write rule, no rules change (a console paste the owner has to do by
-   hand). A note is never deleted on completion, only marked done, so the record of who
-   asked for what survives.
-   ============================================================ */
-const noteTime = at => { const t=at?._t ?? (at?.toDate?at.toDate().getTime():null); return t? new Date(t).toLocaleTimeString('en-IN',{hour:'numeric',minute:'2-digit'}) : ""; };
-function notesOn(iso){ return ((dsAll[iso]?.notes)||((iso===dsDate)?(daysheet?.notes||[]):[])); }
-function openNotesOn(iso){ return notesOn(iso).filter(n=>n&&!n.done); }
-// every open note, any date — soonest day first, then the order they were sent
-function openNotesAll(){
-  const out=[];
-  Object.keys(dsAll).sort().forEach(iso=>openNotesOn(iso).forEach(n=>out.push({...n, date:iso})));
-  return out;
-}
-async function writeNotes(iso, notes){
-  await db.set("daysheets/"+iso,{date:iso, notes, updatedAt:db.now(), updatedBy:me.uid},true);
-}
-// ---- the chit itself (phone-first: four boxes, nothing mandatory but the day) ----
-function courtNoteForm(iso){
-  const tmr=(()=>{const x=new Date();x.setDate(x.getDate()+1);return x.toLocaleDateString('en-CA');})();
-  const date=iso||tmr;
-  openSheet(`<div class="sheet-head"><div><h3>Note for the office</h3><div class="sub">Tell the office what has come in — they will enter it</div></div><button class="x-btn"><span class="ti ti-x"></span></button></div>
-    <div class="sheet-body">
-      <label>Which day is it listed for?</label><input type="date" id="cn_date" value="${esc(date)}">
-      <div id="cn_senwarn"></div>
-      <div class="grid2"><div><label>Court no.</label><input id="cn_court" class="mono" inputmode="numeric" placeholder="e.g. 5"></div>
-        <div><label>Item no.</label><input id="cn_item" class="mono" placeholder="e.g. 12"></div></div>
-      <label>Briefing counsel <span class="muted" style="font-weight:400">(if known)</span></label>
-      <input id="cn_counsel" list="lawfirms_cn" placeholder="e.g. Karanjawala & Co.">
-      <datalist id="lawfirms_cn">${LAW_FIRMS.map(f=>`<option value="${esc(f)}"></option>`).join("")}</datalist>
-      <label>Anything else</label>
-      <textarea id="cn_text" rows="3" placeholder="Party name, which side we are for, conference time, urgent — whatever you know"></textarea>
-      <div style="margin-top:18px"><button class="btn" id="cn_send"><span class="ic ti ti-send"></span>Send to office</button></div>
-      <div class="muted" style="font-size:11.5px;margin-top:10px">The office sees this at once on the Calendar and on that day's sheet, and enters the matter from it.</div>
-    </div>`);
-  const warn=()=>{ const d=$("cn_date").value; $("cn_senwarn").innerHTML = (d&&seniorOff(d))
-    ? `<div class="notice warn" style="margin:8px 0 4px"><span class="ti ti-user-off"></span><div><b>Senior is not available on ${fmtDateY(d)}</b>${seniorAvail[d]?` — ${esc(seniorAvail[d])}`:''}. The office cannot list a matter for that day — send the note anyway so they know it has come in.</div></div>` : ""; };
-  $("cn_date").onchange=warn; warn();
-  $("cn_send").onclick=async()=>{
-    const d=$("cn_date").value; if(!d){ toast("Pick the day","ti-alert-triangle"); return; }
-    const court=$("cn_court").value.trim(), item=$("cn_item").value.trim(), counsel=$("cn_counsel").value.trim(), text=$("cn_text").value.trim();
-    if(!(court||item||counsel||text)){ toast("Give the office something to go on — court & item, or a note","ti-alert-triangle"); return; }
-    const note={ id:"n"+Date.now().toString(36)+Math.random().toString(36).slice(2,6), court, item, counsel, text, by:me.uid, byName:me.name||"", at:db.now(), done:false };
-    $("cn_send").disabled=true;
-    try{ await writeNotes(d,[...notesOn(d), note]); }
-    catch(e){ toast("Couldn't send — check your connection","ti-alert-triangle"); $("cn_send").disabled=false; return; }
-    closeSheet(); toast(`Sent to the office for ${fmtDateY(d)}`,"ti-send"); renderActive();
-    // the office-side staff sees it live; the sender is told in-app too, so both know it went
-    const others=Object.values(users).filter(u=>u.id!==me.uid && u.active!==false && ["clerk","pa","admin"].includes(u.role)).map(u=>u.id);
-    if(others.length) try{ pushNotif(others, `From court — ${[court?`Ct ${court}`:"", item?`item ${item}`:"", counsel].filter(Boolean).join(" ")||"a matter"} for ${fmtDateY(d)}: ${text||"to be entered"}`, "note", null); }catch(_){}
-  };
-}
-// ---- the office's inbox: one date's notes, or every open one across dates (iso=null) ----
-function courtNotesPanel(iso){
-  const list = iso ? openNotesOn(iso).map(n=>({...n,date:iso})) : openNotesAll();
-  if(!list.length) return "";
-  const row=n=>`<div class="cnote" data-cnote="${esc(n.date)}|${esc(n.id)}">
-    <div class="cnote-main">
-      <div class="cnote-when">${iso?"":`<span>${esc(fmtDateY(n.date))}</span>`}${(n.court||n.item)?`<span class="mono">Ct-${esc(n.court||"?")}#${esc(n.item||"?")}</span>`:""}${n.counsel?`<span>${esc(n.counsel)}</span>`:""}${seniorOff(n.date)?`<span class="chip av-leave" style="font-size:10px"><span class="dot"></span>Senior away that day</span>`:""}</div>
-      ${n.text?`<div class="cnote-text">${esc(n.text)}</div>`:""}
-      <div class="cnote-by">${esc(n.byName||nameOf(n.by)||"")}${noteTime(n.at)?` · ${esc(noteTime(n.at))}`:""}</div>
-    </div>
-    <div class="cnote-act">
-      ${seniorOff(n.date)?"":`<button class="btn sm" data-cnenter><span class="ic ti ti-plus"></span>Enter this matter</button>`}
-      <button class="tbtn" data-cndone title="Already entered / nothing to enter"><span class="ic ti ti-check"></span>Done</button>
-      ${(n.by===me.uid||canAdmin())?`<button class="tbtn icon-only" data-cndel aria-label="Delete note"><span class="ic ti ti-trash"></span></button>`:""}
-    </div></div>`;
-  return `<div class="cnotes"><div class="cnotes-head"><span class="ti ti-message-2"></span>From court — ${list.length} to enter${iso?"":" (all days)"}</div>${list.map(row).join("")}</div>`;
-}
-function wireCourtNotes(root){
-  if(!root) return;
-  root.querySelectorAll("[data-cnote]").forEach(el=>{
-    const [date,id]=el.dataset.cnote.split("|");
-    const find=()=>notesOn(date).find(n=>n&&n.id===id);
-    const strike=async()=>{ const arr=notesOn(date).map(n=>(n&&n.id===id)?{...n,done:true,doneBy:me.uid,doneAt:db.now()}:n); await writeNotes(date,arr); renderActive(); };
-    const enter=el.querySelector("[data-cnenter]");
-    if(enter) enter.onclick=()=>{ const n=find(); if(!n) return;
-      // straight into the real Add-matter form, filled from the chit; the note is struck
-      // only once the listing is genuinely saved — closing the form leaves it waiting.
-      dsForm(null,{ date, courtNo:n.court||"", itemNo:n.item||"", counsel:n.counsel||"", remarks:"",
-        onSaved:async()=>{ await strike(); } }); };
-    const done=el.querySelector("[data-cndone]");
-    if(done) done.onclick=async()=>{ await strike(); toast("Marked done","ti-check"); };
-    const del=el.querySelector("[data-cndel]");
-    if(del) del.onclick=()=>confirmAsk({title:"Delete this note?", body:"The office will no longer see it.", confirmLabel:"Delete", danger:true,
-      onYes:async()=>{ await writeNotes(date, notesOn(date).filter(n=>!(n&&n.id===id))); toast("Note deleted"); renderActive(); }});
-  });
-}
-
-/* ============================================================
    SENIOR'S CALENDAR  (owner Sep 2026)
    The office-side staff is the only person who knows when the Senior will not be
    sitting, and why. The per-day toggle in the day detail stays (a one-off), but a
@@ -4297,314 +4220,6 @@ ${summary}
   const doPrint=()=>{ try{ w.print(); }catch(e){} };
   try{ (w.document.fonts&&w.document.fonts.ready?w.document.fonts.ready:Promise.resolve()).then(()=>setTimeout(doPrint,300)); }
   catch(e){ setTimeout(doPrint,700); }
-}
-
-/* ============================================================
-   WORD-CAUSELIST IMPORT  (isolated — gated by WORD_IMPORT; see the flag note)
-   Reads the clerk's daily causelist .docx (a zipped WordprocessingML file) fully
-   in-browser — no external library. A .docx is a ZIP; we pull word/document.xml,
-   inflate it with the platform DecompressionStream, parse the table, and lift each
-   Ct-x#y row → court, item, briefing counsel (+ the party marker), chamber
-   colleague(s) and the conference time. An editable preview confirms before any
-   write. To remove the feature: set WORD_IMPORT=false, or delete this block + its
-   button in renderToday. No data model or schema changes — imported rows are plain
-   day-sheet entries + briefs, identical to hand-typed ones.
-   ============================================================ */
-// ---- .docx reading (ZIP + inflate + WordML table extraction) ----
-async function _inflateRaw(bytes){
-  const ds=new DecompressionStream("deflate-raw");
-  const ab=await new Response(new Blob([bytes]).stream().pipeThrough(ds)).arrayBuffer();
-  return new Uint8Array(ab);
-}
-// Pull one entry's bytes from a ZIP via its central directory (robust to data
-// descriptors, which local headers hide). Returns Uint8Array or null.
-async function _zipEntry(buf, name){
-  const dv=new DataView(buf.buffer, buf.byteOffset, buf.byteLength);
-  // find End Of Central Directory (0x06054b50), scanning back from the tail
-  let eocd=-1;
-  for(let i=buf.length-22; i>=0 && i>buf.length-22-65536; i--){ if(dv.getUint32(i,true)===0x06054b50){ eocd=i; break; } }
-  if(eocd<0) return null;
-  let off=dv.getUint32(eocd+16,true);                       // central dir start
-  const count=dv.getUint16(eocd+10,true);
-  for(let n=0;n<count;n++){
-    if(dv.getUint32(off,true)!==0x02014b50) break;
-    const method=dv.getUint16(off+10,true);
-    const compSize=dv.getUint32(off+20,true);
-    const fnLen=dv.getUint16(off+28,true), exLen=dv.getUint16(off+30,true), cmLen=dv.getUint16(off+32,true);
-    const lho=dv.getUint32(off+42,true);
-    const fn=new TextDecoder().decode(buf.subarray(off+46, off+46+fnLen));
-    if(fn===name){
-      const lfnLen=dv.getUint16(lho+26,true), lexLen=dv.getUint16(lho+28,true);
-      const start=lho+30+lfnLen+lexLen;
-      const data=buf.subarray(start, start+compSize);
-      return method===0 ? data.slice() : await _inflateRaw(data);
-    }
-    off += 46+fnLen+exLen+cmLen;
-  }
-  return null;
-}
-// WordprocessingML → rows of the FIRST table, each cell a string (paragraphs → \n).
-function _docxTable(xml){
-  // harden against a stray & that isn't a valid entity (Word escapes them, but a
-  // copy-pasted / macro-produced doc may not) — else the strict XML parse aborts.
-  const safe=xml.replace(/&(?!(?:amp|lt|gt|quot|apos|#\d+|#x[0-9a-fA-F]+);)/g,"&amp;");
-  const doc=new DOMParser().parseFromString(safe,"application/xml");
-  const tbl=doc.getElementsByTagName("w:tbl")[0]; if(!tbl) return [];
-  const cellText=tc=>{
-    const lines=[];
-    for(const p of tc.getElementsByTagName("w:p")){
-      let s=""; for(const t of p.getElementsByTagName("w:t")) s+=t.textContent;
-      lines.push(s);
-    }
-    return lines.join("\n").replace(/\n{2,}/g,"\n").trim();
-  };
-  const rows=[];
-  for(const tr of tbl.getElementsByTagName("w:tr")){
-    // only this row's own cells (not cells of a nested table, which the clerk never uses)
-    const cells=[...tr.childNodes].filter(n=>n.nodeName==="w:tc").map(cellText);
-    if(cells.length) rows.push(cells);
-  }
-  return rows;
-}
-async function readDocxCauselist(file){
-  const buf=new Uint8Array(await file.arrayBuffer());
-  const xmlBytes=await _zipEntry(buf,"word/document.xml");
-  if(!xmlBytes) throw new Error("This doesn't look like a Word .docx file.");
-  const xml=new TextDecoder().decode(xmlBytes);
-  return parseClerkCauselist(_docxTable(xml), xml);
-}
-// ---- parse the clerk's layout ----
-const _wiName=s=>String(s||"").toLowerCase().replace(/\b(adv|mr|mrs|ms|dr|sr|jr)\b\.?/g," ").replace(/[^a-z ]/g," ").replace(/\s+/g," ").trim();
-// A briefing-counsel cell's first line is "Name <party>"; the marker is a trailing
-// P/R (optionally (…), -…, or a party number like R-2). Returns {counsel, party}.
-function _wiCounsel(raw){
-  let s=String(raw||"").replace(/\s+/g," ").trim(); let party="";
-  const m=s.match(/[\s(–\-]*\b([PR])\b\s*[-–)]?\s*\d*\s*$/i);
-  if(m && m.index>0){ party=/p/i.test(m[1])?"Petitioner":"Respondent"; s=s.slice(0,m.index).trim(); }
-  s=s.replace(/[\s(–\-]+$/,"").trim();
-  return {counsel:s, party};
-}
-// Map a short colleague token ("Adith D", "Anshula", "Yash") to a chamber uid.
-function _wiMatchColleague(token){
-  const t=_wiName(token); if(!t) return null;
-  const tw=t.split(" ");
-  let best=null,score=0;
-  for(const c of chamberColleagues()){
-    const n=_wiName(c.name), nw=n.split(" "); let s=0;
-    if(n===t) s=100;
-    else if(nw[0]===tw[0]){ s=60; if(tw[1]&&nw[1]&&nw[1][0]===tw[1][0]) s+=25; if(tw.length===1) s+=5; }
-    else if(nw[0].length>=4 && (nw[0].startsWith(tw[0])||tw[0].startsWith(nw[0]))) s=42;
-    if(s>score){ score=s; best=c; }
-  }
-  return score>=42 ? {id:best.id,name:best.name,score} : null;
-}
-// Split a colleague line ("Adith D/Anshula", "Arpith JV /Rishit V.") into tokens.
-const _wiColl=line=>String(line||"").split(/[\/,]/).map(x=>x.trim()).filter(Boolean);
-function parseClerkCauselist(rows, xml){
-  const matters=[];
-  // locate the header row (has "Court" and "Advocate")
-  let start=0;
-  for(let i=0;i<rows.length;i++){ const j=rows[i].join(" ").toLowerCase();
-    if(/court/.test(j)&&/advocate/.test(j)){ start=i+1; break; } }
-  for(let i=start;i<rows.length;i++){
-    const c=rows[i]; if(!c.length) continue;
-    const cm=(c[0]||"").match(/ct[\s.\-]*(\d+)\s*#\s*(\d+(?:\.\d+)?)/i);
-    if(!cm) continue;                                       // not a matter row (blank / stray)
-    const court=cm[1], item=cm[2];
-    const time=((c[1]||"").match(/\d{1,2}[.:]\d{2}/)||["10.30"])[0].replace(":",".");
-    const title=(c[2]||"").replace(/\n/g," ").replace(/\s+/g," ").trim();
-    const bench=(c[3]||"").replace(/\n/g," ").replace(/\s+/g," ").trim();
-    const advLines=String(c[4]||"").split("\n").map(x=>x.trim()).filter(Boolean);
-    const {counsel,party}=_wiCounsel(advLines[0]||"");
-    const tokens=advLines.slice(1).flatMap(_wiColl);
-    const jrs=[], unmatched=[];
-    for(const tk of tokens){ const m=_wiMatchColleague(tk); if(m&&!jrs.some(j=>j.id===m.id)) jrs.push(m); else if(!m) unmatched.push(tk); }
-    matters.push({court,item,time,title,bench,counsel,party,
-      jrs:jrs.map(j=>j.id), jrNames:jrs.map(j=>j.name), unmatched, confTime:"", include:true,
-      err: (!court||!item)?"court/item unclear":"" });
-  }
-  // conferences: after the table, lines "2.30 - Nishant Patil"
-  const confs=[];
-  const flat=(xml? xml.replace(/<[^>]+>/g," ") : rows.flat().join("\n"));
-  const text=flat.replace(/&amp;/g,"&").replace(/&lt;/g,"<").replace(/&gt;/g,">");
-  for(const line of text.split(/[\n\r]|(?=\d{1,2}[.:]\d{2}\s*[-–])/)){
-    const m=line.match(/(?:^|\s)(\d{1,2}[.:]\d{2})\s*[-–]\s*([A-Za-z][A-Za-z.\s,&]{1,40})/);
-    if(m){ const time=m[1].replace(":","."), name=m[2].replace(/\s+/g," ").trim();
-      if(name && !/case name|advocate|judges|total|supreme court/i.test(name) && !confs.some(x=>x.time===time&&x.name===name))
-        confs.push({time,name}); }
-  }
-  // link a conference to its matter by matching the conference name to the counsel.
-  // date starts null → the preview defaults it to the listing day, and the user can
-  // move any conference to another day (the clerk's list mixes eve-before + day-of).
-  for(const cf of confs){
-    cf.date=null;
-    const cn=_wiName(cf.name.split(",")[0]);
-    const idx=matters.findIndex(mt=>{ const mc=_wiName(mt.counsel); if(!mc||!cn) return false;
-      return mc===cn || mc.split(" ")[0]===cn.split(" ")[0]; });
-    if(idx>=0 && !matters[idx].confTime){ matters[idx].confTime=cf.time; cf.matched=true; cf.matterIdx=idx; }
-  }
-  return {matters, conferences:confs};
-}
-// ---- preview + apply ----
-let _wiData=null;
-function wordImportForm(){
-  if(seniorOff(dsDate)){ toast("Senior is not available on "+fmtDateY(dsDate)+" — no matter can be listed that day","ti-user-off"); return; }
-  _wiData=null;
-  openSheet(`<div class="sheet-head"><div><h3>Import Word causelist</h3><div class="sub">Read the clerk's .docx for ${esc(fmtDateY(dsDate))} — court, item, colleague, counsel &amp; conference times</div></div><button class="x-btn"><span class="ti ti-x"></span></button></div>
-    <div class="sheet-body">
-      <label class="wi-drop" id="wi_drop"><input type="file" id="wi_file" accept=".docx" hidden>
-        <span class="ti ti-file-type-docx" style="font-size:26px;color:var(--accent)"></span>
-        <span><b style="font-weight:600">Choose the Word file</b><br><span class="muted" style="font-size:12px">the clerk's daily causelist (.docx)</span></span></label>
-      <div id="wi_res"></div>
-    </div>`);
-  $("wi_drop").onclick=()=>$("wi_file").click();
-  $("wi_file").onchange=async e=>{
-    const f=e.target.files[0]; if(!f) return;
-    $("wi_res").innerHTML=`<div class="muted" style="padding:14px 2px"><span class="ti ti-loader-2 spin"></span> Reading ${esc(f.name)}…</div>`;
-    try{ _wiData=await readDocxCauselist(f); renderWiPreview(); }
-    catch(err){ $("wi_res").innerHTML=`<div class="empty"><span class="ic ti ti-alert-triangle"></span>${esc(err.message||String(err))}</div>`; }
-  };
-}
-function renderWiPreview(){
-  const d=_wiData; if(!d){ return; }
-  // each matter is checked against the register once; a strong match is pre-chosen, a weaker one
-  // must be decided by the person (same case, or a new case) before anything is added
-  d.matters.forEach(m=>{ if(m._cands===undefined){ m._cands=caseMatches({title:m.title}); m.pick=m._cands[0]&&m._cands[0].strong?m._cands[0].b.id:(m._cands.length?"":"new"); } });
-  const undecided=d.matters.filter(m=>m.include&&m.court&&m.item&&m.pick==="").length;
-  const cols=chamberColleagues();
-  const collSel=(mi)=>`<select class="wi-add" data-mi="${mi}"><option value="">+ colleague</option>${cols.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join("")}</select>`;
-  const nInc=d.matters.filter(m=>m.include&&m.court&&m.item).length;
-  const rows=d.matters.map((m,i)=>`<div class="wi-row ${m.include?'':'off'}">
-    <label class="wi-chk"><input type="checkbox" data-inc="${i}" ${m.include?'checked':''}></label>
-    <div class="wi-main">
-      <div class="wi-top"><span class="wi-ci">Ct ${esc(m.court||'?')} · #${esc(m.item||'?')}</span>
-        <span class="wi-title">${esc(m.title||'(no title)')}</span>${m.err?`<span class="wi-warn">${esc(m.err)}</span>`:''}</div>
-      <div class="wi-line"><span class="wi-k">Counsel</span> ${esc(m.counsel||'—')}${m.party?` <span class="wi-party">${esc(m.party)}</span>`:''}${(()=>{const cf=d.conferences.find(c=>c.matterIdx===i);return m.confTime?` <span class="wi-conf"><span class="ti ti-clock" style="font-size:11px"></span>${esc(m.confTime)}${cf&&cf.date&&cf.date!==dsDate?` · ${esc(fmtDateY(cf.date))}`:''}</span>`:'';})()}</div>
-      <div class="wi-line"><span class="wi-k">Colleagues</span>
-        ${m.jrs.map((id,ji)=>`<span class="wi-chip">${esc(nameOf(id))}<button class="wi-x" data-rm="${i}:${id}">×</button></span>`).join("")}
-        ${m.unmatched.map(tk=>`<span class="wi-chip un" title="not recognised">${esc(tk)} ?</span>`).join("")}
-        ${collSel(i)}
-      </div>
-      ${m._cands&&m._cands.length?`<div class="wi-match ${m.pick?"ok":""}"><span class="ti ti-${m.pick?"link":"alert-triangle"}"></span>${m.pick?"":"<b>Possible existing case — choose:</b>"}
-        <select data-wpick="${i}"><option value="" ${m.pick===""?"selected":""} disabled>— is it one of these? —</option>
-          ${m._cands.map(c=>`<option value="${c.b.id}" ${m.pick===c.b.id?"selected":""}>Same case: ${serialNum(c.b)!=null?pad3(serialNum(c.b))+" · ":""}${esc(labelOf(c.b))} (${esc(c.why.join(", "))})</option>`).join("")}
-          <option value="new" ${m.pick==="new"?"selected":""}>A new case — give it the next serial</option></select></div>`:""}
-    </div>
-  </div>`).join("");
-  // each conference carries its own DATE (the clerk's list mixes the eve-before and
-  // the day-of). Default to the listing day; the two quick buttons bulk-set, and each
-  // row's date picker overrides one. A linked conference's date rides onto its matter.
-  d.conferences.forEach(c=>{ if(!c.date) c.date=dsDate; });
-  const prevDay=(()=>{ const dt=new Date(dsDate+"T00:00"); dt.setDate(dt.getDate()-1); return dt.toLocaleDateString('en-CA'); })();
-  const confRows=d.conferences.length?`<div class="wi-conflist">
-    <div class="wi-sub" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">Conferences (${d.conferences.length})
-      <span class="muted" style="font-weight:400;text-transform:none;letter-spacing:0">— set the day each is held:</span>
-      <button class="wi-bulk" data-alld="${prevDay}">all → ${esc(fmtDateY(prevDay))} (eve before)</button>
-      <button class="wi-bulk" data-alld="${dsDate}">all → ${esc(fmtDateY(dsDate))}</button></div>
-    ${d.conferences.map((c,i)=>`<div class="wi-cfrow">
-      <span class="mono">${esc(c.time)}</span>
-      <span class="wi-cfname">${esc(c.name)}</span>
-      ${c.matched?`<span class="wi-linked">→ Ct-${esc(d.matters[c.matterIdx]?.court||'?')}#${esc(d.matters[c.matterIdx]?.item||'?')}</span>`:'<span class="wi-standalone">on its own</span>'}
-      <input type="date" class="wi-cfdate" data-cfd="${i}" value="${esc(c.date)}">
-    </div>`).join("")}</div>`:'';
-  $("wi_res").innerHTML=`<div class="wi-summary">${d.matters.length} matter${d.matters.length!==1?'s':''} · ${d.conferences.length} conference${d.conferences.length!==1?'s':''} found</div>
-    <div class="wi-list">${rows||'<div class="empty">No Ct-x#y matters recognised in this file.</div>'}</div>
-    ${confRows}
-    ${undecided?`<div class="notice warn" style="margin-top:14px"><span class="ti ti-alert-triangle"></span><div><b>${undecided} possible match${undecided>1?"es":""} to decide</b> — say for each whether it is an existing case or a new one.</div></div>`:""}
-    <div style="margin-top:16px"><button class="btn" id="wi_add" ${nInc&&!undecided?'':'disabled'}><span class="ic ti ti-plus"></span>Add ${nInc} matter${nInc!==1?'s':''} to ${esc(fmtDateY(dsDate))}</button></div>`;
-  document.querySelectorAll("[data-wpick]").forEach(x=>x.onchange=()=>{ _wiData.matters[+x.dataset.wpick].pick=x.value; renderWiPreview(); });
-  document.querySelectorAll("[data-inc]").forEach(x=>x.onchange=()=>{ _wiData.matters[+x.dataset.inc].include=x.checked; renderWiPreview(); });
-  document.querySelectorAll("[data-rm]").forEach(x=>x.onclick=()=>{ const [i,id]=x.dataset.rm.split(":"); const m=_wiData.matters[+i]; m.jrs=m.jrs.filter(j=>j!==id); renderWiPreview(); });
-  document.querySelectorAll(".wi-add").forEach(sel=>sel.onchange=()=>{ const m=_wiData.matters[+sel.dataset.mi]; if(sel.value&&!m.jrs.includes(sel.value)) m.jrs.push(sel.value); renderWiPreview(); });
-  document.querySelectorAll("[data-cfd]").forEach(inp=>inp.onchange=()=>{ _wiData.conferences[+inp.dataset.cfd].date=inp.value||dsDate; renderWiPreview(); });
-  document.querySelectorAll("[data-alld]").forEach(b=>b.onclick=()=>{ const dv=b.dataset.alld; _wiData.conferences.forEach(c=>c.date=dv); renderWiPreview(); });
-  if($("wi_add"))$("wi_add").onclick=applyWordImport;
-}
-async function applyWordImport(){
-  const d=_wiData; if(!d) return;
-  if(seniorOff(dsDate)){ toast("Senior is not available on "+fmtDateY(dsDate)+" — no matter can be listed that day","ti-user-off"); return; }
-  const date=dsDate;
-  // carry each conference's chosen date onto its linked matter, so the matter's
-  // conference lands on the day the clerk actually holds it (eve-before or day-of).
-  for(const cf of d.conferences){ if(cf.matched && cf.matterIdx!=null && d.matters[cf.matterIdx]) d.matters[cf.matterIdx].confDate=cf.date||date; }
-  const arr=[...(dsAll[date]?.entries||[])];
-  const use=d.matters.filter(m=>m.include&&m.court&&m.item);
-  if(use.some(m=>m.pick==="")){ toast("Decide the possible matches first","ti-alert-triangle"); return; }
-  const _wiNew=[];
-  for(const m of use){
-    const entry={ briefId:null, caseTitle:m.title||"", courtNo:String(m.court), itemNo:String(m.item),
-      listType:"", appearingFor:m.party||"", time:m.time||"10.30",
-      confTime:m.confTime||"", confDate:m.confTime?(m.confDate||date):"", bench:m.bench||"", counsel:m.counsel||"", caseNo:"",
-      awaitingList:false, juniorUids:m.jrs.slice(), juniorUid:m.jrs[0]||null, remarks:"", done:false };
-    const brief=(m.pick&&m.pick!=="new"&&briefs[m.pick])?briefs[m.pick]:null;   // the person's own choice
-    if(brief){
-      entry.briefId=brief.id;
-      const patch={updatedAt:db.now()};
-      if(!brief.caseTitle && entry.caseTitle) patch.caseTitle=entry.caseTitle;
-      if(!brief.aor && entry.counsel) patch.aor=entry.counsel;
-      if(!brief.appearingFor && entry.appearingFor) patch.appearingFor=entry.appearingFor;
-      if(entry.juniorUids.length){ const a=[...new Set([...(brief.assignedTo||[]),...entry.juniorUids])];
-        patch.assignedTo=a; patch.everAssigned=[...new Set([...(brief.everAssigned||[]),...entry.juniorUids])];
-        patch.ackBy=[...new Set([...(brief.ackBy||[]),...entry.juniorUids])]; }
-      if(["received","assigned"].includes(brief.status)) patch.status="listed";
-      patch.nextDate=date; if(entry.confTime) patch.conferenceAt=entry.confDate||date;
-      try{ await db.update("briefs/"+brief.id,patch); }catch(_){}
-    } else {
-      const jr=entry.juniorUids;
-      const nb={ caseTitle:entry.caseTitle||"(from causelist)", caseNo:"", diaryNo:"", matterType:"Other court / tribunal",
-        appearingFor:entry.appearingFor||"", aor:entry.counsel||"", chamberNo:"",
-        assignedTo:jr.slice(), everAssigned:jr.slice(), ackBy:jr.slice(), declinedBy:[],
-        assignHistory:jr.map(u=>({uid:u,at:Date.now(),by:me.uid,mode:"listed"})),
-        status:"listed", priority:false, nextDate:date, detailsAwaited:true,
-        conferenceAt:entry.confTime?date:null, fromListing:true, wordImport:true,
-        createdBy:me.uid, createdAt:db.now(), updatedAt:db.now() };
-      try{ entry.briefId=await addBrief(nb); _wiNew.push(entry.briefId); }catch(_){}
-    }
-    arr.push(entry);
-  }
-  // conferences the parser couldn't tie to a matter → keep as standalone rows (no
-  // colleague, so no ½-credit — these are counsel meetings, exactly like today's).
-  const confs=[...(dsAll[date]?.conferences||[])];
-  for(const cf of d.conferences){ if(cf.matched) continue; const cdate=cf.date||date;
-    if(!confs.some(x=>x.time===cf.time && (x.name||"")===cf.name && (x.date||date)===cdate)) confs.push({date:cdate,time:cf.time,name:cf.name,briefId:null,juniorUids:[]}); }
-  try{ await db.set("daysheets/"+date,{date,entries:byCourt(arr,date),conferences:confs,updatedAt:db.now(),updatedBy:me.uid},true); }catch(_){}
-  closeSheet();
-  // the new cases take their serials and folders
-  const nums=[]; for(const id of _wiNew){ const r=await numberNewCase(id); if(r.n!=null) nums.push(pad3(r.n)); }
-  toast(`Imported ${use.length} matter${use.length!==1?'s':''} from the Word list${nums.length?` · new case${nums.length>1?"s":""} ${nums.join(", ")}`:""}`,"ti-file-check");
-}
-
-function importCauseList(){
-  openSheet(`<div class="sheet-head"><div><h3>Import from cause list</h3><div class="sub">Paste the SCI cause-list text — matters matching the register are picked up</div></div><button class="x-btn"><span class="ti ti-x"></span></button></div>
-    <div class="sheet-body">
-      <textarea id="cl_text" rows="8" placeholder="Open the day's cause list PDF, select all, copy, and paste here."></textarea>
-      <div style="margin-top:14px"><button class="btn" id="cl_find"><span class="ic ti ti-search"></span>Find chamber matters</button></div>
-      <div id="cl_res" style="margin-top:16px"></div>
-    </div>`);
-  $("cl_find").onclick=()=>{
-    const lines=$("cl_text").value.split(/\r?\n+/); let court="",item=""; const found=[];
-    // normalise a case number for matching: drop "Diary"/"No(s)" tokens, dots and spaces so
-    // "W.P.(C) No. 7065/2026" collapses to the register's "WP(C)7065/2026".
-    const clNorm=s=>s.toUpperCase().replace(/\bDIARY\b|\bNOS?\b/g," ").replace(/[.\s]/g,"");
-    const byDy={},byCase={};
-    Object.values(briefs).forEach(b=>{if(b.diaryNo)byDy[b.diaryNo.replace(/\s/g,"")]=b; if(b.caseNo){const k=clNorm(b.caseNo);if(k.length>=5)byCase[k]=b;}});
-    for(const raw of lines){ const line=raw.trim(); if(!line)continue;
-      const cm=line.match(/COURT\s*NO\.?\s*[:\-]?\s*(\d+)/i); if(cm){court=cm[1];item="";continue;}
-      const im=line.match(/^(\d{1,3})[\.\)]\s/); if(im)item=im[1];   // carry item across the block's continuation lines
-      let hit=null,via=null;
-      // test every "number/20yy" token on the line against diary numbers (a case no. may precede the diary)
-      for(const m of line.matchAll(/(\d{3,6})\s*[\/\-]\s*(20\d{2})/g)){const dk=m[1]+"/"+m[2];if(byDy[dk]){hit=byDy[dk];via="Dy. "+dk;break;}}
-      if(!hit){const k=clNorm(line);for(const c in byCase){if(k.includes(c)){hit=byCase[c];via=byCase[c].caseNo;break;}}}
-      if(hit&&!found.some(f=>f.brief.id===hit.id))found.push({brief:hit,court,item,via});
-    }
-    if(!found.length){$("cl_res").innerHTML=`<div class="empty"><span class="ic ti ti-search-off"></span>No matches. Check that diary numbers in the register use the same format (e.g. 12345/2026).</div>`;return;}
-    $("cl_res").innerHTML=found.map((f,i)=>`<label class="chk-row"><input type="checkbox" checked data-cl="${i}"><span><b style="font-weight:500">${esc(labelOf(f.brief))}</b><br><span class="mono muted" style="font-size:12px">Court ${esc(f.court||'?')} · Item ${esc(f.item||'?')} · via ${esc(f.via||'')}</span></span></label>`).join("")
-      +`<div style="margin-top:14px"><button class="btn" id="cl_add">Add ${found.length} to day sheet</button></div>`;
-    $("cl_add").onclick=()=>{ if(seniorOff(dsDate)){ toast("Senior is not available on "+fmtDateY(dsDate)+" — no matter can be listed that day","ti-user-off"); return; } const arr=[...(daysheet?.entries||[])];
-      document.querySelectorAll("[data-cl]:checked").forEach(cb=>{const f=found[+cb.dataset.cl];const jrs=f.brief.assignedTo||[];arr.push({briefId:f.brief.id,caseTitle:labelOf(f.brief),courtNo:f.court||"",itemNo:f.item||"",time:"10.30",bench:"",counsel:f.brief.aor||"",juniorUids:jrs,juniorUid:jrs[0]||null,remarks:"",done:false});});
-      saveDaysheet(byCourt(arr, dsDate)); closeSheet(); toast("Matters added to day sheet");
-    };
-  };
 }
 
 /* ============================================================
@@ -5093,29 +4708,53 @@ function nextListingOf(id){
    desktop, one card per brief on phones; warnings for briefs without a serial and for a
    serial used twice; the admin imports the serial list (privately) from here. */
 /* ===== the register's table + cards, shared by the Brief register and My work ===== */
+// Every day-sheet listing of every brief, newest first — one pass over dsAll, rebuilt only
+// when the day sheets change (dsAll is replaced on each snapshot).
+let _lstIdx={src:null,map:{}};
+function briefListings(id){
+  if(_lstIdx.src!==dsAll){ const map={};
+    for(const [d,ds] of Object.entries(dsAll)) for(const e of (ds.entries||[])){ if(!e.briefId) continue;
+      const a=map[e.briefId]||(map[e.briefId]=[]); if(!a.some(x=>x.date===d)) a.push({date:d,court:e.courtNo||"",item:e.itemNo||""}); }
+    Object.values(map).forEach(a=>a.sort((x,y)=>y.date.localeCompare(x.date))); _lstIdx={src:dsAll,map}; }
+  return _lstIdx.map[id]||[];
+}
+const _lstOpen=new Set();
+function listingsCell(b){
+  const t=todayISO(), all=briefListings(b.id);
+  const up=all.filter(x=>x.date>=t).reverse(), past=all.filter(x=>x.date<t);
+  if(b.nextDate&&b.nextDate>=t&&!all.some(x=>x.date===b.nextDate)) up.unshift({date:b.nextDate,next:true}), up.sort((x,y)=>x.date.localeCompare(y.date));
+  if(!up.length&&!past.length) return `<span class="muted" style="font-size:12px">Not listed yet</span>`;
+  const ci=x=>[x.court?`Ct ${esc(x.court)}`:"", x.item?`Item ${esc(x.item)}`:""].filter(Boolean).join(" · ");
+  const upH=up.map(x=>`<div class="lst-up"><b>${fmtDateY(x.date)}</b>${x.next?`<span class="lst-ci">next date</span>`:ci(x)?`<span class="lst-ci">${ci(x)}</span>`:""}</div>`).join("");
+  const SHOW=up.length?3:4, open=_lstOpen.has(b.id);
+  const pd=x=>`<span class="lst-past" title="${esc(ci(x))}">${esc(fmtDateY(x.date))}</span>`;
+  const pastH=past.length?`<div class="lst-pasts">${past.slice(0,SHOW).map(pd).join("")}${past.length>SHOW?`<span class="lst-more${open?"":" hidden"}">${past.slice(SHOW).map(pd).join("")}</span><button class="lst-exp" data-lexp="${b.id}">${open?"less":`+${past.length-SHOW} earlier`}</button>`:""}</div>`:"";
+  return `<div class="rg-lst">${upH}${past.length?`<div class="lst-h">${past.length} earlier listing${past.length>1?"s":""}</div>`:""}${pastH}</div>`;
+}
+function wireListingExp(root){
+  (root||document).querySelectorAll("[data-lexp]").forEach(x=>x.onclick=e=>{ e.stopPropagation(); const id=x.dataset.lexp, more=x.parentElement.querySelector(".lst-more"); if(!more) return;
+    const open=more.classList.toggle("hidden")===false; open?_lstOpen.add(id):_lstOpen.delete(id);
+    x.textContent=open?"less":`+${more.children.length} earlier`; });
+}
 function briefListHTML(list, opts){
   opts=opts||{}; const canEd=opts.edit!==false&&canManage();
   const serialCell=b=>{ const n=serialNum(b); return n!=null?`<button class="rg-serial" data-brief="${b.id}">${pad3(n)}</button>`:`<span class="rg-serial none">no serial</span>`; };
   const tag=b=>b.legalAid?`<span class="rg-tag">Legal aid</span>`:b.confCredit?`<span class="rg-tag">Conference</span>`:b.fromSerialList?`<span class="rg-tag">from the list</span>`:"";
   const nums=b=>[b.caseNo, b.diaryNo?"Dy. "+b.diaryNo:""].filter(Boolean).join(" · ");
-  const when=b=>{ const L=nextListingOf(b.id);
-    if(L) return `<div class="rg-when">${fmtDateY(L.date)}</div><span class="rg-listed">Listed${L.court?` · Ct ${esc(L.court)}`:""}${L.item?` · Item ${esc(L.item)}`:""}</span>`;
-    if(b.nextDate) return `<div class="rg-when">${fmtDateY(b.nextDate)}</div>`;
-    return `<span class="muted" style="font-size:12px">—</span>`; };
   const team=b=>(b.assignedTo||[]).map(u=>`<span class="mini-ava" title="${esc(nameOf(u))}">${esc(initials(nameOf(u)))}</span>`).join("")||`<span class="muted" style="font-size:12px">unassigned</span>`;
-  const status=b=>{ const st=STATUS[b.status]||STATUS.received; return `<span class="chip ${st.cls}"><span class="dot"></span>${st.label}</span>${b.priority?' <span class="ti ti-flag-3" style="color:var(--urgent)" title="Urgent"></span>':''}${needsMyAck(b)?' <span class="new-chip">new</span>':''}`; };
-  const table=list.length?`<table class="rg-table"><thead><tr><th style="width:74px">Serial</th><th>Matter</th><th style="width:150px">Next hearing</th><th style="width:110px">Colleagues</th><th style="width:120px">Status</th><th style="width:150px;text-align:right">Papers</th></tr></thead><tbody>
+  const flags=b=>`${b.status==="disposed"?`<span class="rg-tag">Disposed</span>`:""}${b.priority?' <span class="ti ti-flag-3" style="color:var(--urgent)" title="Urgent"></span>':''}${needsMyAck(b)?' <span class="new-chip">new</span>':''}`;
+  const table=list.length?`<table class="rg-table"><thead><tr><th style="width:74px">Serial</th><th>Matter</th><th style="width:250px">Dates of listing</th><th style="width:110px">Colleagues</th><th style="width:150px;text-align:right">Papers</th></tr></thead><tbody>
     ${list.map(b=>`<tr class="rg-row ${b.status==='disposed'?'dim':''}">
       <td>${serialCell(b)}</td>
-      <td><button class="rg-name" data-brief="${b.id}">${esc(labelOf(b))}</button>${tag(b)}${nums(b)?`<div class="rg-nums">${esc(nums(b))}</div>`:""}${b.aor?`<div class="rg-meta">AoR ${esc(b.aor)}</div>`:""}</td>
-      <td>${when(b)}</td><td><div class="rg-team">${team(b)}</div></td><td>${status(b)}</td>
+      <td><button class="rg-name" data-brief="${b.id}">${esc(labelOf(b))}</button>${tag(b)}${flags(b)}${nums(b)?`<div class="rg-nums">${esc(nums(b))}</div>`:""}${b.aor?`<div class="rg-meta">AoR ${esc(b.aor)}</div>`:""}</td>
+      <td>${listingsCell(b)}</td><td><div class="rg-team">${team(b)}</div></td>
       <td><div class="rg-acts">${isCaseBrief(b)?filesBtn(b.id):""}${canEd?`<button class="tbtn icon-only" data-editbrief="${b.id}" title="Edit"><span class="ic ti ti-pencil"></span></button>`:""}</div></td></tr>`).join("")}
     </tbody></table>`:"";
   const cards=list.length?`<div class="rg-cards">${list.map(b=>`<div class="rg-card ${b.status==='disposed'?'dim':''}">
-      <div class="top">${serialCell(b)}${status(b)}${tag(b)}</div>
+      <div class="top">${serialCell(b)}${tag(b)}${flags(b)}</div>
       <button class="rg-name" data-brief="${b.id}" style="font-size:16px">${esc(labelOf(b))}</button>
       ${nums(b)?`<div class="rg-nums">${esc(nums(b))}</div>`:""}
-      <div class="row" style="gap:10px;align-items:center;margin-top:6px;flex-wrap:wrap">${when(b)}<div class="rg-team">${team(b)}</div></div>
+      <div class="rg-card-lst">${listingsCell(b)}</div><div class="rg-team" style="margin-top:6px">${team(b)}</div>
       <div class="acts">${isCaseBrief(b)?filesBtn(b.id):"<span></span>"}<button class="btn ghost" data-brief="${b.id}"><span class="ic ti ti-folder-open"></span>Open</button></div>
     </div>`).join("")}</div>`:"";
   return table+cards;
@@ -5137,7 +4776,7 @@ function sortBriefs(list, mode){
   return list.slice().sort(cmp);
 }
 function renderBriefs(){
-  $("topbarAction").innerHTML = canManage()? `<button class="btn ghost sm" id="tbLegalAid" title="Record a legal-aid opinion given to a colleague"><span class="ic ti ti-scale"></span>Legal aid</button> <button class="btn ghost sm" id="tbSyncReg" title="Add any listed matter that isn't in the register yet"><span class="ic ti ti-refresh"></span>Sync listings</button> <button class="btn" id="tbNewBrief2"><span class="ic ti ti-plus"></span>New brief</button>`:"";
+  $("topbarAction").innerHTML = canManage()? `<button class="btn ghost sm" id="tbLegalAid" title="Record a legal-aid opinion given to a colleague"><span class="ic ti ti-scale"></span>Legal aid</button> <button class="btn" id="tbNewBrief2"><span class="ic ti ti-plus"></span>New brief</button>`:"";
   const all=Object.values(briefs);
   const cases=all.filter(isCaseBrief);
   const today=todayISO();
@@ -5189,7 +4828,6 @@ function renderBriefs(){
   if($("rgDups")) $("rgDups").onclick=duplicatesForm;
   if($("tbNewBrief2"))$("tbNewBrief2").onclick=()=>briefForm();
   if($("tbLegalAid"))$("tbLegalAid").onclick=()=>legalAidForm();
-  if($("tbSyncReg"))$("tbSyncReg").onclick=async()=>{ $("tbSyncReg").disabled=true; await syncRegister(true); toast("Register synced with the listings","ti-check"); renderBriefs(); };
   wireSort($("tab-briefs"), renderBriefs);
   bindClicks($("tab-briefs"));
 }
@@ -6523,14 +6161,13 @@ function renderRosterBody(){
    shared click binding
    ============================================================ */
 function bindClicks(root){
-  wireFilesBtns(root);
+  wireFilesBtns(root); wireListingExp(root);
   root.querySelectorAll("[data-brief]").forEach(x=>x.onclick=e=>{e.stopPropagation();openBrief(x.dataset.brief);});
   root.querySelectorAll("[data-dstools]").forEach(x=>x.onclick=()=>{const el=$("dstools-"+x.dataset.dstools);if(el)el.classList.toggle("show");});
   root.querySelectorAll("[data-dsup]").forEach(x=>x.onclick=()=>dsMove(+x.dataset.dsup,-1));
   root.querySelectorAll("[data-dsdown]").forEach(x=>x.onclick=()=>dsMove(+x.dataset.dsdown,1));
   root.querySelectorAll("[data-dsedit]").forEach(x=>x.onclick=()=>dsForm(+x.dataset.dsedit));
   root.querySelectorAll("[data-dsdel]").forEach(x=>x.onclick=()=>dsDel(+x.dataset.dsdel));
-  root.querySelectorAll("[data-dsdone]").forEach(x=>x.onclick=()=>dsDone(+x.dataset.dsdone));
 }
 </script>
 </body>

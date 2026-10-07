@@ -47,6 +47,24 @@ Dropbox is reachable, enforced by Dropbox itself) and **one folder per brief**.
   `sd-chamber-files` with KV + both secrets, and connected from the app. Verified from
   outside: home page, 401 without sign-in, CORS for the app origin, KV-backed callback guard.
 
+## Trimmed: Done buttons, Note for office, both imports · listing dates · video links (Oct 2026)
+
+- **Removed on the owner's word** (code deleted, not flagged off): the day sheet's Done/Undo
+  and the "Brief" button beside it (the case title now opens the brief — `.ds-open`), the
+  "Note for office" chits from court (calendar + day sheet panels, `notes[]` no longer read;
+  old data left alone), the Word-causelist import and the paste-the-cause-list import, and the
+  register's "Sync listings" button (the register syncs itself — `maybeSyncRegister`).
+  Remaining day-sheet buttons are big: Files (big) / Edit / Remove (`.ds-act`).
+- **Brief register — no Status column.** In its place "Dates of listing" (`listingsCell`,
+  `briefListings(id)` = every day-sheet date the brief appears on, indexed once per dsAll
+  snapshot — NB `listingsOf(uid)` is a different, colleague-side function): upcoming dates
+  bold with Ct/Item (plus the brief's own next date), then earlier listings as small chips,
+  "+N earlier" expands (`_lstOpen`, `wireListingExp` via bindClicks). Disposed shows as a tag.
+- **Conference video link**: confstatus/{key}.video = {url,by,at} (members may already write
+  confstatus — no rules change). Whoever runs the conference pastes the Zoom/Meet/Teams link
+  (or the whole invite — `videoUrlFrom` keeps just the https link); everyone sees a
+  "Join Zoom/Google Meet/Teams" button on the card, even collapsed. Change / Copy / Remove.
+
 ## My work rebuilt · Sort by on every register · conference Word files (Oct 2026)
 
 - **My work** (`renderMyWork`, colleagues): navy hero (greeting, date, 4 tiles — need your
