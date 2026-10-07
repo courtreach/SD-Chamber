@@ -4956,7 +4956,7 @@ function renderBriefs(){
   const notice=(!canManage()&&!isSenior()&&myUnacked.length)?`<div class="notice"><span class="ti ti-bell"></span><div><b>${myUnacked.length} new assignment${myUnacked.length>1?'s':''}</b> awaiting your acknowledgment — open and acknowledge.</div></div>`:"";
   const head=`<div class="rg-head"><div><div class="rg-title">Brief register</div>
       <div class="rg-sub">${cases.length} files · ${counts[""]} active · next serial <b>${pad3(nextSerial())}</b></div></div>
-      ${isAdmin()?`<div class="row" style="gap:8px;flex-wrap:wrap"><button class="btn ghost sm" id="rgDups"><span class="ic ti ti-copy"></span>Find duplicates</button><button class="btn ghost sm" id="rgFolders"><span class="ic ti ti-folders"></span>Create case folders</button>${noSerial.length?`<button class="btn ghost sm" id="rgNumberDate"><span class="ic ti ti-hash"></span>Number old cases by date</button>`:""}</div>`:""}</div>
+      ${isAdmin()?`<div class="row" style="gap:8px;flex-wrap:wrap"><button class="btn ghost sm" id="rgDups"><span class="ic ti ti-copy"></span>Find duplicates</button><button class="btn ghost sm" id="rgFolders"><span class="ic ti ti-folders"></span>Create case folders</button><button class="btn ghost sm" id="rgExport" title="Download the list of cases (for matching papers kept elsewhere)"><span class="ic ti ti-download"></span>Download case list</button>${noSerial.length?`<button class="btn ghost sm" id="rgNumberDate"><span class="ic ti ti-hash"></span>Number old cases by date</button>`:""}</div>`:""}</div>
     ${isAdmin()&&noSerial.length?`<div class="rg-steps"><span class="ti ti-list-numbers"></span>To number the old cases: <b>1</b> Find duplicates → <b>2</b> Number old cases by date. New cases are numbered when their Files are first opened.</div>`:""}
     ${(noSerial.length||clashes.length||(canManage()&&gapPlan().length))?`<div class="rg-warn">${canManage()&&gapPlan().length?`<button class="chip" id="rgGaps"><span class="ti ti-arrows-sort"></span>Numbering has gaps — close them</button>`:""}${noSerial.length?`<button class="chip" data-bf="noserial"><span class="ti ti-hash"></span>${noSerial.length} without a serial</button>`:""}${clashes.map(c=>`<span class="chip"><span class="ti ti-alert-triangle"></span>${pad3(c.n)} used ${c.ids.length}×: ${c.ids.map(id=>esc(labelOf(briefs[id]))).join(" / ")}</span>`).join("")}</div>`:""}`;
   const tools=`<div class="rg-tools"><div class="rg-search"><span class="ti ti-search"></span><input id="bSearch" placeholder="Search serial, title, diary or case no., AoR" value="${esc(briefSearch)}" autocomplete="off"></div>
@@ -4972,6 +4972,7 @@ function renderBriefs(){
   if($("rgGaps")) $("rgGaps").onclick=()=>closeGapsForm();
   if($("rgDups")) $("rgDups").onclick=duplicatesForm;
   if($("rgFolders")) $("rgFolders").onclick=allFoldersForm;
+  if($("rgExport")) $("rgExport").onclick=downloadCaseList;
   if($("tbNewBrief2"))$("tbNewBrief2").onclick=()=>briefForm();
   if($("tbLegalAid"))$("tbLegalAid").onclick=()=>legalAidForm();
   wireSort($("tab-briefs"), renderBriefs);
@@ -5310,6 +5311,19 @@ async function bumpSerialCounter(minNext){
    gatekeeper's mkdir is a no-op on an existing folder, never a rename or a copy). Cases with
    no serial yet are sent through "Number old cases by date" first, which makes their folders
    as it numbers them. Colleagues and Staff can then add papers to any of them from Files. */
+// Admin: the register as a file — serial, title, numbers, folder, listings — so papers kept
+// elsewhere (the owner's OneDrive) can be matched to the right case. Saved to the device only.
+function downloadCaseList(){
+  if(!isAdmin()) return;
+  const rows=Object.values(briefs).filter(isCaseBrief).map(b=>({ id:b.id, serial:serialNum(b), title:labelOf(b), caseTitle:b.caseTitle||"",
+    caseNo:b.caseNo||"", diaryNo:b.diaryNo||"", folder:b.dropboxFolder||"", status:b.status||"", aor:b.aor||"", appearingFor:b.appearingFor||"",
+    matterType:b.matterType||"", nextDate:b.nextDate||"", listed:briefListings(b.id).map(x=>x.date), assignedTo:(b.assignedTo||[]).map(nameOf) }))
+    .sort((a,z)=>(a.serial??1e9)-(z.serial??1e9));
+  const blob=new Blob([JSON.stringify({exported:new Date().toISOString(), cases:rows},null,1)],{type:"application/json"});
+  const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=`SD case list ${ddmmyyyy()}.json`;
+  document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); },1500);
+  toast(`${rows.length} cases saved to your Downloads`,"ti-download");
+}
 function allFoldersForm(){
   if(!isAdmin()) return;
   const cases=Object.values(briefs).filter(isCaseBrief);
