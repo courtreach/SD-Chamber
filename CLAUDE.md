@@ -47,6 +47,35 @@ Dropbox is reachable, enforced by Dropbox itself) and **one folder per brief**.
   `sd-chamber-files` with KV + both secrets, and connected from the app. Verified from
   outside: home page, 401 without sign-in, CORS for the app origin, KV-backed callback guard.
 
+## Serials v2 — numbered on first Files tap; old cases by date (Oct 2026, supersedes the Word-list import)
+
+Owner: "Forget about the word files. The app will number a case with serial number only when
+someone clicks on files button and there is no linked serial number folder for that case. For
+the old cases … assign a serial number as per date. I dont want two cases to be assigned one
+serial number so check for duplicates. Also once a serial number is created or assigned the
+corresponding serial number folder has to be created in the dropbox."
+- The Word serial-list import and "Number the rest" are REMOVED. `addBrief` no longer numbers.
+- **`allocateSerial(id)`**: a Firestore TRANSACTION (`db.tx` — runTransaction in prod, a
+  sequential emulation in DEMO) reads the brief + `config/serial {next}`, takes
+  max(counter, local max+1) skipping any number visible on another brief, writes counter =
+  n+1 and the brief's chamberNo + dropboxFolder together. Concurrent taps → Firestore retries
+  one → different numbers. Rules: `config/serial` create by any approved member (next int ≥1),
+  update only if next strictly increases.
+- **`ensureCaseFolder(id)`** (opening Files, saving a paper, "Create its folder now"):
+  allocate if no serial, record the folder, gatekeeper mkdir. Opening Files now numbers a case
+  (owner's explicit choice — earlier "don't spend a number on a tap" guard reversed).
+- **Number old cases by date** (admin, register; `numberByDateForm`/`runNumbering`): blocked
+  by the duplicate check until reviewed or "They're all different — continue"; date =
+  `caseCameOn(b)` = earliest of createdAt / assignedAt / assignHistory / first listing; mode
+  "every case from 001" (default) or "keep numbers already given"; preview table; reserves
+  the range first (`bumpSerialCounter(top+1)`) so concurrent taps can't collide; per case
+  updates chamberNo then `applySerialFolder` (rename existing folder + the numbered papers in
+  it, or mkdir). Admin hand-edit of a serial (brief form; non-admins can't type one) → unique
+  check, counter bump, folder/paper rename.
+- Tested in demo: new brief unnumbered; dup gate caught a real pair; 53 cases → 001–053 by
+  date, unique, no gaps, folders; next taps → 054, 055 with folders; admin 055→060 renamed
+  folder + F055→F060, counter 061; duplicate hand serial refused.
+
 ## Folders on demand (Oct 2026)
 
 Owner: "If there is no folder for a case and I am clicking on the files button … it should

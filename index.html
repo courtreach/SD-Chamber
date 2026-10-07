@@ -1205,6 +1205,9 @@ if(DEMO){
     async add(path,data){ const id=gid(); C(path).set(id,{...data}); emitColl(path); return id; },
     async update(path,data){ const[cp,id]=split(path); const m=C(cp); m.set(id,{...(m.get(id)||{}),...data}); emitColl(cp); emitDoc(path); },
     async remove(path){ const[cp,id]=split(path); C(cp).delete(id); emitColl(cp); },
+    async tx(fn){ const ops=[]; const r=await fn({ async get(path){ const[cp,id]=split(path); return exists(cp,id)?{id,...C(cp).get(id)}:null; },
+      set(path,data,merge){ ops.push(()=>db.set(path,data,merge)); }, update(path,data){ ops.push(()=>db.update(path,data)); } });
+      for(const o of ops) await o(); return r; },
     now
   };
   let authCb=null, cur={uid:"u_clerk"};
@@ -1215,7 +1218,7 @@ if(DEMO){
   seedDemo(db);
 } else {
   const [{initializeApp},{getAuth,signInWithEmailAndPassword,createUserWithEmailAndPassword,onAuthStateChanged,signOut,sendPasswordResetEmail},
-    {getFirestore,collection,doc,getDoc,setDoc,addDoc,updateDoc,deleteDoc,onSnapshot,query,orderBy,serverTimestamp}] =
+    {getFirestore,collection,doc,getDoc,setDoc,addDoc,updateDoc,deleteDoc,onSnapshot,query,orderBy,serverTimestamp,runTransaction}] =
     await Promise.all([
       import("https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"),
       import("https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js"),
@@ -1231,6 +1234,12 @@ if(DEMO){
     async add(path,data){ const r=await addDoc(collection(fs,...path.split("/")),data); return r.id; },
     async update(path,data){ await updateDoc(doc(fs,...path.split("/")),data); },
     async remove(path){ await deleteDoc(doc(fs,...path.split("/"))); },
+    // all-or-nothing read-then-write (serial numbers): Firestore retries it if anyone else
+    // changed what it read, so two devices can never take the same number
+    tx(fn){ return runTransaction(fs, t=>fn({
+      async get(path){ const sn=await t.get(doc(fs,...path.split("/"))); return sn.exists()?{id:sn.id,...sn.data()}:null; },
+      set(path,data,merge){ t.set(doc(fs,...path.split("/")),data,{merge:!!merge}); },
+      update(path,data){ t.update(doc(fs,...path.split("/")),data); } })); },
     now:serverTimestamp
   };
   auth={ onChange(cb){ onAuthStateChanged(fa,async user=>{
@@ -3667,7 +3676,7 @@ function dsForm(idx=null, preset=null){
       <p class="muted" style="font-size:11.5px;margin:4px 0 12px"><span class="ti ti-info-circle"></span> Date → type → court → item is all you need — the case name &amp; bench fill from the SC causelist (now, or automatically once that day's list is out). Everything below is optional.</p>
       <div id="dsNewFields">
         <label>Case title <span class="muted" style="font-weight:400">(auto-fills from the SC list — edit freely; your text is kept)</span></label><input id="f_title" value="${esc(e.caseTitle||'')}" placeholder="fills from the causelist — or type it">
-        <label>Serial no. <span class="muted" style="font-weight:400">(automatic — leave blank)</span></label><input id="f_chno" class="mono" value="${esc(e.briefId&&briefs[e.briefId]?.chamberNo||'')}" placeholder="next: ${pad3(nextSerial())}" style="max-width:140px">
+        <label>Serial no. <span class="muted" style="font-weight:400">(automatic — given when its Files are first opened)</span></label><input id="f_chno" class="mono" value="${esc(e.briefId&&briefs[e.briefId]?.chamberNo||'')}" placeholder="automatic" style="max-width:140px" ${!isAdmin()?"disabled":""}>
         <label>Diary / Case no. <span class="muted" style="font-weight:400">(so an unlisted matter auto-matches once it\'s out)</span></label><input id="f_dno" class="mono" value="${esc((e.briefId&&(briefs[e.briefId]?.diaryNo||briefs[e.briefId]?.caseNo))||e.diaryNo||e.caseNo||'')}" placeholder="e.g. SLP(C) 18036/2026 or D. 12345/2026">
       </div>
       <label>Appearing for <span class="muted" style="font-weight:400">(bolds that party on the list)</span></label>
@@ -4711,7 +4720,7 @@ function duplicatesForm(){
 function renderDuplicates(){
   const box=$("dupBody"); if(!box) return;
   const groups=findDuplicateGroups();
-  if(!groups.length){ box.innerHTML=`<div class="empty"><span class="ic ti ti-circle-check"></span>No likely duplicates left. Next: <b>Import serial list</b>, then <b>Number the rest</b>.</div>`; return; }
+  if(!groups.length){ box.innerHTML=`<div class="empty"><span class="ic ti ti-circle-check"></span>No likely duplicates left. Next: <b>Number old cases by date</b>.</div>`; return; }
   const card=(b,gi,keep)=>{ const n=serialNum(b), L=listingDatesOf(b.id), st=STATUS[b.status]||STATUS.received;
     return `<label class="dup-m ${b.id===keep?"keep":""}"><input type="radio" name="dg${gi}" value="${b.id}" ${b.id===keep?"checked":""}>
       <div class="dup-main"><div class="dup-t">${n!=null?`<span class="mono" style="color:var(--accent-ink);font-weight:700">${pad3(n)}</span> · `:""}${esc(labelOf(b))}</div>
@@ -4796,8 +4805,8 @@ function renderBriefs(){
   const notice=(!canManage()&&!isSenior()&&myUnacked.length)?`<div class="notice"><span class="ti ti-bell"></span><div><b>${myUnacked.length} new assignment${myUnacked.length>1?'s':''}</b> awaiting your acknowledgment — open and acknowledge.</div></div>`:"";
   const head=`<div class="rg-head"><div><div class="rg-title">Brief register</div>
       <div class="rg-sub">${cases.length} files · ${counts[""]} active · next serial <b>${pad3(nextSerial())}</b></div></div>
-      ${isAdmin()?`<div class="row" style="gap:8px;flex-wrap:wrap"><button class="btn ghost sm" id="rgDups"><span class="ic ti ti-copy"></span>Find duplicates</button><button class="btn ghost sm" id="rgImport"><span class="ic ti ti-file-import"></span>Import serial list</button>${noSerial.length?`<button class="btn ghost sm" id="rgNumber"><span class="ic ti ti-hash"></span>Number the rest</button>`:""}</div>`:""}</div>
-    ${isAdmin()&&noSerial.length?`<div class="rg-steps"><span class="ti ti-list-numbers"></span>To number the register: <b>1</b> Find duplicates → <b>2</b> Import serial list → <b>3</b> Number the rest</div>`:""}
+      ${isAdmin()?`<div class="row" style="gap:8px;flex-wrap:wrap"><button class="btn ghost sm" id="rgDups"><span class="ic ti ti-copy"></span>Find duplicates</button>${noSerial.length?`<button class="btn ghost sm" id="rgNumberDate"><span class="ic ti ti-hash"></span>Number old cases by date</button>`:""}</div>`:""}</div>
+    ${isAdmin()&&noSerial.length?`<div class="rg-steps"><span class="ti ti-list-numbers"></span>To number the old cases: <b>1</b> Find duplicates → <b>2</b> Number old cases by date. New cases are numbered when their Files are first opened.</div>`:""}
     ${(noSerial.length||clashes.length)?`<div class="rg-warn">${noSerial.length?`<button class="chip" data-bf="noserial"><span class="ti ti-hash"></span>${noSerial.length} without a serial</button>`:""}${clashes.map(c=>`<span class="chip"><span class="ti ti-alert-triangle"></span>${pad3(c.n)} used ${c.ids.length}×: ${c.ids.map(id=>esc(labelOf(briefs[id]))).join(" / ")}</span>`).join("")}</div>`:""}`;
   const tools=`<div class="rg-tools"><div class="rg-search"><span class="ti ti-search"></span><input id="bSearch" placeholder="Search serial, title, diary or case no., AoR" value="${esc(briefSearch)}" autocomplete="off"></div>
     <div class="rg-chips">${filters.map(([k,l])=>`<button class="rg-chip ${briefFilter===k?'on':''}" data-bf="${k}">${l}<b>${counts[k]}</b></button>`).join("")}</div></div>`;
@@ -4829,9 +4838,8 @@ function renderBriefs(){
   $("bSearch").oninput=e=>{briefSearch=e.target.value; renderBriefs(); $("bSearch").focus(); const v=$("bSearch").value;$("bSearch").setSelectionRange(v.length,v.length);};
   document.querySelectorAll("#tab-briefs [data-bf]").forEach(x=>x.onclick=()=>{briefFilter=x.dataset.bf;renderBriefs();});
   document.querySelectorAll("#tab-briefs [data-editbrief]").forEach(x=>x.onclick=e=>{e.stopPropagation();briefForm(briefs[x.dataset.editbrief]);});
-  if($("rgImport")) $("rgImport").onclick=serialImportForm;
+  if($("rgNumberDate")) $("rgNumberDate").onclick=numberByDateForm;
   if($("rgDups")) $("rgDups").onclick=duplicatesForm;
-  if($("rgNumber")) $("rgNumber").onclick=numberRemainingForm;
   if($("tbNewBrief2"))$("tbNewBrief2").onclick=()=>briefForm();
   if($("tbLegalAid"))$("tbLegalAid").onclick=()=>legalAidForm();
   if($("tbSyncReg"))$("tbSyncReg").onclick=async()=>{ $("tbSyncReg").disabled=true; await syncRegister(true); toast("Register synced with the listings","ti-check"); renderBriefs(); };
@@ -4843,8 +4851,8 @@ function briefForm(b=null){
   openSheet(`<div class="sheet-head"><div><h3>${b?'Edit brief':'New brief'}</h3></div><button class="x-btn"><span class="ti ti-x"></span></button></div>
     <div class="sheet-body">
       <label>Case title</label><input id="b_title" value="${esc(b?.caseTitle||'')}" placeholder="Petitioner vs Respondent">
-      <label>Serial no. <span class="muted" style="font-weight:400">(automatic if left blank — fixed once given)</span></label>
-      <input id="b_chno" class="mono" value="${esc(b?.chamberNo||'')}" placeholder="next: ${pad3(nextSerial())}" ${(b&&serialNum(b)!=null&&!isAdmin())?'disabled title="Only the admin can change a serial once given"':''}>
+      <label>Serial no. <span class="muted" style="font-weight:400">(automatic — given when its Files are first opened)</span></label>
+      <input id="b_chno" class="mono" value="${esc(b?.chamberNo||'')}" placeholder="given when its Files are first opened" ${!isAdmin()?'disabled title="Serials are given automatically; only the admin sets one by hand"':''}>
       <div class="grid2"><div><label>Diary no.</label><input id="b_dy" class="mono" value="${esc(b?.diaryNo||'')}" placeholder="12345/2026"></div>
         <div><label>Case no.</label><input id="b_cn" class="mono" value="${esc(b?.caseNo||'')}" placeholder="SLP(C) 123/2026"></div></div>
       <div class="grid2"><div><label>Matter type</label><select id="b_type">${MATTER_TYPES.map(t=>`<option ${b?.matterType===t?'selected':''}>${t}</option>`).join("")}</select></div>
@@ -4929,6 +4937,11 @@ function briefForm(b=null){
       data.everAssigned=assigned.slice(); data.declinedBy=[];
       data.assignHistory=assigned.map(u=>({uid:u,at:Date.now(),by:me.uid,mode:asgHistMode}));
       savedId=await addBrief(data); }
+    // the admin set or changed a serial by hand: keep the counter ahead of it and the folder in step
+    if(isAdmin() && !isNaN(_sn) && savedId && (!b || serialNum(b)!==_sn)){
+      try{ await bumpSerialCounter(_sn+1);
+        if(briefs[savedId] && (await filesStatus()).connected){ briefs[savedId].chamberNo=String(_sn); await applySerialFolder(savedId, b?serialNum(b):null); } }
+      catch(e){ toast("Serial saved — its folder: "+e.message,"ti-alert-triangle"); } }
     // keep every cause-list row of this matter in step: team + (upcoming) title
     if(b) await syncListingJrs(b.id, assigned, data.caseTitle);
     // an auto-assignment consumes a roster turn, just like the standalone auto-assign
@@ -5043,11 +5056,9 @@ const isCaseBrief=b=>!!b&&!b.legalAid&&!b.confCredit;
 let _serialIssued=0;                      // numbers handed out this session, ahead of the Firestore echo
 function nextSerial(){ let m=_serialIssued; for(const b of Object.values(briefs)){ const n=serialNum(b); if(n!=null&&n>m) m=n; } return m+1; }
 function takeSerial(){ const n=nextSerial(); _serialIssued=n; return n; }
-// Every brief is created through here, so every new case gets the next serial.
-async function addBrief(data){
-  if(isCaseBrief(data) && !String(data.chamberNo||"").trim()) data.chamberNo=String(takeSerial());
-  return db.add("briefs",data);
-}
+// Every brief is created through here. A case is NOT numbered on creation any more (owner,
+// Oct 2026): it gets its serial when its Files are first opened — see allocateSerial.
+async function addBrief(data){ return db.add("briefs",data); }
 function serialClashes(){
   const by={};
   for(const b of Object.values(briefs)){ if(!isCaseBrief(b)) continue; const n=serialNum(b); if(n==null) continue; (by[n]=by[n]||[]).push(b.id); }
@@ -5093,27 +5104,141 @@ function planNumber(b,files,L){
   return {sub:Math.max(maxSub,unsub.length?1:0)+1,rename:null};
 }
 
-/* ---------------- a case's folder, created on demand ----------------
-   Owner: "If there is no folder for a case and I am clicking on the files button … it should
-   create a folder for that case with serial number and allow me to save the file in that folder
-   as colleague or staff." A case WITH a serial gets its folder the moment Files is opened. A
-   case WITHOUT one gets the next serial only when somebody actually saves a paper (or taps
-   "Create its folder") — merely opening Files must not spend a number, because older cases are
-   meant to take theirs from the owner's serial list. Members may set a serial / folder only
-   while it is empty (firestore.rules). */
+/* ============================================================
+   SERIALS v2 (owner, Oct 2026) — replaces the Word-list import.
+   "The app will number a case with serial number only when someone clicks on files button and
+   there is no linked serial number folder for that case. For the old cases which are in the
+   record of the app the app will assign a serial number as per date. I dont want two cases to
+   be assigned one serial number so check for duplicates. Also once a serial number is created
+   or assigned the corresponding serial number folder has to be created in the dropbox."
+   - New numbers come ONLY from config/serial {next}, taken inside a Firestore TRANSACTION
+     together with the brief's chamberNo + dropboxFolder. Two people tapping Files at the same
+     moment can never get the same number: one transaction retries and takes the following one.
+     The counter only ever moves forward (rules), and never hands out a number this device can
+     see is already on another brief.
+   - Old cases: a one-time admin step, "Number old cases by date", after a duplicate check.
+   - Every number given creates its Dropbox folder at once.
+   ============================================================ */
+const _ms=x=>x?._t??(x?.toMillis?x.toMillis():(typeof x==="number"?x:null));
+// The date a case came in: the earliest thing we know about it.
+function caseCameOn(b){
+  const c=[_ms(b.createdAt), _ms(b.assignedAt), ...(b.assignHistory||[]).map(h=>_ms(h.at))].filter(v=>typeof v==="number"&&v>0);
+  const L=listingDatesOf(b.id); if(L.length) c.push(new Date(L[0]+"T00:00").getTime());
+  return c.length?Math.min(...c):Number.MAX_SAFE_INTEGER;
+}
+// Take the next serial for one brief, atomically. Returns the brief's serial (existing or new).
+async function allocateSerial(id){
+  return db.tx(async t=>{
+    const b=await t.get("briefs/"+id); if(!b) throw new Error("That brief no longer exists.");
+    const have=serialNum(b); if(have!=null) return have;
+    const c=await t.get("config/serial");
+    let n=Math.max(c&&Number.isInteger(c.next)?c.next:1, nextSerial());   // skip anything already in use
+    while(serialTakenBy(n,id)) n++;
+    t.set("config/serial",{next:n+1,updatedAt:db.now()},true);
+    const patch={chamberNo:String(n),updatedAt:db.now()};
+    if(!b.dropboxFolder) patch.dropboxFolder=caseFolderName({...b,chamberNo:String(n)});
+    t.update("briefs/"+id,patch);
+    return n;
+  });
+}
+async function mkdirQuiet(folder){ try{ await filesApi("mkdir",{folder}); }catch(e){ if(!/Unknown request/.test(e.message)) throw e; } }
+// A case's folder, made on demand: number it if it has none, record the folder, create it.
 async function ensureCaseFolder(id){
-  const b=briefs[id]; if(!b||!isCaseBrief(b)) return null;
-  const patch={};
-  if(serialNum(b)==null) patch.chamberNo=String(takeSerial());
-  if(!b.dropboxFolder) patch.dropboxFolder=caseFolderName({...b,...patch});
-  if(Object.keys(patch).length){
-    await db.update("briefs/"+id,{...patch,updatedAt:db.now()});   // throws if the rules refuse
-    Object.assign(b,patch);
-  }
-  // create it in Dropbox now (an older gatekeeper without "mkdir" simply creates it on the first upload)
-  try{ await filesApi("mkdir",{folder:b.dropboxFolder}); }catch(e){ if(!/Unknown request/.test(e.message)) throw e; }
+  let b=briefs[id]; if(!b||!isCaseBrief(b)) return null;
+  if(serialNum(b)==null){ const n=await allocateSerial(id); b=briefs[id]; if(serialNum(b)==null){ b.chamberNo=String(n); } }
+  if(!b.dropboxFolder){ const fold=caseFolderName(b); await db.update("briefs/"+id,{dropboxFolder:fold,updatedAt:db.now()}); b.dropboxFolder=fold; }
+  await mkdirQuiet(b.dropboxFolder);
   return b;
 }
+// A brief's serial changed (admin edit or renumbering): rename its folder and the numbered
+// papers in it, or create the folder if it has none. Returns the new folder name.
+async function applySerialFolder(id, oldN){
+  const b=briefs[id]; const n=serialNum(b); if(n==null) return null;
+  const want=caseFolderName(b);
+  if(b.dropboxFolder && b.dropboxFolder!==want){
+    try{ await filesApi("move",{folder:b.dropboxFolder,toFolder:want}); }
+    catch(e){ if(!/not_found/.test(e.message)) throw e; await mkdirQuiet(want); }
+    if(oldN!=null && oldN!==n){
+      const files=(await filesApi("list",{folder:want})).files||[];
+      for(const f of files){ const m=PAPER_RE.exec(f.name); if(!m||+m[2]!==oldN) continue;
+        await filesApi("move",{folder:want,name:f.name,toName:f.name.replace(PAPER_RE,(_,L,_s,sub,rest)=>`${L}${pad3(n)}${sub?"."+sub:""} ${rest}`)}); }
+    }
+  } else await mkdirQuiet(want);
+  if(b.dropboxFolder!==want) await db.update("briefs/"+id,{dropboxFolder:want,updatedAt:db.now()});
+  b.dropboxFolder=want; return want;
+}
+async function bumpSerialCounter(minNext){
+  await db.tx(async t=>{ const c=await t.get("config/serial"); const cur=c&&Number.isInteger(c.next)?c.next:1;
+    if(minNext>cur) t.set("config/serial",{next:minNext,updatedAt:db.now()},true); });
+}
+
+/* ---------------- Number old cases by date (admin, one time) ---------------- */
+let _nbdForce=false;
+function numberByDateForm(){
+  if(!isAdmin()) return;
+  const cases=Object.values(briefs).filter(isCaseBrief);
+  const dupGroups=findDuplicateGroups();
+  const numbered=cases.filter(b=>serialNum(b)!=null);
+  openSheet(`<div class="sheet-head"><div><h3>Number old cases by date</h3><div class="sub">${cases.length} cases · ${numbered.length} already numbered</div></div><button class="x-btn"><span class="ti ti-x"></span></button></div>
+    <div class="sheet-body" id="nbdBody"></div>`);
+  document.querySelector("#modalRoot .sheet")?.classList.add("sheet-wide");
+  const body=$("nbdBody");
+  if(dupGroups.length && !_nbdForce){
+    body.innerHTML=`<div class="notice warn"><span class="ti ti-copy"></span><div><b>${dupGroups.length} possible duplicate group${dupGroups.length>1?"s":""}.</b> Merge real duplicates first, so one matter doesn't take two serials.</div></div>
+      <div class="row" style="gap:8px;margin-top:12px"><button class="btn" id="nbdDups"><span class="ic ti ti-copy"></span>Review duplicates</button><button class="btn ghost" id="nbdAnyway">They're all different — continue</button></div>`;
+    $("nbdDups").onclick=duplicatesForm; $("nbdAnyway").onclick=()=>{ _nbdForce=true; numberByDateForm(); };
+    return;
+  }
+  _nbdForce=false;
+  let mode="all";
+  const plan=()=>{
+    const byDate=(a,z)=>caseCameOn(a)-caseCameOn(z)||labelOf(a).localeCompare(labelOf(z));
+    if(mode==="all") return cases.slice().sort(byDate).map((b,i)=>({b,n:i+1}));
+    const keep=numbered.map(b=>({b,n:serialNum(b)}));
+    let n=Math.max(0,...numbered.map(serialNum));
+    return keep.concat(cases.filter(b=>serialNum(b)==null).sort(byDate).map(b=>({b,n:++n}))).sort((x,y)=>x.n-y.n);
+  };
+  const render=()=>{
+    const P=plan(), changes=P.filter(p=>serialNum(p.b)!==p.n), withFolder=changes.filter(p=>p.b.dropboxFolder);
+    const day=b=>{ const t=caseCameOn(b); return t===Number.MAX_SAFE_INTEGER?"—":fmtDateY(new Date(t).toLocaleDateString("en-CA")); };
+    body.innerHTML=`${numbered.length?`<div class="seg" style="margin-bottom:12px;width:100%">
+        <button type="button" data-nbm="all" class="${mode==="all"?"active":""}" style="flex:1">Every case by date, from 001</button>
+        <button type="button" data-nbm="keep" class="${mode==="keep"?"active":""}" style="flex:1">Keep the ${numbered.length} numbers already given</button></div>`:""}
+      <div class="muted" style="font-size:12.5px;margin-bottom:10px">${changes.length} case${changes.length===1?"":"s"} will get a number${withFolder.length?` · ${withFolder.length} existing folder${withFolder.length>1?"s":""} will be renamed (and the numbered papers in them)`:""}. Each case's Dropbox folder is created as it is numbered. The date is the earliest the app knows for the case — when it was entered, assigned or first listed.</div>
+      <div style="max-height:48vh;overflow:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)">
+      <table class="sl-table"><thead><tr><th>Serial</th><th>Came in</th><th>Case</th><th>Now</th></tr></thead><tbody>
+      ${P.map(p=>{ const was=serialNum(p.b); return `<tr><td class="mono"><b>${pad3(p.n)}</b></td><td style="white-space:nowrap">${esc(day(p.b))}</td><td>${esc(labelOf(p.b))}</td><td>${was==null?`<span class="sl-st mute">no serial</span>`:was===p.n?`<span class="sl-st ok">same</span>`:`<span class="sl-st warn">${pad3(was)} → ${pad3(p.n)}</span>`}</td></tr>`; }).join("")}
+      </tbody></table></div>
+      <div id="nbdMsg" class="muted" style="font-size:12.5px;min-height:18px;margin-top:10px"></div>
+      <div class="row" style="gap:8px;margin-top:8px"><button class="btn" id="nbdGo"><span class="ic ti ti-hash"></span>Number ${changes.length} case${changes.length===1?"":"s"} and create their folders</button></div>`;
+    body.querySelectorAll("[data-nbm]").forEach(x=>x.onclick=()=>{ mode=x.dataset.nbm; render(); });
+    $("nbdGo").onclick=()=>confirmAsk({title:`Number ${changes.length} cases?`,confirmLabel:"Number them",
+      body:`Serial numbers are fixed once given. ${withFolder.length?`${withFolder.length} folder${withFolder.length>1?"s":""} already in Dropbox will be renamed to the new number. `:""}Every case gets its Dropbox folder.`,
+      onYes:()=>runNumbering(P)});
+  };
+  render();
+}
+async function runNumbering(P){
+  const msg=()=>$("nbdMsg"); const btn=$("nbdGo"); if(btn) btn.disabled=true;
+  const top=Math.max(...P.map(p=>p.n));
+  try{ await bumpSerialCounter(top+1); }catch(e){ toast("Couldn't reserve the numbers — "+e.message,"ti-alert-triangle"); return; }   // nobody else can take these meanwhile
+  const st=await filesStatus(true); const dbx=st.connected;
+  let done=0, fails=[];
+  for(const p of P){
+    const b=briefs[p.b.id]; if(!b) continue; const old=serialNum(b);
+    if(old===p.n && b.dropboxFolder){ done++; continue; }
+    if(msg()) msg().textContent=`Numbering ${done+1} of ${P.length} — ${labelOf(b)}`;
+    try{
+      if(old!==p.n){ await db.update("briefs/"+b.id,{chamberNo:String(p.n),updatedAt:db.now()}); b.chamberNo=String(p.n); }
+      if(dbx) await applySerialFolder(b.id, old);
+    }catch(e){ fails.push(`${pad3(p.n)} ${labelOf(b)}: ${e.message}`); }
+    done++;
+  }
+  toast(fails.length?`Numbered — ${fails.length} need a second try`:`All ${P.length} cases numbered${dbx?" and their folders created":""}`, fails.length?"ti-alert-triangle":"ti-check");
+  if(msg()) msg().innerHTML=fails.length?`<b>Not finished for ${fails.length}:</b><br>${fails.map(esc).join("<br>")}<br>Press the button again to retry them.`:(dbx?"Done.":"Numbered. Dropbox wasn't reachable, so each folder will be created the first time its Files are opened.");
+  if(!fails.length) setTimeout(()=>{ closeSheet(); renderActive(); },900);
+}
+
 const _rulesMsg="The app's security rules don't allow this yet — the admin needs to publish the updated rules";
 
 /* ---------------- the Files screen ---------------- */
@@ -5134,8 +5259,9 @@ async function openFiles(id, sub){
   renderFilesSheet();
   _fv.st=await filesStatus();
   if(_fv.id!==id) return;
-  if(!b._virtual && canEditPapers(_fv.st) && serialNum(b)!=null && !b.dropboxFolder){
-    try{ await ensureCaseFolder(id); toast(`Folder created — ${briefs[id].dropboxFolder}`,"ti-folder-plus"); }
+  if(!b._virtual && canEditPapers(_fv.st) && (serialNum(b)==null || !b.dropboxFolder)){
+    const had=serialNum(b);
+    try{ const bb=await ensureCaseFolder(id); toast(had==null?`Serial ${pad3(serialNum(bb))} given — folder created`:`Folder created — ${bb.dropboxFolder}`,"ti-folder-plus"); }
     catch(e){ toast(/permission|insufficient/i.test(e.message)?_rulesMsg:e.message,"ti-alert-triangle"); }
   }
   const folder=briefFolder(briefs[id]||VIRTUAL_FOLDERS[id]||b);
@@ -5153,7 +5279,7 @@ function renderFilesSheet(){
   let notes="";
   if(st&&st.unreachable) notes+=`<div class="fv-note warn"><span class="ti ti-plug-off"></span>Files aren't reachable right now${isAdmin()?" — the Dropbox gatekeeper didn't answer":""}.</div>`;
   else if(st&&!st.connected) notes+=`<div class="fv-note warn"><span class="ti ti-brand-dropbox"></span>${st.admin?"Dropbox isn't connected.":"Files aren't set up yet — the admin needs to connect Dropbox."}${st.admin?` <button class="btn sm" id="fv_connect">Connect Dropbox</button>`:""}</div>`;
-  if(n==null&&!virt) notes+=`<div class="fv-note"><span class="ti ti-hash"></span><span>No serial or folder yet. Saving the first paper gives it serial <b>${pad3(nextSerial())}</b> and creates its folder.</span>${canEditPapers(st)?` <button class="btn sm" id="fv_giveSerial">Create its folder now</button>`:""}</div>`;
+  if(n==null&&!virt) notes+=`<div class="fv-note"><span class="ti ti-hash"></span><span>No serial or folder yet — they are given as soon as Dropbox is reachable.</span>${canEditPapers(st)?` <button class="btn sm" id="fv_giveSerial">Create its folder now</button>`:""}</div>`;
   const want=caseFolderName(b);
   if(manage && !virt && b.dropboxFolder && want && b.dropboxFolder!==want && !_fv.sub)
     notes+=`<div class="fv-note"><span class="ti ti-folder-cog"></span><span>Folder is named “${esc(b.dropboxFolder)}”. Rename it to “${esc(want)}” to match the serial and title?</span> <button class="btn sm" id="fv_renameFolder">Rename folder</button></div>`;
@@ -5316,111 +5442,6 @@ function addPapersForm(id, list, sub){
     openFiles(id,sub);
   };
 }
-
-/* ---------------- the serial list (Word), read privately in the browser ----------------
-   Owner: the list is sensitive. It is read HERE, on the admin's own device — nothing is
-   uploaded anywhere; only the serial numbers chosen on the matching screen are written onto
-   the briefs (and, if asked, the entries not in the app are added as disposed files).
-   Matching follows ASD's lesson: only an EXACT title match is pre-ticked; everything else
-   is the admin's choice. */
-async function readSerialList(file){
-  const buf=new Uint8Array(await file.arrayBuffer());
-  const raw=await _zipEntry(buf,"word/document.xml");
-  if(!raw) throw new Error("That doesn't look like a Word (.docx) file.");
-  const xml=new TextDecoder().decode(raw).replace(/&(?!(?:amp|lt|gt|quot|apos|#\d+|#x[0-9a-fA-F]+);)/g,"&amp;");
-  const doc=new DOMParser().parseFromString(xml,"application/xml");
-  const textOf=n=>{ let s=""; for(const t of n.getElementsByTagName("w:t")) s+=t.textContent; return s.replace(/\s+/g," ").trim(); };
-  const out=[], seen=new Set();
-  const push=(serial,title)=>{ const n=parseInt(serial,10); title=String(title||"").trim(); if(isNaN(n)||n<1||n>99999||title.length<3) return; out.push({serial:n,title,dup:seen.has(n)}); seen.add(n); };
-  for(const tr of doc.getElementsByTagName("w:tr")){
-    const cells=[...tr.childNodes].filter(x=>x.nodeName==="w:tc").map(textOf);
-    const si=cells.findIndex(c=>/^\(?\d{1,5}\)?[.)]?$/.test(c)); if(si<0) continue;
-    const title=cells.filter((c,i)=>i!==si && !/^\d{1,2}[.\/-]\d{1,2}[.\/-]\d{2,4}$/.test(c)).sort((a,z)=>z.length-a.length)[0];
-    push(cells[si].replace(/\D/g,""),title);
-  }
-  for(const p of doc.getElementsByTagName("w:p")){
-    let a=p.parentNode, inTable=false; while(a){ if(a.nodeName==="w:tc"){ inTable=true; break; } a=a.parentNode; }
-    if(inTable) continue;
-    const m=textOf(p).match(/^\(?(\d{1,5})\)?\s*[.)\-–:]?\s+(.{3,})$/); if(m) push(m[1],m[2]);
-  }
-  return out;
-}
-function serialImportForm(){
-  if(!isAdmin()) return;
-  openSheet(`<div class="sheet-head"><div><h3>Import the serial list</h3><div class="sub">Read on this device only — the file is not uploaded anywhere</div></div><button class="x-btn"><span class="ti ti-x"></span></button></div>
-    <div class="sheet-body">
-      <div class="notice" style="margin-bottom:12px"><span class="ti ti-lock"></span><div>The Word file stays on this device. The app reads it here, shows you each entry against the briefs, and saves <b>only the serial numbers you approve</b>.</div></div>
-      <label>Word list (.docx)</label><input type="file" id="sl_file" accept=".docx">
-      <div id="sl_out" style="margin-top:14px"></div>
-    </div>`);
-  $("sl_file").onchange=async e=>{ const f=e.target.files[0]; if(!f) return;
-    $("sl_out").innerHTML=`<div class="muted">Reading…</div>`;
-    try{ const entries=await readSerialList(f);
-      if(!entries.length){ $("sl_out").innerHTML=`<div class="notice warn"><span class="ti ti-alert-triangle"></span><div>No numbered entries found. The list needs each entry to start with its number (in its own table column, or as “12. Title”).</div></div>`; return; }
-      renderSerialMatch(entries); }
-    catch(err){ $("sl_out").innerHTML=`<div class="notice warn"><span class="ti ti-alert-triangle"></span><div>${esc(err.message)}</div></div>`; }
-  };
-}
-function renderSerialMatch(entries){
-  const cases=Object.values(briefs).filter(isCaseBrief);
-  const byNorm={}; cases.forEach(b=>{ const k=_normTitle(labelOf(b)); (byNorm[k]=byNorm[k]||[]).push(b); });
-  const opt=b=>`${serialNum(b)!=null?pad3(serialNum(b))+" · ":""}${labelOf(b)}`;
-  const optToId={}; cases.forEach(b=>{ optToId[opt(b)]=b.id; });
-  const rows=entries.map(en=>{
-    const cand=byNorm[_normTitle(en.title)]||[];
-    const holder=serialTakenBy(en.serial,null);
-    let pick=cand.length===1?cand[0]:null, st, tick=false;
-    if(en.dup){ st=["warn","number repeated in the list"]; pick=null; }
-    else if(pick&&serialNum(pick)===en.serial){ st=["mute","already numbered"]; }
-    else if(pick&&holder&&holder.id!==pick.id){ st=["warn",`${pad3(en.serial)} is already on “${labelOf(holder)}”`]; }
-    else if(pick&&serialNum(pick)!=null){ st=["warn",`brief has ${pad3(serialNum(pick))}`]; }
-    else if(pick){ st=["ok","exact title match"]; tick=true; }
-    else if(holder){ st=["mute",`on “${labelOf(holder)}”`]; }
-    else { st=["mute",cand.length>1?"several briefs have this title — pick one":"not in the app"]; }
-    return {...en, pickId:pick?pick.id:"", st, tick};
-  });
-  const nOk=rows.filter(r=>r.tick).length, nNone=rows.filter(r=>!r.pickId&&!serialTakenBy(r.serial,null)&&!r.dup).length;
-  $("sl_out").innerHTML=`<div style="font-size:13px;margin-bottom:8px"><b>${rows.length}</b> entries read · <b>${nOk}</b> matched exactly (ticked) · <b>${nNone}</b> not in the app</div>
-    <datalist id="sl_briefs">${cases.map(b=>`<option value="${esc(opt(b))}"></option>`).join("")}</datalist>
-    <div style="max-height:46vh;overflow:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)">
-    <table class="sl-table"><thead><tr><th></th><th>No.</th><th>In the list</th><th>Brief in the app</th></tr></thead><tbody>
-    ${rows.map((r,i)=>`<tr><td><input type="checkbox" data-slt="${i}" ${r.tick?"checked":""} ${r.dup?"disabled":""}></td>
-      <td class="mono"><b>${pad3(r.serial)}</b></td><td>${esc(r.title)}</td>
-      <td><input list="sl_briefs" data-slp="${i}" value="${esc(r.pickId?opt(briefs[r.pickId]):"")}" placeholder="— not in the app —" style="font-size:12.5px;padding:6px 8px">
-        <div style="margin-top:3px"><span class="sl-st ${r.st[0]}">${esc(r.st[1])}</span></div></td></tr>`).join("")}
-    </tbody></table></div>
-    <label class="chk-row" style="margin-top:12px"><input type="checkbox" id="sl_addmissing"> Also add the entries that aren't in the app, as disposed files (keeps the register complete — every chamber member will see them)</label>
-    <div class="row" style="gap:8px;margin-top:12px"><button class="btn" id="sl_apply"><span class="ic ti ti-check"></span>Apply</button></div>`;
-  document.querySelectorAll("[data-slp]").forEach(x=>x.onchange=()=>{ const r=rows[+x.dataset.slp]; r.pickId=optToId[x.value]||""; const t=document.querySelector(`[data-slt="${x.dataset.slp}"]`); if(t&&r.pickId) t.checked=true; });
-  document.querySelectorAll("[data-slt]").forEach(x=>x.onchange=()=>{ rows[+x.dataset.slt].tick=x.checked; });
-  $("sl_apply").onclick=()=>{
-    document.querySelectorAll("[data-slt]").forEach(x=>{ rows[+x.dataset.slt].tick=x.checked; });
-    const sets=rows.filter(r=>r.tick&&r.pickId);
-    const clash=sets.find(r=>{ const h=serialTakenBy(r.serial,r.pickId); return h&&!sets.some(o=>o.pickId===h.id); });
-    if(clash){ toast(`${pad3(clash.serial)} is already used by “${labelOf(serialTakenBy(clash.serial,clash.pickId))}” — untick it or fix that brief first`,"ti-alert-triangle"); return; }
-    const addMissing=$("sl_addmissing").checked;
-    const missing=addMissing?rows.filter(r=>!r.pickId&&!r.dup&&!serialTakenBy(r.serial,null)):[];
-    confirmAsk({title:"Apply the serial numbers?",confirmLabel:"Apply",
-      body:`${sets.length} brief${sets.length===1?"":"s"} will get ${sets.length===1?"its":"their"} serial number${missing.length?`, and ${missing.length} list entr${missing.length===1?"y":"ies"} will be added as disposed files`:""}. Serial numbers are fixed once given.`,
-      onYes:async()=>{
-        for(const r of sets) await db.update("briefs/"+r.pickId,{chamberNo:String(r.serial),updatedAt:db.now()});
-        for(const r of missing) await addBrief({caseTitle:r.title,chamberNo:String(r.serial),status:"disposed",fromSerialList:true,matterType:"",appearingFor:"",aor:"",
-          assignedTo:[],everAssigned:[],ackBy:[],declinedBy:[],assignHistory:[],detailsAwaited:false,createdBy:me.uid,createdAt:db.now(),updatedAt:db.now()});
-        toast(`Serial numbers saved — ${sets.length} updated${missing.length?`, ${missing.length} added`:""}`,"ti-check"); closeSheet(); renderActive();
-      }});
-  };
-}
-// Admin: give every remaining case brief without a serial the next numbers, oldest first.
-function numberRemainingForm(){
-  const left=Object.values(briefs).filter(b=>isCaseBrief(b)&&serialNum(b)==null)
-    .sort((a,z)=>((a.createdAt?._t??a.createdAt?.toMillis?.()??0)-(z.createdAt?._t??z.createdAt?.toMillis?.()??0)));
-  if(!left.length){ toast("Every brief already has a serial","ti-check"); return; }
-  const from=nextSerial();
-  confirmAsk({title:`Number ${left.length} brief${left.length>1?"s":""}?`,confirmLabel:"Give them numbers",
-    body:`They get ${pad3(from)}${left.length>1?` to ${pad3(from+left.length-1)}`:""}, oldest first. <b>If they are in your serial list, import the list first</b> — numbers are fixed once given.`,
-    onYes:async()=>{ for(const b of left){ await db.update("briefs/"+b.id,{chamberNo:String(takeSerial()),updatedAt:db.now()}); } toast("Numbers given","ti-hash"); renderActive(); }});
-}
-
 
 function openBrief(id){
   const b=briefs[id]; if(!b)return;
