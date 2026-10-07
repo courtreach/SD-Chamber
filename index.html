@@ -4981,6 +4981,7 @@ async function filesApi(action, body, raw){
     if(action==="link") return {link:"about:blank"};
     if(action==="delete"){ const i=bag.findIndex(x=>x.name===body.name); if(i>=0) bag.splice(i,1); return {ok:true}; }
     if(action==="connect") return {url:"about:blank"};
+    if(action==="mkdir") return {ok:true};
     return {};
   }
   const tok=await auth.idToken();
@@ -5013,7 +5014,7 @@ async function loadBriefFiles(id){
   let sum;
   if(st.unreachable) sum="Files aren't reachable right now.";
   else if(!st.connected) sum=st.admin?"Dropbox isn't connected yet.":"Files aren't set up yet.";
-  else if(!b.dropboxFolder) sum=serialNum(b)==null?"No serial yet, so no folder.":`No papers yet · the folder will be <b>${esc(caseFolderName(b))}</b>`;
+  else if(!b.dropboxFolder) sum=serialNum(b)==null?"No papers yet — the first paper gives it its serial and folder.":`No papers yet · folder <b>${esc(caseFolderName(b))}</b>`;
   else { try{ const d=await filesApi("list",{folder:b.dropboxFolder}); const f=d.files||[], dr=d.dirs||[];
       const last=f.map(x=>String(x.modified||"")).sort().pop();
       sum=(f.length||dr.length)?`<b>${f.length} paper${f.length===1?"":"s"}</b>${dr.length?` · ${dr.length} older folder${dr.length>1?"s":""}`:""}${last?` · latest ${fmtDateY(last.slice(0,10))}`:""}`:"The folder is empty."; }
@@ -5092,6 +5093,29 @@ function planNumber(b,files,L){
   return {sub:Math.max(maxSub,unsub.length?1:0)+1,rename:null};
 }
 
+/* ---------------- a case's folder, created on demand ----------------
+   Owner: "If there is no folder for a case and I am clicking on the files button … it should
+   create a folder for that case with serial number and allow me to save the file in that folder
+   as colleague or staff." A case WITH a serial gets its folder the moment Files is opened. A
+   case WITHOUT one gets the next serial only when somebody actually saves a paper (or taps
+   "Create its folder") — merely opening Files must not spend a number, because older cases are
+   meant to take theirs from the owner's serial list. Members may set a serial / folder only
+   while it is empty (firestore.rules). */
+async function ensureCaseFolder(id){
+  const b=briefs[id]; if(!b||!isCaseBrief(b)) return null;
+  const patch={};
+  if(serialNum(b)==null) patch.chamberNo=String(takeSerial());
+  if(!b.dropboxFolder) patch.dropboxFolder=caseFolderName({...b,...patch});
+  if(Object.keys(patch).length){
+    await db.update("briefs/"+id,{...patch,updatedAt:db.now()});   // throws if the rules refuse
+    Object.assign(b,patch);
+  }
+  // create it in Dropbox now (an older gatekeeper without "mkdir" simply creates it on the first upload)
+  try{ await filesApi("mkdir",{folder:b.dropboxFolder}); }catch(e){ if(!/Unknown request/.test(e.message)) throw e; }
+  return b;
+}
+const _rulesMsg="The app's security rules don't allow this yet — the admin needs to publish the updated rules";
+
 /* ---------------- the Files screen ---------------- */
 let _fv={id:null,sub:"",files:[],dirs:[],q:"",type:"all",loading:false,err:"",st:null};
 const _hl=(s,q)=>{ s=esc(s); if(!q) return s; const i=s.toLowerCase().indexOf(esc(q).toLowerCase()); return i<0?s:s.slice(0,i)+`<span class="fv-hit">${s.slice(i,i+esc(q).length)}</span>`+s.slice(i+esc(q).length); };
@@ -5110,6 +5134,10 @@ async function openFiles(id, sub){
   renderFilesSheet();
   _fv.st=await filesStatus();
   if(_fv.id!==id) return;
+  if(!b._virtual && canEditPapers(_fv.st) && serialNum(b)!=null && !b.dropboxFolder){
+    try{ await ensureCaseFolder(id); toast(`Folder created — ${briefs[id].dropboxFolder}`,"ti-folder-plus"); }
+    catch(e){ toast(/permission|insufficient/i.test(e.message)?_rulesMsg:e.message,"ti-alert-triangle"); }
+  }
   const folder=briefFolder(briefs[id]||VIRTUAL_FOLDERS[id]||b);
   if(_fv.st.connected && folder && (b.dropboxFolder||b._virtual)){
     try{ const d=await filesApi("list",{folder, sub:_fv.sub}); _fv.files=d.files||[]; _fv.dirs=d.dirs||[]; }
@@ -5125,11 +5153,11 @@ function renderFilesSheet(){
   let notes="";
   if(st&&st.unreachable) notes+=`<div class="fv-note warn"><span class="ti ti-plug-off"></span>Files aren't reachable right now${isAdmin()?" — the Dropbox gatekeeper didn't answer":""}.</div>`;
   else if(st&&!st.connected) notes+=`<div class="fv-note warn"><span class="ti ti-brand-dropbox"></span>${st.admin?"Dropbox isn't connected.":"Files aren't set up yet — the admin needs to connect Dropbox."}${st.admin?` <button class="btn sm" id="fv_connect">Connect Dropbox</button>`:""}</div>`;
-  if(n==null&&!virt) notes+=`<div class="fv-note warn"><span class="ti ti-hash"></span><span>This brief has no serial number yet, so its folder can't be named.</span>${manage?` <button class="btn sm" id="fv_giveSerial">Give it serial ${pad3(nextSerial())}</button>`:""}</div>`;
+  if(n==null&&!virt) notes+=`<div class="fv-note"><span class="ti ti-hash"></span><span>No serial or folder yet. Saving the first paper gives it serial <b>${pad3(nextSerial())}</b> and creates its folder.</span>${canEditPapers(st)?` <button class="btn sm" id="fv_giveSerial">Create its folder now</button>`:""}</div>`;
   const want=caseFolderName(b);
   if(manage && !virt && b.dropboxFolder && want && b.dropboxFolder!==want && !_fv.sub)
     notes+=`<div class="fv-note"><span class="ti ti-folder-cog"></span><span>Folder is named “${esc(b.dropboxFolder)}”. Rename it to “${esc(want)}” to match the serial and title?</span> <button class="btn sm" id="fv_renameFolder">Rename folder</button></div>`;
-  const canAdd=canEditPapers(st) && n!=null && !virt;
+  const canAdd=canEditPapers(st) && !virt;
   openSheet(`<div class="sheet-head"><div><h3>${n!=null?`<span class="fv-serial">${pad3(n)}</span> · `:""}${esc(labelOf(b))}</h3>
       <div class="fv-path"><span class="ti ti-folder"></span> ${crumbs.map(esc).join(" › ")}</div></div>
       <button class="x-btn"><span class="ti ti-x"></span></button></div>
@@ -5153,7 +5181,10 @@ function renderFilesSheet(){
   $("fv_refresh").onclick=()=>{ _filesStatus=null; openFiles(id,_fv.sub); };
   if($("fv_up")) $("fv_up").onclick=()=>openFiles(id,_fv.sub.split("/").slice(0,-1).join("/"));
   if($("fv_connect")) $("fv_connect").onclick=async()=>{ const w=window.open("","_blank"); try{ const d=await filesApi("connect"); if(w) w.location=d.url; else location.href=d.url; _filesStatus=null; }catch(e){ if(w) w.close(); toast(e.message,"ti-alert-triangle"); } };
-  if($("fv_giveSerial")) $("fv_giveSerial").onclick=async()=>{ const s=takeSerial(); await db.update("briefs/"+id,{chamberNo:String(s),updatedAt:db.now()}); toast(`Serial ${pad3(s)} given`,"ti-hash"); setTimeout(()=>openFiles(id),250); };
+  if($("fv_giveSerial")) $("fv_giveSerial").onclick=async()=>{ $("fv_giveSerial").disabled=true;
+    try{ const bb=await ensureCaseFolder(id); toast(`Serial ${pad3(serialNum(bb))} given — folder created`,"ti-folder-plus"); }
+    catch(e){ toast(/permission|insufficient/i.test(e.message)?_rulesMsg:e.message,"ti-alert-triangle"); }
+    setTimeout(()=>openFiles(id),250); };
   if($("fv_renameFolder")) $("fv_renameFolder").onclick=async()=>{
     const bb=briefs[id]; const to=caseFolderName(bb);
     try{ await filesApi("move",{folder:bb.dropboxFolder,toFolder:to}); }
@@ -5242,13 +5273,15 @@ function fvRenderList(){
 
 /* ---------------- adding papers: name each one the ASD way ---------------- */
 function addPapersForm(id, list, sub){
-  const b=briefs[id]; if(!b) return;
+  const real=briefs[id]; if(!real) return;
+  const b=serialNum(real)!=null?real:{...real,chamberNo:String(nextSerial())};   // for the preview only
   const rows=list.map(f=>{ const L=guessLetter(f.name); return {f, L, desc:L==="N"?`Note - ${ddmmyyyy()}`:cleanDesc(f.name), ext:(f.name.match(/\.[^.\s]+$/)||[""])[0]}; });
   const big=list.find(f=>f.size>95*1024*1024);
   if(big){ toast(`${big.name} is over 95 MB — put it straight into the Dropbox folder instead`,"ti-alert-triangle"); return; }
   const preview=r=>paperName(b,r.L,null,r.desc||"Document",r.ext);
   openSheet(`<div class="sheet-head"><div><h3>Add ${rows.length} paper${rows.length>1?"s":""}</h3><div class="sub">${pad3(serialNum(b))} · ${esc(shortTitle(b))}</div></div><button class="x-btn"><span class="ti ti-x"></span></button></div>
     <div class="sheet-body">
+      ${serialNum(real)==null?`<div class="fv-note" style="margin-bottom:10px"><span class="ti ti-hash"></span><span>This case gets serial <b>${pad3(serialNum(b))}</b> and its folder when you add these.</span></div>`:""}
       <div class="muted" style="font-size:12px;margin-bottom:10px">Each paper is named with the case serial: the letter says what it is, the number orders papers of that kind. Sub-numbers (.1, .2…) are added automatically.</div>
       ${rows.map((r,i)=>`<div class="ap-row"><div class="ap-orig"><span class="ti ti-file"></span> ${esc(r.f.name)} · ${esc(fmtSize(r.f.size))}</div>
         <div class="ap-grid"><select data-apl="${i}">${PAPER_LETTERS.map(([k,v])=>`<option value="${k}" ${r.L===k?"selected":""}>${k} — ${esc(v)}</option>`).join("")}</select>
@@ -5265,11 +5298,9 @@ function addPapersForm(id, list, sub){
   $("ap_cancel").onclick=()=>openFiles(id,sub);
   $("ap_go").onclick=async()=>{
     $("ap_go").disabled=true; $("ap_cancel").disabled=true;
-    let bb=briefs[id];
-    if(!bb.dropboxFolder){ const fold=caseFolderName(bb);
-      try{ await db.update("briefs/"+id,{dropboxFolder:fold,updatedAt:db.now()}); }
-      catch(e){ toast("The app's security rules don't yet let colleagues start a brief's folder — ask Staff to add the first paper","ti-lock"); $("ap_go").disabled=false; $("ap_cancel").disabled=false; return; }
-      bb={...bb,dropboxFolder:fold}; }
+    let bb;
+    try{ bb=await ensureCaseFolder(id); }
+    catch(e){ toast(/permission|insufficient/i.test(e.message)?_rulesMsg:e.message,"ti-lock"); $("ap_go").disabled=false; $("ap_cancel").disabled=false; return; }
     const folder=bb.dropboxFolder; let ok=0;
     for(let i=0;i<rows.length;i++){ const r=rows[i];
       $("ap_msg").textContent=`Adding ${i+1} of ${rows.length} — ${r.f.name}…`;

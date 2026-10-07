@@ -47,6 +47,20 @@ Dropbox is reachable, enforced by Dropbox itself) and **one folder per brief**.
   `sd-chamber-files` with KV + both secrets, and connected from the app. Verified from
   outside: home page, 401 without sign-in, CORS for the app origin, KV-backed callback guard.
 
+## Folders on demand (Oct 2026)
+
+Owner: "If there is no folder for a case and I am clicking on the files button … it should
+create a folder for that case with serial number and allow me to save the file in that folder
+as colleague or staff." `ensureCaseFolder(id)`: gives the next serial if missing, records
+`dropboxFolder`, then gatekeeper **/api/mkdir** (create_folder_v2, existing folder = fine).
+Opening Files creates the folder ONLY for a case that already has a serial; a case without
+one gets its serial on the first SAVE (addPapersForm) or on "Create its folder now" — merely
+browsing must not spend serials before the owner's list is imported. firestore.rules: any
+member may set `chamberNo` and `dropboxFolder` only while each is empty (hasOnly those +
+updatedAt). Tested: gatekeeper 67/67; demo — Staff opening a numbered case → folder made;
+colleague opening an un-numbered case → no number spent; colleague saving → serial + folder
++ correctly named paper; colleague "Create its folder now". Staff always had full paper rights.
+
 ## Colleague file rights, preview, Edit in Word, duplicates, cause-list save (Oct 2026)
 
 - **Colleagues manage papers** (owner: "colleague to be able to add, delete, edit files"):
