@@ -47,6 +47,14 @@ Dropbox is reachable, enforced by Dropbox itself) and **one folder per brief**.
   `sd-chamber-files` with KV + both secrets, and connected from the app. Verified from
   outside: home page, 401 without sign-in, CORS for the app origin, KV-backed callback guard.
 
+## Cause titles: joining words lower case (Oct 2026)
+
+`titleWords(t)` (by `labelOf`): "and/or/of/the/for/in/on/through…" lower case unless they start a
+party (first word, or right after vs / v.); "Ors."/"Anr." kept; an ALL-CAPS title is first given
+capital initials (initials and consonant-only abbreviations like NCT kept; VS→vs, ORS.→Ors.).
+Applied via `labelOf`, `resolveEntry().title`, `titleFromCauseLine`. `shortTitle` (Dropbox
+folder + paper names) deliberately uses the RAW `b.caseTitle`, so no existing folder changes.
+
 ## Names in "first letter capital" case (Oct 2026)
 
 `nameCase(s)` (top level, before dsForm): every word Capitalised, rest lower ("SANCHIT GARGA" →

@@ -1847,7 +1847,25 @@ const nameOf=uid=>{
   if(uid&&uid.startsWith&&uid.startsWith("pending:")){ const a=approvals[uid.slice(8)]; return a?(a.name||a.email||"—"):"—"; }
   return users[uid]?.name||"—";
 };
-const labelOf=b=>b?.caseTitle||"(untitled matter)";
+// Cause titles: joining words in lower case — "and", "of", "or", "the"… (owner, Oct 2026), even
+// when the SC list prints them "And" / "OF". Not the first word of either party ("The State …",
+// "In Re …"), and "Ors." / "Anr." stay as they are.
+const TITLE_SMALL=new Set(["and","or","of","the","for","in","on","at","to","by","with","from","through","thr","into","as","an","a","nor","but"]);
+function titleWords(t){
+  t=String(t||"");
+  // a title printed ALL IN CAPITALS: each word gets a capital initial first (initials like
+  // "K.V." and short consonant-only abbreviations like "NCT" stay in capitals)
+  if(!/[a-z]/.test(t)&&/[A-Z]{4,}/.test(t)) t=t.split(/(\s+)/).map(w=>/^(?:VS\.?|V\.|VERSUS)$/.test(w)?"vs":/^(ORS|ANR|ETC)\.?,?$/.test(w)?w.charAt(0)+w.slice(1).toLowerCase():/\./.test(w)||/^[^AEIOUY]{2,4}[):,]*$/.test(w)?w:w.toLowerCase().replace(/(^|[-'(\/])([a-z])/g,(m,a,b)=>a+b.toUpperCase())).join("");
+  const ws=t.split(/(\s+)/); let startOfParty=true;
+  return ws.map(w=>{
+    if(/^\s+$/.test(w)) return w;
+    if(/^(?:vs\.?|v\.?|versus|v\/s\.?)$/i.test(w)){ startOfParty=true; return w; }
+    const bare=w.replace(/[^A-Za-z]/g,"");
+    const out=(!startOfParty&&TITLE_SMALL.has(bare.toLowerCase())&&w.replace(/[^A-Za-z]/g,"")===bare&&!/\./.test(w)) ? w.toLowerCase() : w;
+    startOfParty=false; return out;
+  }).join("");
+}
+const labelOf=b=>b?.caseTitle?titleWords(b.caseTitle):"(untitled matter)";
 // day-sheet entries pre-date juniorUids[]; old docs carry a single juniorUid
 const jrsOf=e=>e?.juniorUids?.length?e.juniorUids:(e?.juniorUid?[e.juniorUid]:[]);
 // Work assigned BEFORE a colleague's first login is recorded under their
@@ -1927,7 +1945,7 @@ $("signOutBtn").onclick=()=>auth.signOut();
 // service worker is holding an old copy. Clears the shell cache, nudges the SW,
 // then reloads with a cache-buster.
 // Shown in the sidebar / More / Refresh tooltip so anyone can tell which version they have.
-const APP_VERSION="67 · 8 Oct 2026";
+const APP_VERSION="68 · 8 Oct 2026";
 if($("appVer")) $("appVer").textContent="App version "+APP_VERSION;
 if($("btnRefresh")) $("btnRefresh").title="Refresh — fetch the latest app (you have version "+APP_VERSION+")";
 async function hardRefresh(){
@@ -3684,7 +3702,7 @@ function partiesFromCauseLine(s){
 }
 function titleFromCauseLine(s){
   const p=partiesFromCauseLine(s);
-  return p.resp ? p.pet+" vs "+p.resp : p.pet;
+  return titleWords(p.resp ? p.pet+" vs "+p.resp : p.pet);
 }
 // Render a "A vs B" title with the side we appear for in bold. mode: 'html'|'text'.
 function renderTitle(title, appearingFor, mode){
@@ -3730,7 +3748,7 @@ function resolveEntry(e, dateISO){
   const lt=e.listType||(hit?hit.listType:"");
   const courtRec=(lt&&e.courtNo)?courtUpdates?.by_date?.[dateISO]?.lists?.[lt]?.[String(e.courtNo).trim()]:null;
   return {
-    title: e.caseTitle || (b?labelOf(b):"") || (hit?titleFromCauseLine(hit.caseLine):"") || "(awaiting causelist)",
+    title: titleWords(e.caseTitle || (b?labelOf(b):"") || (hit?titleFromCauseLine(hit.caseLine):"")) || "(awaiting causelist)",
     bench: e.bench || (hit?cleanCoram(hit.coram):""),
     listType: lt,
     appearingFor: e.appearingFor || (b?b.appearingFor:"") || "",
@@ -5671,7 +5689,7 @@ function serialTakenBy(n, exceptId){ return Object.values(briefs).find(b=>b.id!=
 
 // "Sharma vs. State of Maharashtra" -> "Sharma v State of Maharashtra", safe for Dropbox/OneDrive.
 function shortTitle(b){
-  let t=String(labelOf(b)||"").replace(/\s+(?:vs\.?|v\/s\.?|versus|v\.)\s+/gi," v ")
+  let t=String(b?.caseTitle||labelOf(b)||"").replace(/\s+(?:vs\.?|v\/s\.?|versus|v\.)\s+/gi," v ")
     .replace(/["*:<>?\/\\|\u0000-\u001f]/g," ").replace(/\s+/g," ").trim();
   if(t.length>80) t=t.slice(0,80).trim();
   return t.replace(/[. ]+$/,"")||"Untitled";
