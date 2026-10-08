@@ -1927,7 +1927,7 @@ $("signOutBtn").onclick=()=>auth.signOut();
 // service worker is holding an old copy. Clears the shell cache, nudges the SW,
 // then reloads with a cache-buster.
 // Shown in the sidebar / More / Refresh tooltip so anyone can tell which version they have.
-const APP_VERSION="65 · 8 Oct 2026";
+const APP_VERSION="66 · 8 Oct 2026";
 if($("appVer")) $("appVer").textContent="App version "+APP_VERSION;
 if($("btnRefresh")) $("btnRefresh").title="Refresh — fetch the latest app (you have version "+APP_VERSION+")";
 async function hardRefresh(){
@@ -2857,9 +2857,9 @@ function conferencesOn(dateISO){
   Object.values(dsAll||{}).forEach(ds=>{ const dt=ds.date||ds.id;
     (ds.entries||[]).forEach(e=>{ const cd=e.confDate||dt; if((e.confTime||e.confDate)&&cd===dateISO){
       const jrs=[...new Set([...jrsOf(e), ...((e.briefId&&briefs[e.briefId]?.assignedTo)||[])])];
-      raw.push({date:cd,time:e.confTime||"",counsel:(e.counsel||"").trim(),title:resolveEntry(e,dt).title,kind:"matter",jrs,briefId:e.briefId||null}); } });
+      raw.push({date:cd,time:e.confTime||"",counsel:nameCase((e.counsel||"").trim()),title:resolveEntry(e,dt).title,kind:"matter",jrs,briefId:e.briefId||null}); } });
     (ds.conferences||[]).forEach(c=>{ const cd=c.date||dt; if(cd===dateISO)
-      raw.push({date:cd,time:c.time||"",counsel:c.name||"",title:(c.briefId&&briefs[c.briefId])?labelOf(briefs[c.briefId]):"",kind:"manual",isManual:true,jrs:(c.juniorUids||[]).slice(),briefId:(c.briefId&&briefs[c.briefId])?c.briefId:null}); });
+      raw.push({date:cd,time:c.time||"",counsel:nameCase(c.name||""),title:(c.briefId&&briefs[c.briefId])?labelOf(briefs[c.briefId]):"",kind:"manual",isManual:true,jrs:(c.juniorUids||[]).slice(),briefId:(c.briefId&&briefs[c.briefId])?c.briefId:null}); });
   });
   const counts={}; raw.forEach(r=>{ if(!r.isManual&&r.counsel){const k=r.counsel.toLowerCase(); counts[k]=(counts[k]||0)+1;} });
   raw.forEach(r=>{ const dup=!r.isManual&&r.counsel&&counts[r.counsel.toLowerCase()]>1; const first=(r.title||"").split(/\s+/)[0]||""; r.label=(r.counsel||"—")+((dup&&first)?` (${first})`:""); });

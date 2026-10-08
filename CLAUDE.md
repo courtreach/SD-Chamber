@@ -54,6 +54,8 @@ Dropbox is reachable, enforced by Dropbox itself) and **one folder per brief**.
 NAME_KEEP_UP (LLP, AZB, HDFC…), "&", "M/s", hyphen/apostrophe parts; joining words (and, of…)
 lower mid-name. Applied: counsel autofill + advocate buttons, saving day-sheet counsel / brief
 AoR / conference name, and SHOWING counsel on the day sheet + cause-list PDF (old records too).
+Also `conferencesOn` labels (matter counsel + manual names) — safe for confstatus because
+`confKey` lower-cases the label.
 
 ## Cause-list PDF re-done (Oct 2026)
 
