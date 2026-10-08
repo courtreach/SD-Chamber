@@ -52,6 +52,9 @@ Dropbox is reachable, enforced by Dropbox itself) and **one folder per brief**.
 Owner then (same day): GARAMOND as before and NO shading — EB Garamond medium/bold/italic TTF
 embedded from fonts.gstatic.com (`EBG_TTF`, `loadGaramond`, Times if offline), thin black lines
 (0.3), no header fill; builder = `clBuildDoc`/`clBest`.
+Court totals (Total N · Main N · Supp N) sit at the FOOT of the Advocates cell, 0.82× size (room
+reserved with blank lines, drawn in didDrawCell). Scale search may step down to 0.85 to keep one
+page; columns never narrower than their base width.
 `buildCauselistPdf` (Share PDF, Save to Dropbox AND Print — `printCauseList` now opens the same
 PDF in a new tab instead of the old HTML print page): hairline grey grid (lineWidth .35, grey 150),
 no "Total & Seq." column (owner: sequence not needed; court totals, when known, sit under
