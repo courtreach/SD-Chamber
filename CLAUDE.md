@@ -52,6 +52,9 @@ Dropbox is reachable, enforced by Dropbox itself) and **one folder per brief**.
 Owner then (same day): GARAMOND as before and NO shading — EB Garamond medium/bold/italic TTF
 embedded from fonts.gstatic.com (`EBG_TTF`, `loadGaramond`, Times if offline), thin black lines
 (0.3), no header fill; builder = `clBuildDoc`/`clBest`.
+ONE common data size `DS` (12.5 before scaling) for every column incl. Court/Item and For — only
+the totals line is smaller (owner). Narrow columns sized to their content (`fitW`, Judges capped 104,
+Advocates 118 before scaling — very long names wrap) so the rest goes to the cause title.
 P / R in its own narrow "For" column before Advocates (bold, centred; was "(P)" atop the names).
 Supp not out yet: "Total (Main 30 + Supp. ____) = ____" — the blanks drawn as real lines (no "awaited").
 Court/Item narrower (60 base, 15.5 NOT bold — owner; long items like 12 #116.1 wrap); case title 13.6 base (owner: one point smaller — prints ~15pt for 10 cases).

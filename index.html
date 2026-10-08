@@ -1927,7 +1927,7 @@ $("signOutBtn").onclick=()=>auth.signOut();
 // service worker is holding an old copy. Clears the shell cache, nudges the SW,
 // then reloads with a cache-buster.
 // Shown in the sidebar / More / Refresh tooltip so anyone can tell which version they have.
-const APP_VERSION="63 · 8 Oct 2026";
+const APP_VERSION="64 · 8 Oct 2026";
 if($("appVer")) $("appVer").textContent="App version "+APP_VERSION;
 if($("btnRefresh")) $("btnRefresh").title="Refresh — fetch the latest app (you have version "+APP_VERSION+")";
 async function hardRefresh(){
@@ -4001,6 +4001,19 @@ function clBuildDoc(jsPDF, fonts, data, scale){
   doc.setFont(F,"italic").setFontSize(13); doc.text(data.role,W/2,51,{align:"center"});
   doc.setFont(F,"bold").setFontSize(14); doc.text(data.courtLine,W/2,69,{align:"center"});
   const cw=doc.getTextWidth(data.courtLine); doc.setDrawColor(0); doc.setLineWidth(0.6); doc.line((W-cw)/2,71.5,(W+cw)/2,71.5);
+  const DS=12.5;   // the common data size before scaling
+  // Every narrow column is exactly as wide as its longest line at this size (within limits), so
+  // names don't wrap and ALL the remaining width goes to the cause title.
+  const HEADS=["Court /\nItem","Time","Case Name","Judges","For","Advocates"];
+  const fitW=(col,min,max)=>{
+    let w=0;
+    doc.setFont(F,col===4?"bold":"normal"); doc.setFontSize(+(DS*scale).toFixed(2));
+    data.rows.forEach(r=>{ let v=r[col]; if(col===4){ const m=/^\((P|R)\)/.exec(r[4]||""); v=m?m[1]:""; }
+      if(col===5){ v=String(r[4]||"").replace(/^\((P|R)\)\n?/,""); }
+      String(v||"").split("\n").forEach(l=>{ w=Math.max(w,doc.getTextWidth(l)); }); });
+    doc.setFont(F,"bold"); doc.setFontSize(11.5); HEADS[col].split("\n").forEach(l=>{ w=Math.max(w,doc.getTextWidth(l)); });
+    return Math.round(Math.min(max*Math.max(1,scale),Math.max(min,w+10)));
+  };
   const f=x=>+(x*scale).toFixed(2), pad=+(3*Math.min(scale,1.4)).toFixed(2), cwid=(base,grow)=>Math.round(base*Math.max(1,1+(scale-1)*grow));   // never narrower than the base
   doc.autoTable({ startY:80,
     head:[["Court /\nItem","Time","Case Name","Judges","For","Advocates"]],   // P / R in its own column (owner, Oct 2026)
@@ -4008,11 +4021,13 @@ function clBuildDoc(jsPDF, fonts, data, scale){
       return [r[0],r[1],r[2],r[3], m?m[1]:"", adv+((r[5]&&r[5].length)?"\n"+r[5].map(()=>" ").join("\n"):"")]; }):[["","","No matters listed.","","",""]],
     theme:"grid",
     // thin black lines, no shading anywhere
-    styles:{font:F,fontStyle:"normal",fontSize:f(12),cellPadding:{top:pad,bottom:pad,left:4,right:4},valign:"top",lineColor:[0,0,0],lineWidth:0.3,textColor:[0,0,0],fillColor:false,overflow:"linebreak"},
+    styles:{font:F,fontStyle:"normal",fontSize:f(DS),cellPadding:{top:pad,bottom:pad,left:4,right:4},valign:"top",lineColor:[0,0,0],lineWidth:0.3,textColor:[0,0,0],fillColor:false,overflow:"linebreak"},
     headStyles:{font:F,fontStyle:"bold",fontSize:11.5,fillColor:false,textColor:[0,0,0],valign:"middle",lineColor:[0,0,0],lineWidth:0.3},
     alternateRowStyles:{fillColor:false},
-    columnStyles:{0:{cellWidth:cwid(60,.5),fontSize:f(15.5),fontStyle:"normal"},1:{cellWidth:cwid(36,1),fontSize:f(12)},2:{cellWidth:"auto",fontSize:f(13.6)},
-                  3:{cellWidth:cwid(106,.6),fontSize:f(12)},4:{cellWidth:cwid(24,.5),fontSize:f(14),fontStyle:"bold",halign:"center"},5:{cellWidth:cwid(132,.6),fontSize:f(12)}},
+    // ONE common size for all the data (owner, Oct 2026) — only the totals line is smaller.
+    // Narrow columns stay narrow so the cause title gets the width.
+    columnStyles:{0:{cellWidth:fitW(0,40,74),fontSize:f(DS),fontStyle:"normal"},1:{cellWidth:fitW(1,30,60),fontSize:f(DS)},2:{cellWidth:"auto",fontSize:f(DS)},
+                  3:{cellWidth:fitW(3,70,104),fontSize:f(DS)},4:{cellWidth:fitW(4,20,40),fontSize:f(DS),fontStyle:"bold",halign:"center"},5:{cellWidth:fitW(5,90,118),fontSize:f(DS)}},
     didDrawCell:c=>{ if(c.section!=="body"||c.column.index!==5) return;
       const fs=c.cell.styles.fontSize, x=c.cell.x+c.cell.padding("left");
       const m=null;   // the side (P/R) now has its own "For" column
