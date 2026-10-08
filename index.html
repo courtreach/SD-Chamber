@@ -1322,6 +1322,9 @@ body.demo .topbar{top:34px}
   .reg-table .c-sn{width:26px}
   .reg-table .c-cr{width:44px}
 }
+
+.cl-miss{display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:12px;color:var(--ink-2);background:var(--warn-bg);border-radius:8px;padding:5px 9px}
+.cl-day{background:var(--surface);border:1px solid var(--line-2);border-radius:99px;padding:2px 10px;font:600 12px/1.4 Inter,system-ui,sans-serif;color:var(--accent-ink);cursor:pointer}
 </style>
 </head>
 <body>
@@ -3513,7 +3516,16 @@ async function loadCourtUpdates(){
 const courtUpdatesStale=()=>Date.now()-courtUpdatesAt>COURT_UPDATES_STALE;
 // Staff keep the app open all day: re-fetch when it comes back to the
 // foreground, so an afternoon entry matches the latest hourly fetch.
-document.addEventListener("visibilitychange",()=>{ if(!document.hidden&&me&&courtUpdatesStale()) loadCourtUpdates(); });
+document.addEventListener("visibilitychange",()=>{ if(!document.hidden&&me){ rollDayIfNeeded(); if(courtUpdatesStale()) loadCourtUpdates(); } });
+// The app left open overnight (or a phone resuming it) must not stay on yesterday: if the day
+// sheet was showing "today" and the date has turned, move it to the new today.
+let _dsToday=todayISO();
+function rollDayIfNeeded(){
+  const t=todayISO(); if(t===_dsToday) return;
+  const wasToday=dsDate===_dsToday; _dsToday=t;
+  if(wasToday){ dsDate=t; watchDaysheet(); loadCourtUpdates(); if(curTab==="today"||curTab==="cal") renderActive(); }
+}
+setInterval(()=>{ if(me) rollDayIfNeeded(); },60000);
 // The published bench for a (date, list-type, court), if the fetch has it.
 function coramFor(dateISO, listType, court){
   const c = courtUpdates?.by_date?.[dateISO]?.lists?.[listType]?.[String(court||"").trim()];
@@ -3706,7 +3718,9 @@ function renderToday(){
   const clDay=courtUpdates?.by_date?.[dsDate];
   const clStatus = clDay
     ? `<span class="chip bal-even" title="Supreme Court benches fetched for this date — the Add-matter form fills the bench automatically"><span class="dot"></span>SC benches loaded</span>`
-    : (causeListReady()? `<span class="muted" style="font-size:11.5px"><span class="ti ti-clock"></span> No SC list fetched for this date yet</span>` : "");
+    : (causeListReady()? (()=>{ const have=Object.keys(courtUpdates.by_date).sort();
+        const why=dsDate<todayISO()?"Past days' lists aren't kept":"The Supreme Court hasn't published the list for this date yet";
+        return `<span class="cl-miss"><span class="ti ti-clock"></span> ${why} — lists ready for: ${have.map(d=>`<button class="cl-day" data-clday="${d}">${esc(fmtDateY(d).replace(/ \d{4}$/,""))}</button>`).join("")}</span>`; })() : "");
   const toolbar=`<div class="ds-toolbar">
     <div class="ds-date"><button class="ds-step" id="dsPrevDay" aria-label="Previous day"><span class="ti ti-chevron-left"></span></button><span class="lab">Date</span><input type="date" id="dsDateInp" value="${dsDate}"><button class="ds-step" id="dsNextDay" aria-label="Next day"><span class="ti ti-chevron-right"></span></button></div>
     <a class="dlink" href="https://www.sci.gov.in/cause-list/" target="_blank" rel="noopener"><span class="ic ti ti-external-link"></span><span class="l-long">SCI cause list</span><span class="l-short">SCI list</span></a>
@@ -3785,6 +3799,7 @@ function renderToday(){
   const senNotice=senOff?`<div class="notice warn" style="margin-bottom:12px"><span class="ti ti-user-off"></span><div><b>Senior not available on ${fmtDateY(dsDate)}</b>${seniorAvail[dsDate]?` — ${esc(seniorAvail[dsDate])}`:''}. No matter can be listed for this day.</div></div>`:"";
   $("tab-today").innerHTML=senNotice+toolbar+table+rail+confSec;
   $("dsDateInp").onchange=e=>{ dsDate=e.target.value||todayISO(); watchDaysheet(); renderToday(); };
+  $("tab-today").querySelectorAll("[data-clday]").forEach(x=>x.onclick=()=>{ dsDate=x.dataset.clday; watchDaysheet(); renderToday(); });
   const stepDay=d=>{ const x=new Date(dsDate+"T00:00"); x.setDate(x.getDate()+d); dsDate=x.toLocaleDateString("en-CA"); watchDaysheet(); renderToday(); };
   $("dsPrevDay").onclick=()=>stepDay(-1); $("dsNextDay").onclick=()=>stepDay(1);
   if($("tbAddDs"))$("tbAddDs").onclick=()=>dsForm();
