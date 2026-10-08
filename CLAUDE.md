@@ -47,6 +47,20 @@ Dropbox is reachable, enforced by Dropbox itself) and **one folder per brief**.
   `sd-chamber-files` with KV + both secrets, and connected from the app. Verified from
   outside: home page, 401 without sign-in, CORS for the app origin, KV-backed callback guard.
 
+## Word: instant, editable, saves itself back ("Option A", Oct 2026)
+
+Opening Word from a web link (`ms-word:ofe|u|<Dropbox temp link>`) was slow and READ-ONLY.
+Now: the docx is handed over as an ordinary download (`wordDownload`) — a new conference note
+is built on the device (`makeNoteDocx`), the case folder having been prepared when the W was
+tapped (`notePrep`), so it opens in ~30 ms; the copy is uploaded in the background (overwrite).
+Files → Edit in Word downloads the paper the same way. On Chrome/Edge desktop (`_canWatch`:
+showDirectoryPicker, not iOS/Android) the app watches the Downloads folder (handle chosen once
+via the "Allow" banner `wwBanner`, kept in IndexedDB "sd-word"; read permission only) and every
+Word save (stable size+time on two 4-s looks) is uploaded with X-Mode overwrite (`wordTick`).
+Watch list per device in localStorage "sd-word-watch" (7 days); "name (1).docx" re-downloads
+are found too. Safari / iPhone / iPad keep "Replace with edited version". Demo test hook:
+`window.__setDlDir(handle)` (an OPFS folder stands in for Downloads).
+
 ## Conference note = the owner's own note format (Oct 2026)
 
 `makeNoteDocx({b, heading, paras})` copies his sample "Alan Chung v. HDFC Bank Dictated Note":
