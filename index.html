@@ -1927,7 +1927,7 @@ $("signOutBtn").onclick=()=>auth.signOut();
 // service worker is holding an old copy. Clears the shell cache, nudges the SW,
 // then reloads with a cache-buster.
 // Shown in the sidebar / More / Refresh tooltip so anyone can tell which version they have.
-const APP_VERSION="66 · 8 Oct 2026";
+const APP_VERSION="67 · 8 Oct 2026";
 if($("appVer")) $("appVer").textContent="App version "+APP_VERSION;
 if($("btnRefresh")) $("btnRefresh").title="Refresh — fetch the latest app (you have version "+APP_VERSION+")";
 async function hardRefresh(){
@@ -4077,7 +4077,7 @@ async function buildCauselistPdf(iso){
     if(R.total){ if(SUPP_TYPES.has(R.listType)){ const got=suppFetched(iso,R.listType);
                    tot.push(`Total (Main ${R.courtMain} + Supp. ${got?R.courtSupp:"____"}) = ${got?R.total:"____"}`); }
                  else tot.push(`Total ${R.total}`); }
-    return [`${e.courtNo||"?"} #${e.itemNo||"?"}`, e.time||"", R.title||"", judges, adv, tot];
+    return [`Ct-${e.courtNo||"?"}#${e.itemNo||"?"}`, e.time||"", R.title||"", judges, adv, tot];   // "Ct-5#7", no spaces (owner)
   });
   const confs=conferenceList(iso).map(g=>({head:confDateHeading(g.iso), items:g.items.map(c=>`${fmtConfTime(c.time)||"—"}    -    ${c.label||""}`)}));
   const best=clBest(window.jspdf.jsPDF, fonts, {name:CHAMBER.seniorName.toUpperCase(), role:CHAMBER.designation||"Senior Advocate", courtLine:`SUPREME COURT (${day}) ${dt}`, rows, confs});
