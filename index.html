@@ -5042,9 +5042,9 @@ async function newConferenceNote(confKeyStr, kind){
     const plan=planNumber(b,files,"N");
     if(plan.rename) await filesApi("move",{folder,name:plan.rename.from,toName:plan.rename.to});
     const name=paperName(b,"N",plan.sub,`${kind} - ${ddmmyyyy()}`,".docx");
-    const notes=((confStatus[c.key]||{}).notes||[]).map(n=>n.text).filter(Boolean);
     // heading as in his own notes: "Note dated 30.09.2026" (Instructions: "Instructions dated …")
-    const blob=makeNoteDocx({ b, heading:`${/^Instruction/.test(kind)?"Instructions":"Note"} dated ${ddmmyyyy()}`, paras:notes });
+    // owner: every note starts blank — only the numbered paragraphs, nothing carried in
+    const blob=makeNoteDocx({ b, heading:`${/^Instruction/.test(kind)?"Instructions":"Note"} dated ${ddmmyyyy()}`, paras:[], blanks:6 });
     await filesApi("upload",null,{folder,name,file:new File([blob],name,{type:blob.type})});
     toast(`${name.split(" ")[0]} created in the case folder`,"ti-file-check");
     editInWordForm(b.id, folder, "", {name, size:blob.size});

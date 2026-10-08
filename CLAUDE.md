@@ -56,7 +56,7 @@ No.", C.A. → "Civil Appeal No." …; diary only → "Diary No.…") · petitio
 when "Ors/Anr"; small words lower-cased) · "Note dated DD.MM.YYYY" (Instructions: "Instructions
 dated …") bold underlined · Word numbered list (ListParagraph, decimal, 720/360), blank paras.
 Garamond 14, A4, margins 851/1134/567/1134, page number top right. NOTHING else (no serial,
-no conference line). Notes taken in the app become the first numbered paragraphs.
+no conference line). Every note starts blank (6 numbered paras) — app notes are NOT carried in (owner).
 
 ## Read saving — Firestore free quota ran out (Oct 2026)
 
