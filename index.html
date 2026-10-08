@@ -1927,7 +1927,7 @@ $("signOutBtn").onclick=()=>auth.signOut();
 // service worker is holding an old copy. Clears the shell cache, nudges the SW,
 // then reloads with a cache-buster.
 // Shown in the sidebar / More / Refresh tooltip so anyone can tell which version they have.
-const APP_VERSION="64 · 8 Oct 2026";
+const APP_VERSION="65 · 8 Oct 2026";
 if($("appVer")) $("appVer").textContent="App version "+APP_VERSION;
 if($("btnRefresh")) $("btnRefresh").title="Refresh — fetch the latest app (you have version "+APP_VERSION+")";
 async function hardRefresh(){
@@ -3783,7 +3783,7 @@ function renderToday(){
           <div class="rail-case${b?" ds-open":""}" ${b?`data-brief="${b.id}" title="Open the brief"`:""}>${renderTitle(R.title,R.appearingFor,"html")}</div>
           ${R.bench?`<div class="rail-meta" style="margin-top:2px"><span class="muted">Bench:</span><span>${esc(shortBench(R.bench))}</span></div>`:''}
           <div class="rail-meta">
-            ${e.counsel?`<span>${esc(e.counsel)}</span><span>·</span>`:''}
+            ${e.counsel?`<span>${esc(nameCase(e.counsel))}</span><span>·</span>`:''}
             ${jrsOf(e).length?jrsOf(e).map(u=>`<span class="rail-jr"><span class="mini-ava">${esc(initials(nameOf(u)))}</span>${esc(nameOf(u))}${onLeaveOn(u,dsDate)?' <span class="chip av-leave" style="margin-left:4px"><span class="dot"></span>On leave this day</span>':''}</span>`).join(""):'<span class="muted">No colleague marked</span>'}
             ${e.remarks?`<span>·</span><span class="rail-remark">${esc(e.remarks)}</span>`:''}
           </div>
@@ -3808,7 +3808,7 @@ function renderToday(){
         <td class="mono ctitem">Ct-${esc(e.courtNo||'?')}#${esc(e.itemNo||'?')}${R.listType?`<div class="muted" style="font-size:10.5px;font-family:Inter,sans-serif">${esc(R.listType)}</div>`:''}</td>
         <td class="mono time">${esc(e.time||'')}</td>
         <td><div class="tcase${b?" ds-open":""}" ${b?`data-brief="${b.id}" title="Open the brief"`:""}>${renderTitle(R.title,R.appearingFor,"html")}${b?.priority?' <span class="ti ti-flag-3" style="color:var(--urgent);font-size:13px"></span>':''}</div>${R.bench?`<div class="tbench muted">${esc(shortBench(R.bench))}</div>`:''}</td>
-        <td>${e.counsel?`<div>${esc(e.counsel)}</div>`:''}<div class="${e.counsel?'muted':''}">${jrs.length?jrs.map(u=>esc(nameOf(u))+(onLeaveOn(u,dsDate)?' <span class="ti ti-plane-departure" style="color:var(--warn)" title="On leave this day"></span>':'')).join(" / "):'<span class="muted">no colleague marked</span>'}</div></td>
+        <td>${e.counsel?`<div>${esc(nameCase(e.counsel))}</div>`:''}<div class="${e.counsel?'muted':''}">${jrs.length?jrs.map(u=>esc(nameOf(u))+(onLeaveOn(u,dsDate)?' <span class="ti ti-plane-departure" style="color:var(--warn)" title="On leave this day"></span>':'')).join(" / "):'<span class="muted">no colleague marked</span>'}</div></td>
         <td class="muted" style="font-size:12.5px">${esc(e.remarks||'')}</td>
         <td class="tfiles">${filesBtn(e.briefId,true)}</td>
         ${canManage()?`<td class="tact"><div class="tact-in"><button class="ds-act" data-dsedit="${i}" title="Edit"><span class="ic ti ti-pencil"></span>Edit</button><button class="ds-act del" data-dsdel="${i}" title="Remove"><span class="ic ti ti-trash"></span>Remove</button></div></td>`:''}
@@ -3888,7 +3888,7 @@ function confForm(idx=null,prefill=null){
   $("c_brief").onchange=()=>{const b=briefs[$("c_brief").value];if(b&&!$("c_name").value)$("c_name").value=b.aor||labelOf(b);};
   $("c_save").onclick=()=>{
     const juniorUids=[...document.querySelectorAll("#c_jrs [data-cj]:checked")].map(x=>x.dataset.cj);
-    const item={date:$("c_date").value||dsDate,time:readConfTime("c_time"),name:$("c_name").value.trim(),briefId:$("c_brief").value||null,juniorUids};
+    const item={date:$("c_date").value||dsDate,time:readConfTime("c_time"),name:nameCase($("c_name").value.trim()),briefId:$("c_brief").value||null,juniorUids};
     if(!item.name){toast("Add a name","ti-alert-triangle");return;}
     const arr=[...(daysheet?.conferences||[])]; if(idx!==null)arr[idx]=item;else arr.push(item);
     saveDaysheet(daysheet?.entries||[],arr); closeSheet();
@@ -4071,7 +4071,7 @@ async function buildCauselistPdf(iso){
     const R=resolveEntry(e,iso);
     const judges=String(R.bench||"").split(/\s*,\s*/).filter(Boolean).map(shortJudge).join("\n");
     const side=R.appearingFor?(/resp/i.test(R.appearingFor)?"(R)":"(P)"):"";
-    const adv=[side,e.counsel,...jrsOf(e).map(u=>nameOf(u))].filter(Boolean).join("\n");
+    const adv=[side,nameCase(e.counsel),...jrsOf(e).map(u=>nameCase(nameOf(u)))].filter(Boolean).join("\n");
     // court totals (owner: in the Advocates column, in a smaller size, below the names)
     const tot=[];   // one line, e.g. "Total (Main 32 + Supp. 12) = 44"
     if(R.total){ if(SUPP_TYPES.has(R.listType)){ const got=suppFetched(iso,R.listType);
@@ -4098,6 +4098,28 @@ async function shareCauselistPdf(iso){
   toast("PDF saved — attach it in WhatsApp or email","ti-file-text");
 }
 
+// Names (advocates, counsel, firms) are written with ONLY the first letter of each word capital
+// (owner, Oct 2026): the SC list often prints "SANCHIT GARGA", typists send "abhay antukar".
+// Kept as they are: initials ("K.V.", "N."), short acronyms in brackets or known ones
+// ("(JSA)", "LLP"), "&", "M/s", roman numerals; small joining words go lower case mid-name.
+const NAME_KEEP_UP=new Set(["LLP","LLC","AOR","AAG","ASG","SG","AG","II","III","IV","SCLSC","LLB","LLM","JSA","AZB","CAM","SAM","IP","HSA","DSK","ELP","PSA","UK","USA","HDFC","ICICI","SBI"]);
+const NAME_SMALL=new Set(["and","of","the","for","de","da","van","von","bin","al"]);
+function nameCase(str){
+const s=String(str||"").replace(/\s+/g," ").trim(); if(!s) return s;
+return s.split(" ").map((w,i)=>{
+  const core=w.replace(/^[(\["']+|[)\]"',.;:]+$/g,""), lead=w.slice(0,w.indexOf(core.charAt(0))>=0?w.indexOf(core.charAt(0)):0);
+  if(!core) return w;
+  if(/^[A-Za-z]\.([A-Za-z]\.)*$/.test(core+".")&&core.length<=6&&/\./.test(w)) return w.toUpperCase();      // K.V. / N.
+  if(/^([A-Za-z]\.){1,4}[A-Za-z]?$/.test(core)) return w.toUpperCase();
+  if(/^m\/s\.?$/i.test(core)) return w.replace(/m\/s/i,"M/s");
+  if(core==="&") return w;
+  if(NAME_KEEP_UP.has(core.toUpperCase())&&(core===core.toUpperCase()||/^\(/.test(w))) return w.replace(core,core.toUpperCase());
+  if(/^\(/.test(w)&&/^[A-Z]{2,5}$/.test(core)) return w;                                          // (JSA)
+  if(i>0&&NAME_SMALL.has(core.toLowerCase())) return w.replace(core,core.toLowerCase());
+  const cased=core.toLowerCase().replace(/(^|[-'’.])([a-z])/g,(m,a,b)=>a+b.toUpperCase()).replace(/^Mc([a-z])/,(m,a)=>"Mc"+a.toUpperCase());
+  return w.replace(core,cased);
+}).join(" ");
+}
 function dsForm(idx=null, preset=null){
   // preset: a court note being turned into a listing — pre-fills the form and is told when
   // the listing has actually been saved (so the note is struck only on a real save).
@@ -4224,15 +4246,15 @@ function dsForm(idx=null, preset=null){
     const l=sideAdvs($("f_appear").value);
     if(l.length<2){ box.innerHTML=""; return; }
     const cur=($("f_counsel").value||"").trim().toUpperCase();
-    box.innerHTML=`<span class="adv-h">On the list for this side — tap the one for your party:</span>`+l.map((a,i)=>`<button type="button" class="adv-chip${a.n.toUpperCase()===cur?" on":""}" data-advi="${i}">${esc(a.n)}${a.p?`<small>${esc(a.p)}</small>`:""}${a.tag==="amicus"?`<small>amicus</small>`:a.tag==="caveat"?`<small>caveat</small>`:""}</button>`).join("");
-    box.querySelectorAll("[data-advi]").forEach(x=>x.onclick=()=>{ const a=l[+x.dataset.advi]; $("f_counsel").value=a.n; auto.counsel=a.n; showAdvPick(); });
+    box.innerHTML=`<span class="adv-h">On the list for this side — tap the one for your party:</span>`+l.map((a,i)=>`<button type="button" class="adv-chip${a.n.toUpperCase()===cur?" on":""}" data-advi="${i}">${esc(nameCase(a.n))}${a.p?`<small>${esc(a.p)}</small>`:""}${a.tag==="amicus"?`<small>amicus</small>`:a.tag==="caveat"?`<small>caveat</small>`:""}</button>`).join("");
+    box.querySelectorAll("[data-advi]").forEach(x=>x.onclick=()=>{ const a=l[+x.dataset.advi], nm=nameCase(a.n); $("f_counsel").value=nm; auto.counsel=nm; showAdvPick(); });
   }
   function fillCounsel(){
     const el=$("f_counsel"); if(!el || !lastAdv){ showAdvPick(); return; }
     const ap=$("f_appear").value;
     if(!ap){ showAdvPick(); return; }                     // no side chosen yet -> don't guess
     const l=sideAdvs(ap), first=l.find(a=>a.tag!=="amicus"&&a.tag!=="in-person");
-    const name=(first?first.n:"") || "";
+    const name=nameCase((first?first.n:"") || "");
     // Reflect the CHOSEN party's AoR exactly — the respondent's when Respondent is
     // picked, empty if the list names none for that side (NEVER the other party's).
     // A value the staff typed (auto.counsel === "\0") is never touched.
@@ -4293,7 +4315,7 @@ function dsForm(idx=null, preset=null){
     const _pickTitle = pickedBriefId&&briefs[pickedBriefId] ? labelOf(briefs[pickedBriefId]) : "";
     const typedNo=$("f_dno")?$("f_dno").value.trim():"";
     const entry={briefId:$("f_brief").value||null,caseTitle:(_pickTitle||$("f_title").value.trim()),courtNo:$("f_court").value.trim(),itemNo:$("f_item").value.trim(),
-      listType:$("f_listtype").value||"",appearingFor:$("f_appear").value||"",time:toDotted($("f_time").value),confTime:readConfTime("f_conf"),confDate:(readConfTime("f_conf")?($("f_confdate").value||listDate):($("f_confdate").value||"")),bench:$("f_bench").value.trim(),counsel:$("f_counsel").value.trim(),caseNo:typedNo,
+      listType:$("f_listtype").value||"",appearingFor:$("f_appear").value||"",time:toDotted($("f_time").value),confTime:readConfTime("f_conf"),confDate:(readConfTime("f_conf")?($("f_confdate").value||listDate):($("f_confdate").value||"")),bench:$("f_bench").value.trim(),counsel:nameCase($("f_counsel").value.trim()),caseNo:typedNo,
       awaitingList:!($("f_court").value.trim()&&$("f_item").value.trim()),
       juniorUids,juniorUid:juniorUids[0]||null,remarks:$("f_rem").value.trim(),done:e.done||false};
     if(!((entry.courtNo&&entry.itemNo)||entry.caseTitle||entry.briefId)){toast("Enter the court no + item no (or a case title)","ti-alert-triangle");return;}
@@ -5489,7 +5511,7 @@ function briefForm(b=null){
     // a serial is unique and fixed: refuse one already on another brief
     const _sn=parseInt(($("b_chno").value||"").replace(/\D/g,""),10);
     if(!isNaN(_sn)){ const h=serialTakenBy(_sn,b&&b.id); if(h){ toast(`Serial ${pad3(_sn)} is already on “${labelOf(h)}”`,"ti-alert-triangle"); return; } }
-    const data={caseTitle:$("b_title").value.trim(),chamberNo:$("b_chno").value.trim(),diaryNo:$("b_dy").value.trim(),caseNo:$("b_cn").value.trim(),matterType:$("b_type").value,appearingFor:$("b_for").value.trim(),aor:$("b_aor").value.trim(),aorPhone:$("b_aorph").value.trim(),contactPerson:$("b_cperson").value.trim(),contactPhone:$("b_cphone").value.trim(),conferenceAt:$("b_conf").value||null,nextDate:$("b_next").value||null,weight:Number($("b_weight").value)||null,assignedTo:assigned,priority:$("b_prio").checked,directed,updatedAt:db.now()};
+    const data={caseTitle:$("b_title").value.trim(),chamberNo:$("b_chno").value.trim(),diaryNo:$("b_dy").value.trim(),caseNo:$("b_cn").value.trim(),matterType:$("b_type").value,appearingFor:$("b_for").value.trim(),aor:nameCase($("b_aor").value.trim()),aorPhone:$("b_aorph").value.trim(),contactPerson:$("b_cperson").value.trim(),contactPhone:$("b_cphone").value.trim(),conferenceAt:$("b_conf").value||null,nextDate:$("b_next").value||null,weight:Number($("b_weight").value)||null,assignedTo:assigned,priority:$("b_prio").checked,directed,updatedAt:db.now()};
     if(!data.caseTitle){toast("A case title is needed","ti-alert-triangle");return;}
     // Senior unavailable on the next date -> block (owner's rule Jul 2026).
     if(data.nextDate && seniorOff(data.nextDate)){ toast("Senior is not available on "+fmtDateY(data.nextDate)+" — pick another next date","ti-user-off"); return; }

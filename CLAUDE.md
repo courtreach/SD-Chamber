@@ -47,6 +47,14 @@ Dropbox is reachable, enforced by Dropbox itself) and **one folder per brief**.
   `sd-chamber-files` with KV + both secrets, and connected from the app. Verified from
   outside: home page, 401 without sign-in, CORS for the app origin, KV-backed callback guard.
 
+## Names in "first letter capital" case (Oct 2026)
+
+`nameCase(s)` (top level, before dsForm): every word Capitalised, rest lower ("SANCHIT GARGA" →
+"Sanchit Garga"); keeps initials (K.V., N., G.Sivabalan), "(JSA)"-style bracket acronyms and
+NAME_KEEP_UP (LLP, AZB, HDFC…), "&", "M/s", hyphen/apostrophe parts; joining words (and, of…)
+lower mid-name. Applied: counsel autofill + advocate buttons, saving day-sheet counsel / brief
+AoR / conference name, and SHOWING counsel on the day sheet + cause-list PDF (old records too).
+
 ## Cause-list PDF re-done (Oct 2026)
 
 Owner then (same day): GARAMOND as before and NO shading — EB Garamond medium/bold/italic TTF
