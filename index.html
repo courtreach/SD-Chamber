@@ -1927,7 +1927,7 @@ $("signOutBtn").onclick=()=>auth.signOut();
 // service worker is holding an old copy. Clears the shell cache, nudges the SW,
 // then reloads with a cache-buster.
 // Shown in the sidebar / More / Refresh tooltip so anyone can tell which version they have.
-const APP_VERSION="59 · 8 Oct 2026";
+const APP_VERSION="60 · 8 Oct 2026";
 if($("appVer")) $("appVer").textContent="App version "+APP_VERSION;
 if($("btnRefresh")) $("btnRefresh").title="Refresh — fetch the latest app (you have version "+APP_VERSION+")";
 async function hardRefresh(){
@@ -4003,18 +4003,19 @@ function clBuildDoc(jsPDF, fonts, data, scale){
   const cw=doc.getTextWidth(data.courtLine); doc.setDrawColor(0); doc.setLineWidth(0.6); doc.line((W-cw)/2,71.5,(W+cw)/2,71.5);
   const f=x=>+(x*scale).toFixed(2), pad=+(3*Math.min(scale,1.4)).toFixed(2), cwid=(base,grow)=>Math.round(base*Math.max(1,1+(scale-1)*grow));   // never narrower than the base
   doc.autoTable({ startY:80,
-    head:[["Court /\nItem","Time","Case Name","Judges","Advocates"]],
-    body: data.rows.length?data.rows.map(r=>[r[0],r[1],r[2],r[3], r[4]+((r[5]&&r[5].length)?"\n"+r[5].map(()=>" ").join("\n"):"")]):[["","","No matters listed.","",""]],
+    head:[["Court /\nItem","Time","Case Name","Judges","For","Advocates"]],   // P / R in its own column (owner, Oct 2026)
+    body: data.rows.length?data.rows.map(r=>{ const m=/^\((P|R)\)\n?/.exec(r[4]||""); const adv=m?(r[4]||"").slice(m[0].length):(r[4]||"");
+      return [r[0],r[1],r[2],r[3], m?m[1]:"", adv+((r[5]&&r[5].length)?"\n"+r[5].map(()=>" ").join("\n"):"")]; }):[["","","No matters listed.","","",""]],
     theme:"grid",
     // thin black lines, no shading anywhere
     styles:{font:F,fontStyle:"normal",fontSize:f(12),cellPadding:{top:pad,bottom:pad,left:4,right:4},valign:"top",lineColor:[0,0,0],lineWidth:0.3,textColor:[0,0,0],fillColor:false,overflow:"linebreak"},
     headStyles:{font:F,fontStyle:"bold",fontSize:11.5,fillColor:false,textColor:[0,0,0],valign:"middle",lineColor:[0,0,0],lineWidth:0.3},
     alternateRowStyles:{fillColor:false},
     columnStyles:{0:{cellWidth:cwid(84,.6),fontSize:f(16.5),fontStyle:"bold"},1:{cellWidth:cwid(36,1),fontSize:f(12)},2:{cellWidth:"auto",fontSize:f(14)},
-                  3:{cellWidth:cwid(104,.6),fontSize:f(12)},4:{cellWidth:cwid(128,.6),fontSize:f(12)}},
-    didDrawCell:c=>{ if(c.section!=="body"||c.column.index!==4) return;
+                  3:{cellWidth:cwid(106,.6),fontSize:f(12)},4:{cellWidth:cwid(24,.5),fontSize:f(14),fontStyle:"bold",halign:"center"},5:{cellWidth:cwid(132,.6),fontSize:f(12)}},
+    didDrawCell:c=>{ if(c.section!=="body"||c.column.index!==5) return;
       const fs=c.cell.styles.fontSize, x=c.cell.x+c.cell.padding("left");
-      const m=/^\((P|R)\)/.exec(c.cell.raw||"");
+      const m=null;   // the side (P/R) now has its own "For" column
       if(m){ doc.setFont(F,"bold"); doc.setFontSize(fs);
         const y=c.cell.y+c.cell.padding("top")+fs*0.85; doc.setFillColor(255,255,255); doc.rect(x-0.5,y-fs*0.8,doc.getTextWidth(m[0])+1,fs*1.0,"F"); doc.text(m[0],x,y); }
       const tot=(data.rows[c.row.index]||[])[5];

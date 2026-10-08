@@ -52,6 +52,7 @@ Dropbox is reachable, enforced by Dropbox itself) and **one folder per brief**.
 Owner then (same day): GARAMOND as before and NO shading — EB Garamond medium/bold/italic TTF
 embedded from fonts.gstatic.com (`EBG_TTF`, `loadGaramond`, Times if offline), thin black lines
 (0.3), no header fill; builder = `clBuildDoc`/`clBest`.
+P / R in its own narrow "For" column before Advocates (bold, centred; was "(P)" atop the names).
 Court totals as ONE line "Total (Main 32 + Supp. 12) = 44" ("Total 44" for lists with no supp; "awaited"
 until the supp is fetched), shrunk only if wider than the cell; Court/Item 16.5 bold. Earlier: sit at the FOOT of the Advocates cell, 0.82× size (room
 reserved with blank lines, drawn in didDrawCell). Scale search may step down to 0.85 to keep one
