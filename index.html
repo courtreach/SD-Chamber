@@ -1927,7 +1927,7 @@ $("signOutBtn").onclick=()=>auth.signOut();
 // service worker is holding an old copy. Clears the shell cache, nudges the SW,
 // then reloads with a cache-buster.
 // Shown in the sidebar / More / Refresh tooltip so anyone can tell which version they have.
-const APP_VERSION="62 · 8 Oct 2026";
+const APP_VERSION="63 · 8 Oct 2026";
 if($("appVer")) $("appVer").textContent="App version "+APP_VERSION;
 if($("btnRefresh")) $("btnRefresh").title="Refresh — fetch the latest app (you have version "+APP_VERSION+")";
 async function hardRefresh(){
@@ -4011,7 +4011,7 @@ function clBuildDoc(jsPDF, fonts, data, scale){
     styles:{font:F,fontStyle:"normal",fontSize:f(12),cellPadding:{top:pad,bottom:pad,left:4,right:4},valign:"top",lineColor:[0,0,0],lineWidth:0.3,textColor:[0,0,0],fillColor:false,overflow:"linebreak"},
     headStyles:{font:F,fontStyle:"bold",fontSize:11.5,fillColor:false,textColor:[0,0,0],valign:"middle",lineColor:[0,0,0],lineWidth:0.3},
     alternateRowStyles:{fillColor:false},
-    columnStyles:{0:{cellWidth:cwid(60,.5),fontSize:f(15.5),fontStyle:"bold"},1:{cellWidth:cwid(36,1),fontSize:f(12)},2:{cellWidth:"auto",fontSize:f(13.6)},
+    columnStyles:{0:{cellWidth:cwid(60,.5),fontSize:f(15.5),fontStyle:"normal"},1:{cellWidth:cwid(36,1),fontSize:f(12)},2:{cellWidth:"auto",fontSize:f(13.6)},
                   3:{cellWidth:cwid(106,.6),fontSize:f(12)},4:{cellWidth:cwid(24,.5),fontSize:f(14),fontStyle:"bold",halign:"center"},5:{cellWidth:cwid(132,.6),fontSize:f(12)}},
     didDrawCell:c=>{ if(c.section!=="body"||c.column.index!==5) return;
       const fs=c.cell.styles.fontSize, x=c.cell.x+c.cell.padding("left");
