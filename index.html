@@ -1344,6 +1344,8 @@ body.demo .topbar{top:34px}
 .adv-chip{display:inline-flex;flex-direction:column;align-items:flex-start;gap:0;background:var(--surface);border:1px solid var(--line-2);border-radius:8px;padding:5px 9px;font:600 12.5px/1.25 Inter,system-ui,sans-serif;color:var(--ink);cursor:pointer;text-align:left}
 .adv-chip small{font-weight:500;font-size:10.5px;color:var(--ink-3)}
 .adv-chip.on{border-color:var(--accent);background:var(--accent-soft);color:var(--accent-ink)}
+
+.app-ver{font-size:10.5px;color:var(--sidebar-ink-2);opacity:.7;padding:6px 4px 0}
 </style>
 </head>
 <body>
@@ -1423,6 +1425,7 @@ body.demo .topbar{top:34px}
         <div class="info"><div class="nm" id="sbUserName">—</div><div class="rl" id="sbUserRole">—</div></div>
       </div>
       <button class="signout" id="signOutBtn"><span class="ti ti-logout"></span>Sign out</button>
+      <div class="app-ver" id="appVer"></div>
     </div>
   </aside>
 
@@ -1923,6 +1926,10 @@ $("signOutBtn").onclick=()=>auth.signOut();
 // Hard refresh: pull the newest app shell + data even on an installed PWA whose
 // service worker is holding an old copy. Clears the shell cache, nudges the SW,
 // then reloads with a cache-buster.
+// Shown in the sidebar / More / Refresh tooltip so anyone can tell which version they have.
+const APP_VERSION="56 · 8 Oct 2026";
+if($("appVer")) $("appVer").textContent="App version "+APP_VERSION;
+if($("btnRefresh")) $("btnRefresh").title="Refresh — fetch the latest app (you have version "+APP_VERSION+")";
 async function hardRefresh(){
   toast("Refreshing…","ti-refresh");
   try{ if(window.caches){ const keys=await caches.keys(); await Promise.all(keys.map(k=>caches.delete(k))); } }catch(e){}
@@ -1954,6 +1961,7 @@ if($("navMore")) $("navMore").onclick=()=>{
       <button class="btn ghost" data-moretab="leave" style="width:100%;justify-content:flex-start;margin-bottom:8px"><span class="ic ti ti-plane-departure"></span>Leave</button>
       <button class="btn ghost" data-moretab="team" style="width:100%;justify-content:flex-start;margin-bottom:8px"><span class="ic ti ti-users"></span>Chamber</button>
       <button class="btn ghost" id="moreSignOut" style="width:100%;justify-content:flex-start;color:var(--danger)"><span class="ic ti ti-logout"></span>Sign out</button>
+      <div class="muted" style="font-size:11px;text-align:center;margin-top:10px">App version ${APP_VERSION}</div>
     </div>`);
   document.querySelectorAll("[data-moretab]").forEach(x=>x.onclick=()=>{ closeSheet(); selectTab(x.dataset.moretab); });
   $("moreSignOut").onclick=()=>{ closeSheet(); auth.signOut(); };
@@ -3938,6 +3946,15 @@ function shareDaySheet(){
 // Print the very same PDF as Share / Save to Dropbox (owner, Oct 2026: one look everywhere).
 async function printCauseList(iso){
   iso=(typeof iso==="string"&&iso)?iso:dsDate;
+  const ios=/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
+  const standalone=window.matchMedia&&window.matchMedia("(display-mode: standalone)").matches;
+  if(ios||standalone){                          // the share sheet has Print; a pop-up tab doesn't work there
+    toast("Preparing the cause list…","ti-printer");
+    let out; try{ out=await buildCauselistPdf(iso); }catch(e){ toast("Couldn't build the cause list — check your connection and retry","ti-alert-triangle"); return; }
+    const fname=`SD Causelist ${out.dt}.pdf`, file=new File([out.doc.output("blob")],fname,{type:"application/pdf"});
+    if(navigator.canShare&&navigator.canShare({files:[file]})){ try{ await navigator.share({files:[file],title:fname}); return; }catch(e){ if(e&&e.name==="AbortError") return; } }
+    out.doc.save(fname); return;
+  }
   const w=window.open("","_blank");            // opened at once so the pop-up isn't blocked
   if(!w){ toast("Allow pop-ups to print the cause list","ti-alert-triangle"); return; }
   try{ w.document.write('<p style="font:14px system-ui;padding:20px">Preparing the cause list…</p>'); }catch(e){}
