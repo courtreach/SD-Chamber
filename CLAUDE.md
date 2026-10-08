@@ -152,7 +152,9 @@ no conference line). Every note starts blank (6 numbered paras) — app notes ar
 The Spark plan allows ~50k reads/day; on 7 Oct it ran out ("Quota exceeded" on every read).
 Symptom: Files refused every non-admin as "not an active member" — the gatekeeper's read of
 users/{uid} failed (429) and only the admin passes by email. Cuts made:
-- **Device copy**: `initializeFirestore(... persistentLocalCache(persistentMultipleTabManager))`
+- **Device copy — SWITCHED OFF 8 Oct 2026** (it hung at start-up in the owner's Chrome: getDoc and even
+  getDocFromServer never answered, the app never appeared). Back to `getFirestore(app)` (memory).
+  Was: `initializeFirestore(... persistentLocalCache(persistentMultipleTabManager))`
   (falls back to getFirestore). Sign-out = signOut → terminate → clearIndexedDbPersistence →
   reload, so a shared computer keeps nothing.
 - `db.watchCollection(path, cb, order, where)` → `cb(rows, {fromCache})`, with

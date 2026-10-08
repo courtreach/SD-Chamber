@@ -1579,7 +1579,11 @@ if(DEMO){
   // READ SAVING (owner, Oct 2026 — the free daily read allowance ran out): keep a copy of the
   // data on the device, so reopening asks the server only for what changed. Falls back to
   // the old memory-only mode wherever the browser can't store it (e.g. private windows).
-  let fs; try{ fs=initializeFirestore(app,{localCache:persistentLocalCache({tabManager:persistentMultipleTabManager()})}); }catch(e){ fs=getFirestore(app); }
+  // The on-device copy (persistentLocalCache) was switched OFF on 8 Oct 2026: in the owner's Chrome
+  // it hung at start-up (no request ever reached the database — the app never appeared). Memory
+  // cache = the long-proven behaviour. The other read savings (own notifications, today's
+  // conference records) stay.
+  const fs=getFirestore(app);
   const ref=path=>{const a=path.split("/"); return a.length%2? collection(fs,...a): doc(fs,...a);};
   db={
     // cb(rows, {fromCache}) — the first answer may come from the device's copy; a second, from
@@ -1945,7 +1949,7 @@ $("signOutBtn").onclick=()=>auth.signOut();
 // service worker is holding an old copy. Clears the shell cache, nudges the SW,
 // then reloads with a cache-buster.
 // Shown in the sidebar / More / Refresh tooltip so anyone can tell which version they have.
-const APP_VERSION="68 · 8 Oct 2026";
+const APP_VERSION="69 · 8 Oct 2026";
 if($("appVer")) $("appVer").textContent="App version "+APP_VERSION;
 if($("btnRefresh")) $("btnRefresh").title="Refresh — fetch the latest app (you have version "+APP_VERSION+")";
 async function hardRefresh(){
