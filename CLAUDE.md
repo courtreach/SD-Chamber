@@ -47,6 +47,15 @@ Dropbox is reachable, enforced by Dropbox itself) and **one folder per brief**.
   `sd-chamber-files` with KV + both secrets, and connected from the app. Verified from
   outside: home page, 401 without sign-in, CORS for the app origin, KV-backed callback guard.
 
+## Cause-list PDF re-done (Oct 2026)
+
+`buildCauselistPdf` (Share PDF, Save to Dropbox AND Print — `printCauseList` now opens the same
+PDF in a new tab instead of the old HTML print page): hairline grey grid (lineWidth .35, grey 150),
+no "Total & Seq." column (owner: sequence not needed; court totals, when known, sit under
+Court/Item), larger base sizes (case 13.5, court/item 13, judges/advocates/time 11.5) and a
+`build(scale)` search from 2.2 down to 1.0 in 0.02 steps for the biggest text whose table +
+conferences still fit ONE A4 page (narrow columns widen with the scale). Heavy days keep scale 1.
+
 ## Exact petition numbers from the SC lists (Oct 2026, parser v9)
 
 Studied the owner's sample M_J_1 (9 Oct 2026) + the live Regular/Chamber/Registrar/Single lists.

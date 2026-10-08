@@ -3935,97 +3935,16 @@ function shareDaySheet(){
 
 // Printable cause list in the clerk's paper format: SHYAM DIVAN header, italic
 // "Senior Advocate", then the six-column table, then conferences — Garamond 14.
-function printCauseList(iso){
-  iso = (typeof iso==="string" && iso) ? iso : dsDate;
-  const d=new Date(iso+"T00:00");
-  const day=d.toLocaleDateString("en-IN",{weekday:"long"}).toUpperCase();
-  const dt=d.toLocaleDateString("en-IN",{day:"2-digit",month:"2-digit",year:"numeric"}).replace(/\//g,".");
-  // always ordered by court room number, then item
-  const entries=byCourt((iso===dsDate?(daysheet?.entries||[]):(dsAll[iso]?.entries||[])), iso);
-  const q = s => String(s??"").replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
-  const rows=entries.map((e,i)=>{
-    const R=resolveEntry(e,iso);
-    const ci=`${q(e.courtNo||"?")} #${q(e.itemNo||"?")}`;
-    const judges=String(R.bench||"").split(/\s*,\s*/).filter(Boolean).map(j=>q(shortJudge(j))).join("<br>");   // one judge per line
-    // (P)/(R) = which side we appear for; a short own line so the advocate names
-    // keep their exact width/height. Respondent -> (R), any other side -> (P).
-    const side = R.appearingFor ? (/resp/i.test(R.appearingFor) ? "(R)" : "(P)") : "";
-    const adv=[side?`<b>${side}</b>`:"", ...[e.counsel, ...jrsOf(e).map(u=>nameOf(u))].filter(Boolean).map(q)].filter(Boolean).join("<br>"); // side marker then one name per line
-    let totLine="";
-    if(R.total){
-      totLine=`<div>Total ${q(R.total)}</div>`;
-      if(SUPP_TYPES.has(R.listType)){                    // supp comes late — blank until fetched
-        const s = suppFetched(iso,R.listType) ? q(R.courtSupp) : "—";
-        totLine+=`<div class="brk">Main ${q(R.courtMain)} · Supp ${s}</div>`;
-      }
-    }
-    const last = `${totLine}<div class="seqbox"><div class="seqlab">Seq.</div><div class="seqline">${e.seq?q(e.seq):"&nbsp;"}</div></div>`;
-    return `<tr><td class="ci">${ci}</td><td class="tm">${q(e.time||"")}</td><td class="nm">${q(R.title)}</td><td class="jg">${judges}</td><td class="ad">${adv}</td><td class="last">${last}</td></tr>`;
-  }).join("");
-  const confGroups=conferenceList(iso);
-  // Two deterministic columns (no multicol balancing, which fragmented onto page 2):
-  // one conference day → split its rows left/right; two+ days → each day fills a
-  // column (e.g. the 14th-night list on the left, the 15th-morning list on the right).
-  const cfRow=c=>`<div class="cf"><span class="t">${q(fmtConfTime(c.time)||"—")}</span><span>-</span><span class="l">${q(c.label||"")}</span></div>`;
-  let confHtml="";
-  if(confGroups.length===1){
-    const g=confGroups[0], it=g.items, mid=Math.ceil(it.length/2);
-    confHtml=`<div class="confs"><div class="ch">Conferences</div><div class="cfday">${q(confDateHeading(g.iso))}</div>`
-      +`<div class="cfsplit"><div class="cfcol">${it.slice(0,mid).map(cfRow).join("")}</div><div class="cfcol">${it.slice(mid).map(cfRow).join("")}</div></div></div>`;
-  } else if(confGroups.length){
-    confHtml=`<div class="confs"><div class="ch">Conferences</div><div class="cfsplit">`
-      +confGroups.map(g=>`<div class="cfcol"><div class="cfday">${q(confDateHeading(g.iso))}</div>${g.items.map(cfRow).join("")}</div>`).join("")
-      +`</div></div>`;
-  }
-  const html=`<!doctype html><html><head><meta charset="utf-8"><title>SD Causelist ${dt}</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,500&display=swap" rel="stylesheet">
-<style>
-*{box-sizing:border-box}
-/* weight 500 throughout — EB Garamond at 400 printed too faint for the clerk */
-body{font-family:"EB Garamond",Garamond,"Times New Roman",serif;font-size:13px;font-weight:500;color:#000;margin:0}
-.name{text-align:center;font-size:21px;font-weight:700;letter-spacing:1.5px;line-height:1.05}
-.role{text-align:center;font-style:italic;font-size:12.5px;margin-top:0}
-.court{text-align:center;text-decoration:underline;font-weight:700;margin:2px 0 5px;font-size:13.5px}
-table{width:100%;border-collapse:collapse;table-layout:fixed}
-th,td{border:1px solid #000;padding:2px 5px;vertical-align:top;text-align:left;line-height:1.18;overflow-wrap:break-word;font-weight:500}
-th{font-weight:600;font-size:11.5px;white-space:normal}
-td.ci,th.ci{width:56px;white-space:nowrap;font-size:13.5px;font-weight:600}   /* court/item */
-td.tm,th.tm{width:32px;white-space:nowrap;font-size:11.5px}
-td.nm{font-size:13px;line-height:1.2}            /* the cause title */
-td.jg,th.jg{width:114px;font-size:11px;line-height:1.22}    /* judges — one name per row */
-td.ad,th.ad{width:120px;font-size:11px;line-height:1.22}    /* advocates — one name per row */
-td.last,th.last{width:92px;font-size:10.5px}
-.brk{font-size:10px;margin-top:1px;white-space:nowrap}   /* Main N · Supp N on one line */
-.seqbox{margin-top:3px}
-.seqlab{font-size:9.5px;letter-spacing:.03em;text-align:center}
-.seqline{border-bottom:1px solid #000;min-height:13px;line-height:13px;font-size:12.5px;font-weight:600;text-align:center}   /* full-width rule to hand-fill the sequence */
-.confs{margin-top:6px}
-.ch{text-decoration:underline;margin-bottom:3px;font-weight:600}
-/* two side-by-side columns filling the free width, so a long conference list (or
-   a second day) uses the right side instead of running onto page 2. */
-.cfsplit{display:flex;flex-wrap:wrap;gap:0 40px;align-items:flex-start}
-.cfcol{flex:1 1 calc(50% - 20px);min-width:calc(50% - 20px)}
-.cfday{font-weight:600;margin:2px 0 1px;font-size:13px}
-.cf{display:flex;gap:10px;margin:0 0 0 14px;font-size:12.5px}
-.cf .t{min-width:46px}
-.cf .l{overflow-wrap:anywhere}
-@page{size:A4;margin:6mm 11mm 8mm}
-</style></head><body>
-<div class="name">${q(CHAMBER.seniorName.toUpperCase())}</div>
-<div class="role">Senior Advocate</div>
-<div class="court">SUPREME COURT (${day}) ${dt}</div>
-<table><thead><tr><th class="ci">Court/<br>Item</th><th class="tm">Time</th><th class="nm">Case Name</th><th class="jg">Judges</th><th class="ad">Advocates</th><th class="last">Total &amp; Seq.</th></tr></thead>
-<tbody>${rows||'<tr><td colspan="6" style="text-align:center;padding:16px">No matters listed.</td></tr>'}</tbody></table>
-${confHtml}
-</body></html>`;
-  const w=window.open("","_blank");
+// Print the very same PDF as Share / Save to Dropbox (owner, Oct 2026: one look everywhere).
+async function printCauseList(iso){
+  iso=(typeof iso==="string"&&iso)?iso:dsDate;
+  const w=window.open("","_blank");            // opened at once so the pop-up isn't blocked
   if(!w){ toast("Allow pop-ups to print the cause list","ti-alert-triangle"); return; }
-  w.document.open(); w.document.write(html); w.document.close(); w.focus();
-  // trigger print once the Garamond web font is ready (fall back after a beat)
-  const doPrint=()=>{ try{ w.print(); }catch(e){} };
-  try{ (w.document.fonts&&w.document.fonts.ready?w.document.fonts.ready:Promise.resolve()).then(()=>setTimeout(doPrint,200)); }
-  catch(e){ setTimeout(doPrint,600); }
+  try{ w.document.write('<p style="font:14px system-ui;padding:20px">Preparing the cause list…</p>'); }catch(e){}
+  let out; try{ out=await buildCauselistPdf(iso); }catch(e){ try{ w.close(); }catch(_){} toast("Couldn't build the cause list — check your connection and retry","ti-alert-triangle"); return; }
+  const url=URL.createObjectURL(out.doc.output("blob"));
+  w.location.href=url;                          // the browser's PDF viewer — print from there (⌘P / Ctrl+P)
+  setTimeout(()=>URL.revokeObjectURL(url),120000);
 }
 
 // ---- Share the cause list as a real PDF (WhatsApp / email via the native share
@@ -4037,6 +3956,10 @@ function ensurePdfLib(){ if(window.jspdf&&window.jspdf.jsPDF) return Promise.res
     .then(()=>loadScript("https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"));
   return _pdfLibP;
 }
+// The cause list as a PDF (owner, Oct 2026): hairline grey grid (lighter than the text), no
+// sequence column, and the text made as BIG as fits — the sizes step up until the table plus
+// the conferences no longer fit on one A4 page; a heavy day keeps the (already larger) base
+// sizes and runs on. Used for Share, Save to Dropbox and Print alike.
 async function buildCauselistPdf(iso){
   iso=(typeof iso==="string"&&iso)?iso:dsDate;
   await ensurePdfLib();
@@ -4045,38 +3968,55 @@ async function buildCauselistPdf(iso){
   const day=d.toLocaleDateString("en-IN",{weekday:"long"}).toUpperCase();
   const dt=d.toLocaleDateString("en-IN",{day:"2-digit",month:"2-digit",year:"numeric"}).replace(/\//g,".");
   const entries=byCourt((iso===dsDate?(daysheet?.entries||[]):(dsAll[iso]?.entries||[])), iso);
-  const doc=new jsPDF({unit:"pt",format:"a4"});
-  const W=doc.internal.pageSize.getWidth();
-  doc.setFont("times","bold").setFontSize(17); doc.text(CHAMBER.seniorName.toUpperCase(),W/2,42,{align:"center"});
-  doc.setFont("times","italic").setFontSize(11); doc.text(CHAMBER.designation||"Senior Advocate",W/2,57,{align:"center"});
-  doc.setFont("times","bold").setFontSize(12); const ch=`SUPREME COURT (${day}) ${dt}`; doc.text(ch,W/2,74,{align:"center"});
-  const cw=doc.getTextWidth(ch); doc.setLineWidth(0.7); doc.line((W-cw)/2,77,(W+cw)/2,77);
   const body=entries.map(e=>{
     const R=resolveEntry(e,iso);
     const judges=String(R.bench||"").split(/\s*,\s*/).filter(Boolean).map(shortJudge).join("\n");
     const side=R.appearingFor?(/resp/i.test(R.appearingFor)?"(R)":"(P)"):"";
     const adv=[side,e.counsel,...jrsOf(e).map(u=>nameOf(u))].filter(Boolean).join("\n");
-    let last="";
-    if(R.total){ last=`Total ${R.total}`; if(SUPP_TYPES.has(R.listType)){ const s=suppFetched(iso,R.listType)?R.courtSupp:"—"; last+=`\nMain ${R.courtMain} · Supp ${s}`; } }
-    last+=`\nSeq. ${e.seq||"______"}`;
-    return [`${e.courtNo||"?"} #${e.itemNo||"?"}`, e.time||"", R.title||"", judges, adv, last];
+    // court totals, when known, sit quietly under the court/item number
+    let tot="";
+    if(R.total){ tot=`\nTotal ${R.total}`; if(SUPP_TYPES.has(R.listType)){ const sp=suppFetched(iso,R.listType)?R.courtSupp:"—"; tot+=`\nMain ${R.courtMain} · Supp ${sp}`; } }
+    return [`${e.courtNo||"?"} #${e.itemNo||"?"}${tot}`, e.time||"", R.title||"", judges, adv];
   });
-  doc.autoTable({ startY:86,
-    head:[["Court/Item","Time","Case Name","Judges","Advocates","Total & Seq."]],
-    body: body.length?body:[["","","No matters listed.","","",""]],
-    theme:"grid",
-    styles:{font:"times",fontSize:8.5,cellPadding:3,valign:"top",lineColor:[0,0,0],lineWidth:0.5,textColor:[0,0,0],overflow:"linebreak"},
-    headStyles:{fontStyle:"bold",fontSize:8.5,fillColor:[245,244,240],textColor:[0,0,0]},
-    columnStyles:{0:{cellWidth:46,fontSize:10,fontStyle:"bold"},1:{cellWidth:28,fontSize:8},2:{cellWidth:"auto",fontSize:9},3:{cellWidth:96,fontSize:8},4:{cellWidth:102,fontSize:8},5:{cellWidth:78,fontSize:8}},
-    margin:{left:26,right:26} });
   const confGroups=conferenceList(iso);
-  if(confGroups.length){ let y=doc.lastAutoTable.finalY+22;
-    if(y>790){doc.addPage();y=44;}
-    doc.setFont("times","bold").setFontSize(11); doc.text("Conferences",26,y); doc.setLineWidth(0.5); doc.line(26,y+3,92,y+3); y+=17;
-    confGroups.forEach(g=>{ doc.setFont("times","bold").setFontSize(9.5); doc.text(confDateHeading(g.iso),26,y); y+=13;
-      doc.setFont("times","normal").setFontSize(9.5);
-      g.items.forEach(c=>{ if(y>810){doc.addPage();y=44;} doc.text(`${fmtConfTime(c.time)||"—"}    -    ${c.label||""}`,40,y); y+=12; }); y+=5; }); }
-  return {doc,dt};
+  const LINE=[150,150,150];
+  const build=scale=>{
+    const doc=new jsPDF({unit:"pt",format:"a4"});
+    const W=doc.internal.pageSize.getWidth(), H=doc.internal.pageSize.getHeight(), M=18;
+    doc.setFont("times","bold").setFontSize(19); doc.text(CHAMBER.seniorName.toUpperCase(),W/2,34,{align:"center"});
+    doc.setFont("times","italic").setFontSize(12); doc.text(CHAMBER.designation||"Senior Advocate",W/2,48,{align:"center"});
+    doc.setFont("times","bold").setFontSize(13.5); const ch=`SUPREME COURT (${day}) ${dt}`; doc.text(ch,W/2,66,{align:"center"});
+    const cw=doc.getTextWidth(ch); doc.setDrawColor(0); doc.setLineWidth(0.6); doc.line((W-cw)/2,69,(W+cw)/2,69);
+    const f=x=>+(x*scale).toFixed(2), pad=+(3*Math.min(scale,1.4)).toFixed(2), cwid=(base,grow)=>Math.round(base*(1+(scale-1)*grow));
+    doc.autoTable({ startY:78,
+      head:[["Court /\nItem","Time","Case Name","Judges","Advocates"]],
+      body: body.length?body:[["","","No matters listed.","",""]],
+      theme:"grid",
+      styles:{font:"times",fontSize:f(11.5),cellPadding:{top:pad,bottom:pad,left:4,right:4},valign:"top",lineColor:LINE,lineWidth:0.35,textColor:[0,0,0],overflow:"linebreak"},
+      headStyles:{fontStyle:"bold",fontSize:10.5,fillColor:[238,236,230],textColor:[0,0,0],valign:"middle",lineColor:LINE,lineWidth:0.35},
+      columnStyles:{0:{cellWidth:cwid(64,.6),fontSize:f(13),fontStyle:"bold"},1:{cellWidth:cwid(36,1),fontSize:f(11.5)},2:{cellWidth:"auto",fontSize:f(13.5)},
+                    3:{cellWidth:cwid(104,.6),fontSize:f(11.5)},4:{cellWidth:cwid(128,.6),fontSize:f(11.5)}},
+      didParseCell:c=>{ if(c.section==="body"&&c.column.index===0&&/\n/.test(c.cell.raw||"")) c.cell.styles.fontStyle="bold"; },
+      didDrawCell:c=>{ // the side mark (P)/(R) in bold over the advocates; totals under the item drawn smaller
+        if(c.section!=="body") return;
+        if(c.column.index===4){ const m=/^\((P|R)\)/.exec(c.cell.raw||""); if(m){ const fs=c.cell.styles.fontSize; doc.setFont("times","bold"); doc.setFontSize(fs);
+          const x=c.cell.x+c.cell.padding("left"), y=c.cell.y+c.cell.padding("top")+fs*0.85; doc.setFillColor(255,255,255); doc.rect(x-0.5,y-fs*0.8,doc.getTextWidth(m[0])+1,fs*1.0,"F"); doc.text(m[0],x,y); } }
+      },
+      margin:{left:M,right:M,top:24,bottom:20} });
+    let y=doc.lastAutoTable.finalY;
+    if(confGroups.length){ y+=f(18);
+      const lh=f(13.5);
+      if(y>H-60){ doc.addPage(); y=40; }
+      doc.setFont("times","bold").setFontSize(f(12)); doc.setTextColor(0); doc.text("Conferences",M,y); doc.setLineWidth(0.5); doc.line(M,y+3,M+doc.getTextWidth("Conferences"),y+3); y+=lh+3;
+      confGroups.forEach(g=>{ doc.setFont("times","bold").setFontSize(f(11)); doc.text(confDateHeading(g.iso),M,y); y+=lh;
+        doc.setFont("times","normal").setFontSize(f(11));
+        g.items.forEach(cf=>{ if(y>H-24){ doc.addPage(); y=40; } doc.text(`${fmtConfTime(cf.time)||"—"}    -    ${cf.label||""}`,M+14,y); y+=lh; }); y+=4; }); }
+    return {doc, end:y, pages:doc.getNumberOfPages(), H};
+  };
+  let best=null;
+  for(let sc=2.2; sc>=1.0; sc-=0.02){ const r=build(sc); if(r.pages===1&&r.end<=r.H-22){ best=r; break; } }
+  if(!best) best=build(1.0);
+  return {doc:best.doc, dt};
 }
 async function shareCauselistPdf(iso){
   toast("Preparing PDF…","ti-file-text");
