@@ -47,6 +47,17 @@ Dropbox is reachable, enforced by Dropbox itself) and **one folder per brief**.
   `sd-chamber-files` with KV + both secrets, and connected from the app. Verified from
   outside: home page, 401 without sign-in, CORS for the app origin, KV-backed callback guard.
 
+## Conference note = the owner's own note format (Oct 2026)
+
+`makeNoteDocx({b, heading, paras})` copies his sample "Alan Chung v. HDFC Bank Dictated Note":
+"Supreme Court of India" · the case number written out (`scCaseLine`: SLP(C) → "SLP (Civil)
+No.", C.A. → "Civil Appeal No." …; diary only → "Diary No.…") · petitioner ⇥ "...Petitioner(s)"
+/ "versus" / respondent ⇥ "...Respondent(s)" (`causeParties`; Appellant for appeals; plural
+when "Ors/Anr"; small words lower-cased) · "Note dated DD.MM.YYYY" (Instructions: "Instructions
+dated …") bold underlined · Word numbered list (ListParagraph, decimal, 720/360), blank paras.
+Garamond 14, A4, margins 851/1134/567/1134, page number top right. NOTHING else (no serial,
+no conference line). Notes taken in the app become the first numbered paragraphs.
+
 ## Read saving — Firestore free quota ran out (Oct 2026)
 
 The Spark plan allows ~50k reads/day; on 7 Oct it ran out ("Quota exceeded" on every read).

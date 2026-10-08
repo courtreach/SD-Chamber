@@ -4977,20 +4977,58 @@ function _zipStored(entries){                       // a valid ZIP (stored) — 
   return new Blob([...parts,...central,eo],{type:"application/vnd.openxmlformats-officedocument.wordprocessingml.document"});
 }
 const _x=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-function makeNoteDocx({heading, sub, kind, meta, paras, blanks}){
-  const P=(t,{b,c,u,sz,after}={})=>`<w:p><w:pPr>${c?'<w:jc w:val="center"/>':""}<w:spacing w:after="${after??160}"/></w:pPr><w:r><w:rPr>${b?"<w:b/>":""}${u?'<w:u w:val="single"/>':""}${sz?`<w:sz w:val="${sz}"/>`:""}</w:rPr><w:t xml:space="preserve">${_x(t)}</w:t></w:r></w:p>`;
-  // a real Word numbered list (numbering.xml): pressing Enter carries the numbering on
-  const N=t=>`<w:p><w:pPr><w:numPr><w:ilvl w:val="0"/><w:numId w:val="1"/></w:numPr><w:spacing w:after="240" w:line="360" w:lineRule="auto"/><w:jc w:val="both"/></w:pPr>${t?`<w:r><w:t xml:space="preserve">${_x(t)}</w:t></w:r>`:""}</w:p>`;
-  const body=[P(heading,{b:1,c:1,sz:30,after:80}), sub?P(sub,{b:1,c:1,after:240}):"", P(kind.toUpperCase(),{b:1,c:1,u:1,after:120}), meta?P(meta,{c:1,after:360}):"",
+// The owner's own note format (his sample "Alan Chung v. HDFC Bank Dictated Note", Oct 2026):
+//   Supreme Court of India                       (centred, 1.5 lines)
+//   SLP (Civil) No.33989/2026                    (centred)
+//   Alan Chung Wah Tang and Ors.   →tab→   ...Petitioners
+//   versus                                       (centred)
+//   HDFC Bank Limited and Ors.     →tab→   ...Respondents
+//   Note dated 30.09.2026                        (bold, underlined, centred)
+//   1. …  2. …                                   (Word numbered list, justified)
+// Garamond 14, A4, his margins, page number top right. Nothing else.
+const SC_NO=[[/^SLP\s*\(\s*C(?:ivil)?\s*\)/i,"SLP (Civil) No."],[/^SLP\s*\(\s*Crl\.?|^SLP\s*\(\s*Criminal/i,"SLP (Criminal) No."],
+  [/^Crl\.?\s*A\.?(?=[\s\d])|^Criminal\s+Appeal/i,"Criminal Appeal No."],[/^C\.?\s*A\.?(?=[\s\d])|^Civil\s+Appeal/i,"Civil Appeal No."],
+  [/^W\.?\s*P\.?\s*\(\s*C(?:ivil)?\s*\)/i,"Writ Petition (Civil) No."],[/^W\.?\s*P\.?\s*\(\s*Crl\.?|^W\.?\s*P\.?\s*\(\s*Criminal/i,"Writ Petition (Criminal) No."],
+  [/^T\.?\s*P\.?\s*\(\s*C(?:ivil)?\s*\)/i,"Transfer Petition (Civil) No."],[/^T\.?\s*P\.?\s*\(\s*Crl\.?/i,"Transfer Petition (Criminal) No."],
+  [/^M\.?\s*A\.?(?=[\s\d])|^Misc(?:ellaneous)?\.?\s+Application/i,"Miscellaneous Application No."],[/^R\.?\s*P\.?\s*\(\s*C(?:ivil)?\s*\)/i,"Review Petition (Civil) No."],
+  [/^Cont(?:empt)?\.?\s*P(?:et)?\.?\s*\(\s*C(?:ivil)?\s*\)/i,"Contempt Petition (Civil) No."]];
+function scCaseLine(b){
+  const cn=String(b.caseNo||"").trim(), dy=String(b.diaryNo||"").trim().replace(/^d(?:iary)?\.?\s*(?:no\.?)?\s*/i,"");
+  if(cn){ for(const [re,lab] of SC_NO){ const m=cn.match(re); if(m) return {line:lab+cn.slice(m[0].length).replace(/^\s*(?:No\.?)?\s*/i,"").trim(), appeal:/Appeal/.test(lab)}; }
+    return {line:cn, appeal:/appeal/i.test(cn)}; }
+  return {line:dy?"Diary No."+dy:"Diary No.________", appeal:false};
+}
+function causeParties(b){
+  const t=String(b.caseTitle||labelOf(b)||"").replace(/\s+/g," ").trim();
+  const nice=x=>x.replace(/\s+And\s+(Ors|Anr|Others|Another)\b\.?/g," and $1.").replace(/\.\.+$/,".").replace(/\s*&\s*Ors\.?$/i," and Ors.")
+    .replace(/(\S)\s+(Of|And|The|For|In|At|By|To|On)(?=\s)/g,(m,a,w)=>a+" "+w.toLowerCase()).trim();
+  const parts=t.split(/\s+(?:vs\.?|v\.|v|versus)\s+/i);
+  if(parts.length<2) return null;
+  const many=x=>/\b(ors|anr|others|another)\b/i.test(x);
+  return {pet:nice(parts[0]), res:nice(parts.slice(1).join(" v. ")), petMany:many(parts[0]), resMany:many(parts.slice(1).join(" "))};
+}
+function makeNoteDocx({b, heading, paras, blanks}){
+  const T=t=>`<w:t xml:space="preserve">${_x(t)}</w:t>`;
+  const C=t=>`<w:p><w:pPr><w:spacing w:line="360" w:lineRule="auto"/><w:jc w:val="center"/></w:pPr><w:r>${T(t)}</w:r></w:p>`;
+  const PARTY=(name,lab)=>`<w:p><w:pPr><w:tabs><w:tab w:val="right" w:pos="9638"/></w:tabs><w:spacing w:line="360" w:lineRule="auto"/></w:pPr><w:r>${T(name)}</w:r><w:r><w:tab/>${T(lab)}</w:r></w:p>`;
+  const N=t=>`<w:p><w:pPr><w:pStyle w:val="ListParagraph"/><w:numPr><w:ilvl w:val="0"/><w:numId w:val="1"/></w:numPr><w:jc w:val="both"/></w:pPr>${t?`<w:r>${T(t)}</w:r>`:""}</w:p>`;
+  const cl=scCaseLine(b), cp=causeParties(b);
+  const who=cl.appeal?["Appellant","Respondent"]:["Petitioner","Respondent"];
+  const body=[C(CHAMBER.court||"Supreme Court of India"), C(cl.line),
+    ...(cp?[PARTY(cp.pet,"..."+who[0]+(cp.petMany?"s":"")), C("versus"), PARTY(cp.res,"..."+who[1]+(cp.resMany?"s":""))]:[C(String(b.caseTitle||labelOf(b)))]),
+    `<w:p><w:pPr><w:jc w:val="center"/><w:rPr><w:b/><w:bCs/><w:u w:val="single"/></w:rPr></w:pPr><w:r><w:rPr><w:b/><w:bCs/><w:u w:val="single"/></w:rPr>${T(heading)}</w:r></w:p>`,
     ...paras.map(N), ...Array.from({length:blanks??(paras.length?3:6)},()=>N(""))].join("");
-  const doc=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>${body}<w:sectPr><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="1440" w:right="1440" w:bottom="1440" w:left="1440" w:header="708" w:footer="708" w:gutter="0"/></w:sectPr></w:body></w:document>`;
-  const styles=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:docDefaults><w:rPrDefault><w:rPr><w:rFonts w:ascii="Garamond" w:hAnsi="Garamond" w:cs="Garamond" w:eastAsia="Garamond"/><w:sz w:val="28"/><w:szCs w:val="28"/><w:lang w:val="en-IN"/></w:rPr></w:rPrDefault><w:pPrDefault><w:pPr><w:spacing w:line="300" w:lineRule="auto"/></w:pPr></w:pPrDefault></w:docDefaults><w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/><w:qFormat/></w:style></w:styles>`;
+  const W='xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"';
+  const doc=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document ${W}><w:body>${body}<w:sectPr><w:headerReference w:type="default" r:id="rId3"/><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="851" w:right="1134" w:bottom="567" w:left="1134" w:header="709" w:footer="709" w:gutter="0"/></w:sectPr></w:body></w:document>`;
+  const header=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:hdr ${W}><w:p><w:pPr><w:jc w:val="right"/></w:pPr><w:r><w:fldChar w:fldCharType="begin"/></w:r><w:r><w:instrText xml:space="preserve"> PAGE </w:instrText></w:r><w:r><w:fldChar w:fldCharType="separate"/></w:r><w:r><w:t>1</w:t></w:r><w:r><w:fldChar w:fldCharType="end"/></w:r></w:p></w:hdr>`;
+  const styles=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:docDefaults><w:rPrDefault><w:rPr><w:rFonts w:ascii="Garamond" w:hAnsi="Garamond" w:cs="Garamond" w:eastAsia="Garamond"/><w:sz w:val="28"/><w:szCs w:val="28"/><w:lang w:val="en-IN"/></w:rPr></w:rPrDefault><w:pPrDefault><w:pPr><w:spacing w:after="160" w:line="259" w:lineRule="auto"/></w:pPr></w:pPrDefault></w:docDefaults><w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/><w:qFormat/></w:style><w:style w:type="paragraph" w:styleId="ListParagraph"><w:name w:val="List Paragraph"/><w:basedOn w:val="Normal"/><w:qFormat/><w:pPr><w:ind w:left="720"/><w:contextualSpacing/></w:pPr></w:style></w:styles>`;
+  const numbering=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:numbering xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:abstractNum w:abstractNumId="0"><w:multiLevelType w:val="hybridMultilevel"/><w:lvl w:ilvl="0"><w:start w:val="1"/><w:numFmt w:val="decimal"/><w:lvlText w:val="%1."/><w:lvlJc w:val="left"/><w:pPr><w:ind w:left="720" w:hanging="360"/></w:pPr></w:lvl><w:lvl w:ilvl="1"><w:start w:val="1"/><w:numFmt w:val="lowerLetter"/><w:lvlText w:val="%2)"/><w:lvlJc w:val="left"/><w:pPr><w:ind w:left="1080" w:hanging="360"/></w:pPr></w:lvl></w:abstractNum><w:num w:numId="1"><w:abstractNumId w:val="0"/></w:num></w:numbering>`;
+  const CT="application/vnd.openxmlformats-officedocument.wordprocessingml";
   return _zipStored([
-    ["[Content_Types].xml",`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/><Override PartName="/word/numbering.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.numbering+xml"/></Types>`],
+    ["[Content_Types].xml",`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="${CT}.document.main+xml"/><Override PartName="/word/styles.xml" ContentType="${CT}.styles+xml"/><Override PartName="/word/numbering.xml" ContentType="${CT}.numbering+xml"/><Override PartName="/word/header1.xml" ContentType="${CT}.header+xml"/></Types>`],
     ["_rels/.rels",`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>`],
-    ["word/_rels/document.xml.rels",`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/numbering" Target="numbering.xml"/></Relationships>`],
-    ["word/document.xml",doc], ["word/styles.xml",styles],
-    ["word/numbering.xml",`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:numbering xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:abstractNum w:abstractNumId="0"><w:multiLevelType w:val="singleLevel"/><w:lvl w:ilvl="0"><w:start w:val="1"/><w:numFmt w:val="decimal"/><w:lvlText w:val="%1."/><w:lvlJc w:val="left"/><w:pPr><w:ind w:left="720" w:hanging="720"/></w:pPr></w:lvl></w:abstractNum><w:num w:numId="1"><w:abstractNumId w:val="0"/></w:num></w:numbering>`] ]);
+    ["word/_rels/document.xml.rels",`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/numbering" Target="numbering.xml"/><Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/header" Target="header1.xml"/></Relationships>`],
+    ["word/document.xml",doc], ["word/styles.xml",styles], ["word/numbering.xml",numbering], ["word/header1.xml",header] ]);
 }
 async function newConferenceNote(confKeyStr, kind){
   const c=conferencesOn(todayISO()).find(x=>x.key===confKeyStr);
@@ -5005,11 +5043,8 @@ async function newConferenceNote(confKeyStr, kind){
     if(plan.rename) await filesApi("move",{folder,name:plan.rename.from,toName:plan.rename.to});
     const name=paperName(b,"N",plan.sub,`${kind} - ${ddmmyyyy()}`,".docx");
     const notes=((confStatus[c.key]||{}).notes||[]).map(n=>n.text).filter(Boolean);
-    const cause=String(b.caseTitle||labelOf(b)).replace(/\s+vs\.?\s+/i," v. ");
-    const blob=makeNoteDocx({ heading:cause,
-      sub:[b.caseNo, b.diaryNo?"Diary No. "+b.diaryNo:""].filter(Boolean).join("  ·  ")||"Petition / Diary No. ________",
-      kind, meta:[(c.counsel&&c.counsel!=="—")?`Conference with ${c.counsel}`:"Conference", fmtDateY(todayISO()), fmtConfTime(c.time)].filter(Boolean).join("  ·  "),
-      paras:notes });
+    // heading as in his own notes: "Note dated 30.09.2026" (Instructions: "Instructions dated …")
+    const blob=makeNoteDocx({ b, heading:`${/^Instruction/.test(kind)?"Instructions":"Note"} dated ${ddmmyyyy()}`, paras:notes });
     await filesApi("upload",null,{folder,name,file:new File([blob],name,{type:blob.type})});
     toast(`${name.split(" ")[0]} created in the case folder`,"ti-file-check");
     editInWordForm(b.id, folder, "", {name, size:blob.size});
