@@ -4977,17 +4977,20 @@ function _zipStored(entries){                       // a valid ZIP (stored) — 
   return new Blob([...parts,...central,eo],{type:"application/vnd.openxmlformats-officedocument.wordprocessingml.document"});
 }
 const _x=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-function makeNoteDocx({heading, sub, kind, meta, paras}){
+function makeNoteDocx({heading, sub, kind, meta, paras, blanks}){
   const P=(t,{b,c,u,sz,after}={})=>`<w:p><w:pPr>${c?'<w:jc w:val="center"/>':""}<w:spacing w:after="${after??160}"/></w:pPr><w:r><w:rPr>${b?"<w:b/>":""}${u?'<w:u w:val="single"/>':""}${sz?`<w:sz w:val="${sz}"/>`:""}</w:rPr><w:t xml:space="preserve">${_x(t)}</w:t></w:r></w:p>`;
-  const body=[P(heading,{b:1,c:1,sz:30,after:60}), sub?P(sub,{c:1,after:200}):"", P(kind.toUpperCase(),{b:1,c:1,u:1,after:120}), meta?P(meta,{c:1,after:320}):"",
-    ...(paras.length?paras:[""]).map((t,i)=>P(`${i+1}.\t${t}`,{after:200}))].join("");
+  // a real Word numbered list (numbering.xml): pressing Enter carries the numbering on
+  const N=t=>`<w:p><w:pPr><w:numPr><w:ilvl w:val="0"/><w:numId w:val="1"/></w:numPr><w:spacing w:after="240" w:line="360" w:lineRule="auto"/><w:jc w:val="both"/></w:pPr>${t?`<w:r><w:t xml:space="preserve">${_x(t)}</w:t></w:r>`:""}</w:p>`;
+  const body=[P(heading,{b:1,c:1,sz:30,after:80}), sub?P(sub,{b:1,c:1,after:240}):"", P(kind.toUpperCase(),{b:1,c:1,u:1,after:120}), meta?P(meta,{c:1,after:360}):"",
+    ...paras.map(N), ...Array.from({length:blanks??(paras.length?3:6)},()=>N(""))].join("");
   const doc=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>${body}<w:sectPr><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="1440" w:right="1440" w:bottom="1440" w:left="1440" w:header="708" w:footer="708" w:gutter="0"/></w:sectPr></w:body></w:document>`;
   const styles=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:docDefaults><w:rPrDefault><w:rPr><w:rFonts w:ascii="Garamond" w:hAnsi="Garamond" w:cs="Garamond" w:eastAsia="Garamond"/><w:sz w:val="28"/><w:szCs w:val="28"/><w:lang w:val="en-IN"/></w:rPr></w:rPrDefault><w:pPrDefault><w:pPr><w:spacing w:line="300" w:lineRule="auto"/></w:pPr></w:pPrDefault></w:docDefaults><w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/><w:qFormat/></w:style></w:styles>`;
   return _zipStored([
-    ["[Content_Types].xml",`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/></Types>`],
+    ["[Content_Types].xml",`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/><Override PartName="/word/numbering.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.numbering+xml"/></Types>`],
     ["_rels/.rels",`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>`],
-    ["word/_rels/document.xml.rels",`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>`],
-    ["word/document.xml",doc], ["word/styles.xml",styles] ]);
+    ["word/_rels/document.xml.rels",`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/numbering" Target="numbering.xml"/></Relationships>`],
+    ["word/document.xml",doc], ["word/styles.xml",styles],
+    ["word/numbering.xml",`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:numbering xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:abstractNum w:abstractNumId="0"><w:multiLevelType w:val="singleLevel"/><w:lvl w:ilvl="0"><w:start w:val="1"/><w:numFmt w:val="decimal"/><w:lvlText w:val="%1."/><w:lvlJc w:val="left"/><w:pPr><w:ind w:left="720" w:hanging="720"/></w:pPr></w:lvl></w:abstractNum><w:num w:numId="1"><w:abstractNumId w:val="0"/></w:num></w:numbering>`] ]);
 }
 async function newConferenceNote(confKeyStr, kind){
   const c=conferencesOn(todayISO()).find(x=>x.key===confKeyStr);
@@ -5002,8 +5005,9 @@ async function newConferenceNote(confKeyStr, kind){
     if(plan.rename) await filesApi("move",{folder,name:plan.rename.from,toName:plan.rename.to});
     const name=paperName(b,"N",plan.sub,`${kind} - ${ddmmyyyy()}`,".docx");
     const notes=((confStatus[c.key]||{}).notes||[]).map(n=>n.text).filter(Boolean);
-    const blob=makeNoteDocx({ heading:labelOf(b),
-      sub:[`Serial ${pad3(serialNum(b))}`, b.caseNo, b.diaryNo?"Diary No. "+b.diaryNo:""].filter(Boolean).join("  ·  "),
+    const cause=String(b.caseTitle||labelOf(b)).replace(/\s+vs\.?\s+/i," v. ");
+    const blob=makeNoteDocx({ heading:cause,
+      sub:[b.caseNo, b.diaryNo?"Diary No. "+b.diaryNo:""].filter(Boolean).join("  ·  ")||"Petition / Diary No. ________",
       kind, meta:[(c.counsel&&c.counsel!=="—")?`Conference with ${c.counsel}`:"Conference", fmtDateY(todayISO()), fmtConfTime(c.time)].filter(Boolean).join("  ·  "),
       paras:notes });
     await filesApi("upload",null,{folder,name,file:new File([blob],name,{type:blob.type})});

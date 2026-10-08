@@ -4,7 +4,7 @@
    Firebase SDK, fonts, Tabler icons — are CACHE-FIRST so the app still loads
    fast on mobile. Live data (Firestore, Auth, court-updates.json) is never
    cached. */
-const CACHE = "chamber-shell-v46";
+const CACHE = "chamber-shell-v47";
 const SHELL = ["./", "./index.html", "./manifest.json",
   "./icon-192.png", "./icon-512.png", "./apple-touch-icon.png"];
 
