@@ -2192,12 +2192,18 @@ function conferenceCreditsOf(uid){
 // every date a brief appears on a day sheet (its listing history)
 function listingDatesOf(briefId){ _ensureLdIdx(); const s=_ldIdx[briefId]; return s?[...s].sort():[]; }
 // case / diary number pulled out of a causelist item line ("SLP(C) No. 18036/2026 …")
+// The SC list line starts with the case number: "SLP(Crl) No. 18858/2026 …", "Diary No. 51815-2026 …",
+// "CONMT.PET.(C) No. 21/2026 in C.A. No. 138/2024 …", "CURATIVE PET(C) No. …", "MA 2956/2026 in …".
+const _CL_NUM="\\d{1,7}(?:-\\d{1,7})?[\\/-](?:19|20)\\d{2}", _CL_NO="(?:No(?:s|\\(s\\))?\\.?\\s*-?\\s*)?";
+const _yearSlash=n=>n.replace(/\s+/g,"").replace(/-(?=(?:19|20)\d{2}$)/,"/");
 function refsFromCauseLine(s){
-  s=String(s||"");
-  const dm=s.match(/Diary\s*No\.?\s*([0-9]+[-\/]20\d{2})/i);
-  if(dm) return {caseNo:"", diaryNo:dm[1].replace("-","/")};
-  const m=s.match(/^(?:Connected\s+)?([A-Za-z][A-Za-z.()\/&]*)\s*(?:No\.?\s*)?([0-9]+(?:-[0-9]+)?\/20\d{2})/);
-  if(m) return {caseNo:(m[1].replace(/\s+/g,"")+" "+m[2]).trim(), diaryNo:""};
+  s=String(s||"").replace(/^Connected\s+/i,"").trim();
+  const dm=s.match(new RegExp("^Diary\\s*No\\.?\\s*("+_CL_NUM+")","i"));
+  if(dm) return {caseNo:"", diaryNo:_yearSlash(dm[1])};
+  const m=s.match(new RegExp("^([A-Za-z][A-Za-z.()&]*(?:\\s+[A-Za-z][A-Za-z.()&]*){0,2}?)\\s*"+_CL_NO+"("+_CL_NUM+")((?:\\s+in\\s+[A-Za-z][A-Za-z.()&]*(?:\\s+[A-Za-z][A-Za-z.()&]*){0,2}?\\s*"+_CL_NO+_CL_NUM+")*)","i"));
+  if(m){ const type=m[1].replace(/\s+No\.?$/i,"").replace(/\s+/g," ").trim();
+    const tail=(m[3]||"").replace(/\s*No(?:s|\(s\))?\.?\s*-?\s*(?=\d)/gi," ").replace(/\s+/g," ").replace(/(\d)-(?=(?:19|20)\d{2}\b)/g,"$1/");
+    return {caseNo:(type+" "+_yearSlash(m[2])+tail).trim(), diaryNo:""}; }
   return {caseNo:"", diaryNo:""};
 }
 const _normNo=s=>String(s||"").toUpperCase().replace(/[^A-Z0-9]/g,"");
@@ -5002,16 +5008,47 @@ const _x=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt
 //   Note dated 30.09.2026                        (bold, underlined, centred)
 //   1. …  2. …                                   (Word numbered list, justified)
 // Garamond 14, A4, his margins, page number top right. Nothing else.
-const SC_NO=[[/^SLP\s*\(\s*C(?:ivil)?\s*\)/i,"SLP (Civil) No."],[/^SLP\s*\(\s*Crl\.?|^SLP\s*\(\s*Criminal/i,"SLP (Criminal) No."],
-  [/^Crl\.?\s*A\.?(?=[\s\d])|^Criminal\s+Appeal/i,"Criminal Appeal No."],[/^C\.?\s*A\.?(?=[\s\d])|^Civil\s+Appeal/i,"Civil Appeal No."],
-  [/^W\.?\s*P\.?\s*\(\s*C(?:ivil)?\s*\)/i,"Writ Petition (Civil) No."],[/^W\.?\s*P\.?\s*\(\s*Crl\.?|^W\.?\s*P\.?\s*\(\s*Criminal/i,"Writ Petition (Criminal) No."],
-  [/^T\.?\s*P\.?\s*\(\s*C(?:ivil)?\s*\)/i,"Transfer Petition (Civil) No."],[/^T\.?\s*P\.?\s*\(\s*Crl\.?/i,"Transfer Petition (Criminal) No."],
-  [/^M\.?\s*A\.?(?=[\s\d])|^Misc(?:ellaneous)?\.?\s+Application/i,"Miscellaneous Application No."],[/^R\.?\s*P\.?\s*\(\s*C(?:ivil)?\s*\)/i,"Review Petition (Civil) No."],
-  [/^Cont(?:empt)?\.?\s*P(?:et)?\.?\s*\(\s*C(?:ivil)?\s*\)/i,"Contempt Petition (Civil) No."]];
+// Every case type in the SC lists (studied from the 9 Oct 2026 Miscellaneous list + the
+// Regular / Chamber / Registrar / Single-judge lists), written out the owner's way.
+const SC_NO=[
+  [/^S\.?\s*L\.?\s*P\.?\s*\(\s*C(?:ivil)?\s*\)\s*\.*\s*CC\b/i,"SLP (Civil) CC No."],
+  [/^S\.?\s*L\.?\s*P\.?\s*\(\s*Crl\.?\s*\)\s*\.*\s*CC\b/i,"SLP (Criminal) CC No."],
+  [/^S\.?\s*L\.?\s*P\.?\s*\(\s*C(?:ivil)?\s*\)/i,"SLP (Civil) No."],
+  [/^S\.?\s*L\.?\s*P\.?\s*\(\s*(?:Crl|Criminal)\.?\s*\)/i,"SLP (Criminal) No."],
+  [/^(?:Crl\.?\s*A\.?|Criminal\s+Appeal)$/i,"Criminal Appeal No."],
+  [/^(?:C\.?\s*A\.?|Civil\s+Appeal)$/i,"Civil Appeal No."],
+  [/^W\.?\s*P\.?\s*\(\s*C(?:ivil)?\s*\)/i,"Writ Petition (Civil) No."],
+  [/^W\.?\s*P\.?\s*\(\s*(?:Crl|Criminal)\.?\s*\)/i,"Writ Petition (Criminal) No."],
+  [/^T\.?\s*P\.?\s*\(\s*C(?:ivil)?\s*\)/i,"Transfer Petition (Civil) No."],
+  [/^T\.?\s*P\.?\s*\(\s*(?:Crl|Criminal)\.?\s*\)/i,"Transfer Petition (Criminal) No."],
+  [/^T\.?\s*C\.?\s*\(\s*C(?:ivil)?\s*\)/i,"Transferred Case (Civil) No."],
+  [/^T\.?\s*C\.?\s*\(\s*(?:Crl|Criminal)\.?\s*\)/i,"Transferred Case (Criminal) No."],
+  [/^(?:CONMT|CONT|CONTEMPT)\.?\s*(?:PET|PETITION)\.?\s*\(\s*C(?:ivil)?\s*\)/i,"Contempt Petition (Civil) No."],
+  [/^(?:CONMT|CONT|CONTEMPT)\.?\s*(?:PET|PETITION)\.?\s*\(\s*(?:Crl|Criminal)\.?\s*\)/i,"Contempt Petition (Criminal) No."],
+  [/^R\.?\s*P\.?\s*\(\s*C(?:ivil)?\s*\)/i,"Review Petition (Civil) No."],
+  [/^R\.?\s*P\.?\s*\(\s*(?:Crl|Criminal)\.?\s*\)/i,"Review Petition (Criminal) No."],
+  [/^CURATIVE\s*PET(?:ITION)?\.?\s*\(\s*C(?:ivil)?\s*\)/i,"Curative Petition (Civil) No."],
+  [/^CURATIVE\s*PET(?:ITION)?\.?\s*\(\s*(?:Crl|Criminal)\.?\s*\)/i,"Curative Petition (Criminal) No."],
+  [/^ARBIT(?:RATION)?\.?\s*PET/i,"Arbitration Petition No."],   // the SC list spells it "ARBIT.PETITON"
+  [/^(?:ORGNL|ORIGINAL)\.?\s*SUIT/i,"Original Suit No."],
+  [/^SMW\s*\(\s*C(?:ivil)?\s*\)/i,"Suo Motu Writ Petition (Civil) No."],
+  [/^SMW\s*\(\s*(?:Crl|Criminal)\.?\s*\)/i,"Suo Motu Writ Petition (Criminal) No."],
+  [/^SMC\s*\(\s*C(?:ivil)?\s*\)/i,"Suo Motu Contempt Petition (Civil) No."],
+  [/^SMC\s*\(\s*(?:Crl|Criminal)\.?\s*\)/i,"Suo Motu Contempt Petition (Criminal) No."],
+  [/^Crl\.?\s*M\.?\s*P\.?$/i,"Criminal Miscellaneous Petition No."],
+  [/^(?:M\.?\s*A\.?|Misc(?:ellaneous)?\.?\s+Application)$/i,"Miscellaneous Application No."],
+  [/^E\.?\s*P\.?$/i,"Election Petition No."],
+  [/^Diary$/i,"Diary No."]];
+function scNoPart(part){
+  const m=String(part).trim().match(/^(.*?)\s*(?:No(?:s|\(s\))?\.?\s*-?\s*)?(\d{1,7}(?:-\d{1,7})?\/(?:19|20)\d{2})\s*$/i);
+  if(!m) return {line:String(part).trim(), appeal:/appeal/i.test(part)};
+  const t=m[1].replace(/\s+No\.?$/i,"").trim(), n=m[2];
+  for(const [re,lab] of SC_NO) if(re.test(t)) return {line:lab+n, appeal:/Appeal/.test(lab)};
+  return {line:(t?t+" No.":"No.")+n, appeal:/\b(?:C\.?A|Crl\.?A|Appeal)\b/i.test(t)};
+}
 function scCaseLine(b){
-  const cn=String(b.caseNo||"").trim(), dy=String(b.diaryNo||"").trim().replace(/^d(?:iary)?\.?\s*(?:no\.?)?\s*/i,"");
-  if(cn){ for(const [re,lab] of SC_NO){ const m=cn.match(re); if(m) return {line:lab+cn.slice(m[0].length).replace(/^\s*(?:No\.?)?\s*/i,"").trim(), appeal:/Appeal/.test(lab)}; }
-    return {line:cn, appeal:/appeal/i.test(cn)}; }
+  const cn=String(b.caseNo||"").trim(), dy=String(b.diaryNo||"").trim().replace(/^d(?:iary)?\.?\s*(?:no\.?)?\s*/i,"").replace(/-(?=(?:19|20)\d{2}$)/,"/");
+  if(cn){ const parts=cn.split(/\s+in\s+/i).map(scNoPart); return {line:parts.map(p=>p.line).join(" in "), appeal:parts[0].appeal}; }
   return {line:dy?"Diary No."+dy:"Diary No.________", appeal:false};
 }
 function causeParties(b){

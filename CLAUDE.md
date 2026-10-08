@@ -47,6 +47,23 @@ Dropbox is reachable, enforced by Dropbox itself) and **one folder per brief**.
   `sd-chamber-files` with KV + both secrets, and connected from the app. Verified from
   outside: home page, 401 without sign-in, CORS for the app origin, KV-backed callback guard.
 
+## Exact petition numbers from the SC lists (Oct 2026, parser v9)
+
+Studied the owner's sample M_J_1 (9 Oct 2026) + the live Regular/Chamber/Registrar/Single lists.
+The PDF is a table: serial (x<60) · CASE-NO column (60–180, number may WRAP to the next row,
+registry section code under it: "II-E", "XVI-A", "PIL-W") · parties (185–415) · advocate (≥426).
+- `pdf_to_column_text` now gathers the case-no column across an item's rows and writes it whole
+  on the item line (`_case_text`/`CASE_NO_RE`: keeps "… in C.A. No. …" chains, drops section
+  codes, "[FRESH", the signature stamp). Before: ~490/1114 Misc + 207 Regular items had NO number.
+- `parse_courts` accepts an item only if it carries "No." (or "Connected") — advocate codes like
+  "1866 [IMPL], VARUN" and court notices are no longer items. `ADV_TAIL_RE` strips an advocate
+  name+code that slipped onto a respondent line.
+- App: `refsFromCauseLine` reads multi-word types + "in" chains, Diary "51815-2026" → "/";
+  note: `SC_NO`/`scNoPart`/`scCaseLine` spell out every type (SLP (Civil) No., Civil/Criminal
+  Appeal, Writ/Transfer/Review/Curative/Contempt/Arbitration ("ARBIT.PETITON") Petition,
+  Transferred Case, Original Suit, SMW, MA, S.L.P.(C)…CC, Diary).
+- Locally the SC site needs `SSL_CERT_FILE=/etc/ssl/cert.pem` (Python's own certs are broken).
+
 ## Word: instant, editable, saves itself back ("Option A", Oct 2026)
 
 Opening Word from a web link (`ms-word:ofe|u|<Dropbox temp link>`) was slow and READ-ONLY.

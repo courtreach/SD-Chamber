@@ -51,7 +51,7 @@ OUTPUT_FILE = "court-updates.json"
 # based change-detection reuses a cached parse when the PDF is unchanged; without
 # this, a parser FIX never reaches already-cached dates (their PDFs don't change).
 # A version mismatch forces a full re-parse of every date in the window.
-PARSER_VERSION = 8   # bumped: skip page-header boilerplate (was leaking as respondent)
+PARSER_VERSION = 9   # bumped: whole case-number column per item (wrapped numbers), no advocate codes as items
 HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; sd-chamber-causelist-bot/1.0)"}
 
 COURT_RE = re.compile(r"COURT\s*NO\.?\s*[:\-]?\s*([0-9]+)", re.I)
@@ -136,15 +136,49 @@ def pdf_to_text(data):
 # positioned officer line like "ADDITIONAL REGISTRAR" must not be truncated).
 ADV_COL_X = 415   # advocate column left edge (words at/after this are the advocate)
 SNO_COL_X = 60    # an item row's serial number sits in the far-left margin
+# The case number has its OWN column (x ~ 60-180) between the serial number and the parties
+# (x >= 185). A long number wraps onto the next row of that column ("SLP(Crl) No." / then
+# "18858/2026"), and the registry SECTION code sits under it ("II-E", "XVI-A", "PIL-W").
+# Owner, Oct 2026: notes need the exact petition number, so the whole column is gathered
+# per item and the section codes dropped.
+CASE_COL_X = 180
+SECTION_RE = re.compile(r"^(?:[IVXL]{1,5}(?:-[A-Z]{1,2})?|PIL(?:-W)?|[IVXL]{1,5}[A-Z])$")
 ITEM_SNO_RE = re.compile(r"^[0-9]{1,4}(?:\.[0-9]{1,3})?[.\)]?$")
 ADV_SNO_RE = re.compile(r"^([0-9]{1,4}(?:\.[0-9]{1,3})?)[.\)]?$")  # same, capturing the number
+
+
+_NUM = r"\d{1,7}(?:\s*-\s*\d{1,7})?\s*[/-]\s*(?:19|20)\d{2}"
+_TYPE = r"(?:[A-Za-z][A-Za-z.()&]*\.{0,3}\s?){1,4}?"
+CASE_NO_RE = re.compile(
+    rf"(?:Connected\s+)?{_TYPE}(?:No(?:s|\(s\))?\.?\s*-?\s*)?{_NUM}"
+    rf"(?:\s+in\s+{_TYPE}(?:No(?:s|\(s\))?\.?\s*-?\s*)?{_NUM})*", re.I)
+
+
+def _case_text(words):
+    """Words of the case-number column -> one clean number, e.g. 'SLP(Crl) No. 18858/2026'
+    or 'CONMT.PET.(C) No. 21/2026 in C.A. No. 2004/2019'. Section codes, notes ("[FRESH")
+    and the digital-signature stamp that can sit in that column are left out."""
+    t = " ".join(w for w in words if not SECTION_RE.match(w))
+    t = re.sub(r"\s+", " ", t).strip()
+    m = CASE_NO_RE.search(t)
+    if m:
+        num = m.group(0)
+        num = re.sub(r"(No(?:s|\(s\))?\.)\s*-?\s*(?=\d)", r"\1 ", num)
+        num = re.sub(r"\s*-\s*(?=\d)", "-", num)
+        return num.strip()
+    # no number at all (rare): keep a leading "Connected" / case type only
+    m = re.match(r"(?:Connected\s+)?[A-Za-z][A-Za-z.()&]*(?:\s+No(?:s|\(s\))?\.)?", t)
+    return m.group(0) if m else ""
 
 
 def pdf_to_column_text(data):
     """Rebuild the PDF text, dropping the advocate column from item rows only.
     Returns None if word-level extraction isn't available (caller falls back to
     pdf_to_text). A court header resets to header mode (coram kept whole); the
-    first serial-numbered row switches on item mode (advocate column dropped)."""
+    first serial-numbered row switches on item mode (advocate column dropped).
+    In item mode the CASE-NUMBER column is gathered over all the rows of an item and
+    written whole on the item's first line ("6 SLP(Crl) No. 18858/2026 AMIT MITTAL"),
+    so a number that wrapped onto the next row is never lost."""
     try:
         import pdfplumber
     except Exception:
@@ -157,17 +191,36 @@ def pdf_to_column_text(data):
                 for w in page.extract_words(use_text_flow=True):
                     rows.setdefault(round(w["top"] / 2), []).append(w)
                 in_items = False
+                item = None          # {"idx": line index, "sno": str, "case": [words], "party": str}
+
+                def close():
+                    if item is not None:
+                        num = _case_text(item["case"])
+                        out[item["idx"]] = " ".join(x for x in (item["sno"], num, item["party"]) if x)
+
                 for key in sorted(rows):
                     ws = sorted(rows[key], key=lambda w: w["x0"])
                     full = " ".join(w["text"] for w in ws)
                     if REG_RE.search(full) or COURT_RE.search(full) or CJ_RE.search(full):
+                        close(); item = None
                         in_items = False           # a court header — coram follows
+                    elif HEADER_SKIP.search(full):
+                        out.append(full); continue  # page-header boilerplate; the item carries on
                     elif ws[0]["x0"] < SNO_COL_X and ITEM_SNO_RE.match(ws[0]["text"]):
                         in_items = True            # a serial-numbered item row
+                        close()
+                        item = {"idx": len(out), "sno": ws[0]["text"],
+                                "case": [w["text"] for w in ws[1:] if w["x0"] < CASE_COL_X],
+                                "party": " ".join(w["text"] for w in ws[1:] if CASE_COL_X <= w["x0"] < ADV_COL_X)}
+                        out.append("")
+                        continue
                     if in_items:
-                        out.append(" ".join(w["text"] for w in ws if w["x0"] < ADV_COL_X))
+                        if item is not None:
+                            item["case"] += [w["text"] for w in ws if SNO_COL_X <= w["x0"] < CASE_COL_X]
+                        out.append(" ".join(w["text"] for w in ws if CASE_COL_X <= w["x0"] < ADV_COL_X))
                     else:
                         out.append(full)
+                close()
         return "\n".join(out)
     except Exception as e:
         print("  column extraction failed:", e)
@@ -185,6 +238,13 @@ ITEM_LINE_RE = re.compile(r"^([0-9]{1,4}(?:\.[0-9]{1,3})?)[.\)]?\s+(.+)$")
 # every one of these so a clerk entering item 102.2 gets its cause title.
 CONNECTED_RE = re.compile(r"^([0-9]{1,4})\.\s+Connected\s+(.+)$", re.I)
 SUBINDEX_RE = re.compile(r"^([0-9]{1,3})\b\s*(.*)$")
+
+
+# An advocate's name + code that slipped into the party column at the END of a respondent line
+# ("UNION OF INDIA AND ORS. AMRISH KUMAR- 2986 [R-1],"). Up to three name words, never a word
+# that belongs to a party ("ORS.", "OF", "INDIA", …), followed by "- 1234".
+_ADV_WORD = r"(?!(?:ORS|ANR|ETC|LTD|LIMITED|OF|AND|THE|INDIA|STATE|UNION|GOVT|CO)\b)[A-Z][A-Z']*"
+ADV_TAIL_RE = re.compile(rf"\s+(?:{_ADV_WORD}\s+){{0,2}}{_ADV_WORD}-\s?\d{{3,4}}\s*(?:[\[,].*)?$")
 
 
 def parse_courts(text):
@@ -247,11 +307,12 @@ def parse_courts(text):
         # only; page-header repeats won't overwrite). The respondent is captured
         # from the line after "Versus" so the title reads "Petitioner vs Resp".
         im = ITEM_LINE_RE.match(line)
-        if im and re.search(r"[A-Za-z]{3}", im.group(2)):
+        if im and re.search(r"[A-Za-z]{3}", im.group(2)) \
+                and (re.search(r"\bNo(?:s|\(s\))?\.", im.group(2)[:60]) or re.match(r"Connected\b", im.group(2), re.I)):
             in_header = False
             it = im.group(1)
             if it not in courts[cur]["items"]:
-                courts[cur]["items"][it] = re.sub(r"\s+", " ", im.group(2)).strip()[:70]
+                courts[cur]["items"][it] = re.sub(r"\s+", " ", im.group(2)).strip()[:110]
                 pending = (cur, it); await_resp = False
             else:
                 pending = None
@@ -262,7 +323,9 @@ def parse_courts(text):
                 continue
             if await_resp and re.search(r"[A-Za-z]{3}", line) \
                     and not re.match(r"^[\[{(]", line):   # skip [CAVEAT] etc.
-                resp = re.sub(r"\s+", " ", line).strip()[:50]
+                resp = re.sub(r"\s+", " ", line).strip()
+                # an advocate that slipped into the party column: "… AND ORS. AMRISH KUMAR- 2986 [R-1],"
+                resp = ADV_TAIL_RE.sub("", resp).strip()[:60]
                 pc, pit = pending
                 courts[pc]["items"][pit] += " VERSUS " + resp
                 pending = None; await_resp = False
