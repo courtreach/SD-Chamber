@@ -64,6 +64,19 @@ registry section code under it: "II-E", "XVI-A", "PIL-W") · parties (185–415)
   Transferred Case, Original Suit, SMW, MA, S.L.P.(C)…CC, Diary).
 - Locally the SC site needs `SSL_CERT_FILE=/etc/ssl/cert.pem` (Python's own certs are broken).
 
+## Advocates from the SC lists (Oct 2026, parser v10)
+
+Advocate column (x ≥ 415) per side: entries "NAME- AoRcode [P-1], [P-2]" (names and codes WRAP
+over rows), "NAME AC" (amicus), "PETITIONER-IN-PERSON", "[CAVEAT]". `parse_advocates` gathers
+each side's column text over ALL its rows (pet = item row → "Versus"; resp = after it → next
+item; page headers of the same court don't end an item) and `_adv_entries` splits it into
+{n, p, tag}. Output per item: `pet`/`resp` (first real AoR, for the counsel field) and
+`petAll`/`respAll`. Serials wrap too ("39.1" / "1" = 39.11; "102." / "2" = 102.2) —
+`_serial_wraps` joins them in both readers (decided one row late in parse_advocates).
+App: `sideAdvs`/`showAdvPick` — Briefing counsel fills with the chosen side's first AoR;
+when that side has several, buttons show each with its parties (Caveator: caveat AoR first).
+9 Oct test: Misc 1,109 items, petitioner AoR 1,093 (was 259 any), respondent AoR 505.
+
 ## Word: instant, editable, saves itself back ("Option A", Oct 2026)
 
 Opening Word from a web link (`ms-word:ofe|u|<Dropbox temp link>`) was slow and READ-ONLY.

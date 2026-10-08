@@ -51,7 +51,7 @@ OUTPUT_FILE = "court-updates.json"
 # based change-detection reuses a cached parse when the PDF is unchanged; without
 # this, a parser FIX never reaches already-cached dates (their PDFs don't change).
 # A version mismatch forces a full re-parse of every date in the window.
-PARSER_VERSION = 9   # bumped: whole case-number column per item (wrapped numbers), no advocate codes as items
+PARSER_VERSION = 10  # bumped: advocates per side (wrapped names, several per side, caveat/amicus), wrapped serials (39.1+1 = 39.11)
 HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; sd-chamber-causelist-bot/1.0)"}
 
 COURT_RE = re.compile(r"COURT\s*NO\.?\s*[:\-]?\s*([0-9]+)", re.I)
@@ -154,6 +154,18 @@ CASE_NO_RE = re.compile(
     rf"(?:\s+in\s+{_TYPE}(?:No(?:s|\(s\))?\.?\s*-?\s*)?{_NUM})*", re.I)
 
 
+_HAS_NUM = re.compile(r"\d{1,7}(?:-\d{1,7})?\s*[/-]\s*(?:19|20)\d{2}")
+
+
+def _serial_wraps(prev_sno, prev_case_words, prev_key, key, first_word):
+    """The serial column is narrow too: "39.11" can print as "39.1" / "1" (and "102." / "2" in
+    Regular lists). A row starting with a bare number right after a "Connected" sub-item row
+    that has no case number yet is the rest of THAT serial, not a new item."""
+    return (prev_sno is not None and "." in prev_sno and key - prev_key <= 9
+            and not _HAS_NUM.search(" ".join(prev_case_words))
+            and re.fullmatch(r"[0-9]{1,3}", first_word or "") is not None)
+
+
 def _case_text(words):
     """Words of the case-number column -> one clean number, e.g. 'SLP(Crl) No. 18858/2026'
     or 'CONMT.PET.(C) No. 21/2026 in C.A. No. 2004/2019'. Section codes, notes ("[FRESH")
@@ -208,8 +220,15 @@ def pdf_to_column_text(data):
                         out.append(full); continue  # page-header boilerplate; the item carries on
                     elif ws[0]["x0"] < SNO_COL_X and ITEM_SNO_RE.match(ws[0]["text"]):
                         in_items = True            # a serial-numbered item row
+                        if item is not None and _serial_wraps(item["sno"], item["case"], item["key"], key, ws[0]["text"]):
+                            item["sno"] = item["sno"] + ws[0]["text"]          # "39.1"+"1" -> "39.11", "102."+"2" -> "102.2"
+                            item["case"] += [w["text"] for w in ws[1:] if w["x0"] < CASE_COL_X]
+                            more = " ".join(w["text"] for w in ws[1:] if CASE_COL_X <= w["x0"] < ADV_COL_X)
+                            if more: item["party"] = (item["party"] + " " + more).strip()
+                            item["key"] = key
+                            continue
                         close()
-                        item = {"idx": len(out), "sno": ws[0]["text"],
+                        item = {"idx": len(out), "sno": ws[0]["text"], "key": key,
                                 "case": [w["text"] for w in ws[1:] if w["x0"] < CASE_COL_X],
                                 "party": " ".join(w["text"] for w in ws[1:] if CASE_COL_X <= w["x0"] < ADV_COL_X)}
                         out.append("")
@@ -217,6 +236,7 @@ def pdf_to_column_text(data):
                     if in_items:
                         if item is not None:
                             item["case"] += [w["text"] for w in ws if SNO_COL_X <= w["x0"] < CASE_COL_X]
+                            item["key"] = key
                         out.append(" ".join(w["text"] for w in ws if CASE_COL_X <= w["x0"] < ADV_COL_X))
                     else:
                         out.append(full)
@@ -365,7 +385,7 @@ def _clean_adv(s):
 def _valid_adv(s):
     """STRICTLY an advocate / firm NAME: letters plus . , & / ' - and spaces only,
     short, no digits, and none of the party/case/bench/officer words."""
-    if not s or len(s) > 45 or not re.search(r"[A-Za-z]", s):
+    if not s or len(s) > 60 or not re.search(r"[A-Za-z]", s):
         return False
     if re.search(r"[0-9]", s):
         return False
@@ -376,82 +396,134 @@ def _valid_adv(s):
     return True
 
 
+# One advocate entry in the advocate column, as the SC prints it:
+#   "MUKESH KUMAR MARORIA- 2324 [R-1], [R-2], [R-3]"   (name - AoR code [parties])
+#   "DAKSH KADIAN AC"                                  (amicus curiae)
+#   "PETITIONER-IN-PERSON" / "APPLICANT-IN-PERSON"
+_NAME = r"[A-Z][A-Z.'&@/() ]*?[A-Z.)]"
+ADV_CODED_RE = re.compile(rf"({_NAME})\s*-\s*(\d{{1,5}})\s*((?:\[[^\]]*\][\s,]*)*)")
+ADV_AC_RE = re.compile(rf"({_NAME})\s+AC\b\s*((?:\[[^\]]*\][\s,]*)*)")
+ADV_INPERSON_RE = re.compile(r"\b(PETITIONER|APPLICANT|RESPONDENT|APPELLANT)-IN-PERSON\b")
+
+
+def _adv_entries(text):
+    """The advocate column of ONE side of ONE case -> [{n: name, p: "R-1, R-2", tag?}].
+    Only the NAME is kept — the AoR code, party tags and separators are never part of it."""
+    t = re.sub(r"\s+", " ", text or "").strip()
+    out, taken = [], []
+    def tags(s):
+        return ", ".join(x.strip() for x in re.findall(r"\[([^\]]*)\]", s or "") if x.strip())
+    for m in ADV_CODED_RE.finditer(t):
+        name = re.sub(r"\s+", " ", m.group(1)).strip(" ,.-")
+        name = re.sub(r"^(?:AND|&)\s+", "", name)
+        if _valid_adv(name):
+            e = {"n": name, "p": tags(m.group(3))}
+            if "CAVEAT" in e["p"].upper():
+                e["tag"] = "caveat"
+            out.append(e); taken.append(m.span())
+    for m in ADV_AC_RE.finditer(t):
+        if any(a <= m.start() < b for a, b in taken):
+            continue
+        name = re.sub(r"\s+", " ", m.group(1)).strip(" ,.-")
+        name = re.sub(r"^.*\]\s*,?\s*", "", name)            # never a tag before it
+        if _valid_adv(name):
+            out.append({"n": name, "p": tags(m.group(2)), "tag": "amicus"})
+    for m in ADV_INPERSON_RE.finditer(t):
+        out.append({"n": m.group(1).title() + " in person", "p": "", "tag": "in-person"})
+    return out
+
+
 def parse_advocates(data, real_items):
-    """{court: {item: {pet?, resp?}}} — the AoR for each side, taken only from the
-    advocate column and validated. `real_items` = {court: set(item)} from
-    parse_courts, so a note/header line mis-read as an item is dropped (intersection).
-    Empty / invalid values are omitted."""
+    """{court: {item: {pet, resp, petAll, respAll}}} — every advocate of each side, read from
+    the advocate column only (x >= ADV_COL_X), so nothing from the party/number columns can
+    leak in. Petitioner side = the item's rows up to "Versus"; respondent side = the rows
+    after it, up to the next item — including names that wrap onto the next row and items
+    that run onto the next page. `pet`/`resp` = the first real AoR of that side (the one
+    the counsel field is filled with); `petAll`/`respAll` = all of them with their parties."""
     try:
         import pdfplumber
     except Exception:
         return {}
-    out = {}
+    raw = {}           # court -> item -> {"pet": [text], "resp": [text]}
+    st = {"court": None, "item": None, "side": "pet", "pend": None}
+
+    def commit():
+        """The serial row seen last becomes the current item (decided one row late, because
+        the next row may be the rest of a wrapped serial such as "39.1" / "1" = 39.11)."""
+        p = st["pend"]; st["pend"] = None
+        if p is None:
+            return
+        c, sno = st["court"], p["sno"].rstrip(".")
+        if c in real_items and sno in real_items[c]:
+            st["item"] = sno; st["side"] = "pet"
+            raw.setdefault(c, {})[sno] = {"pet": [x for x in p["at"] if x], "resp": []}
+        else:
+            st["item"] = None
+
     try:
         with pdfplumber.open(io.BytesIO(data)) as pdf:
             for page in pdf.pages:
                 rows = {}
                 for w in page.extract_words(use_text_flow=True):
                     rows.setdefault(round(w["top"] / 2), []).append(w)
-                court = item = None
-                seen_v = pet_lock = resp_lock = False
                 for key in sorted(rows):
                     ws = sorted(rows[key], key=lambda w: w["x0"])
                     left = [w for w in ws if w["x0"] < ADV_COL_X]
                     lt = " ".join(w["text"] for w in left).strip()
-                    adv = _clean_adv(" ".join(w["text"] for w in ws if w["x0"] >= ADV_COL_X))
+                    at = " ".join(w["text"] for w in ws if w["x0"] >= ADV_COL_X).strip()
+                    if HEADER_SKIP.search(lt):
+                        continue                     # page header — the item carries on
                     m = REG_RE.search(lt) or COURT_RE.search(lt)
-                    if m:
-                        court = m.group(1); item = None; continue
-                    if CJ_RE.search(lt):
-                        court = "1"; item = None; continue
-                    if court is None:
+                    hdr = m.group(1) if m else ("1" if CJ_RE.search(lt) else None)
+                    if hdr is not None:
+                        if hdr != st["court"]:       # a new court: start afresh
+                            commit(); st["court"] = hdr; st["item"] = None
+                        continue                     # same court repeated on a new page: carry on
+                    if st["court"] is None:
                         continue
                     if left and left[0]["x0"] < SNO_COL_X and ADV_SNO_RE.match(left[0]["text"]):
-                        cand = ADV_SNO_RE.match(left[0]["text"]).group(1)
-                        if court in real_items and cand in real_items[court]:
-                            item = cand; seen_v = pet_lock = resp_lock = False
-                            out.setdefault(court, {}).setdefault(item, {"pet": "", "resp": ""})
-                            if adv:
-                                out[court][item]["pet"] = adv     # petitioner AoR on the serial row
+                        case_w = [w["text"] for w in left[1:] if w["x0"] < CASE_COL_X]
+                        p = st["pend"]
+                        if p is not None and _serial_wraps(p["sno"], p["case"], p["key"], key, left[0]["text"]):
+                            p["sno"] = p["sno"] + left[0]["text"]; p["case"] += case_w; p["at"].append(at); p["key"] = key
+                            continue
+                        commit()
+                        st["pend"] = {"sno": left[0]["text"].rstrip(")"),   # keep a trailing "." ("102." + "2" = 102.2)
+                                      "case": case_w, "key": key, "at": [at]}
+                        continue
+                    if st["pend"] is not None:
+                        p = st["pend"]
+                        if not VERSUS_ONLY_RE.match(lt) and not _HAS_NUM.search(" ".join(p["case"])):
+                            p["case"] += [w["text"] for w in left if SNO_COL_X <= w["x0"] < CASE_COL_X]
+                        if VERSUS_ONLY_RE.match(lt) or key - p["key"] > 9 or _HAS_NUM.search(" ".join(p["case"])):
+                            commit()
                         else:
-                            item = None
+                            p["at"].append(at); p["key"] = key
+                            continue
+                    item = st["item"]
+                    if not item:
                         continue
-                    if not (court and item):
-                        continue
-                    rec = out[court][item]
                     if VERSUS_ONLY_RE.match(lt):
-                        seen_v = True; continue
-                    if not seen_v:
-                        if pet_lock:
-                            continue
-                        if adv and not rec["pet"]:
-                            rec["pet"] = adv
-                        elif adv and not lt:                    # empty-left continuation = same name wrapping
-                            rec["pet"] = (rec["pet"] + " " + adv).strip()
-                        else:
-                            pet_lock = True                     # left content / blank -> stop
-                    else:
-                        if resp_lock:
-                            continue
-                        if adv and not rec["resp"]:
-                            rec["resp"] = adv
-                        elif adv and not lt and rec["resp"]:
-                            rec["resp"] = (rec["resp"] + " " + adv).strip()
-                        elif rec["resp"] and (lt or not adv):   # a blank/annotation row ends respondent capture
-                            resp_lock = True
+                        st["side"] = "resp"
+                        if at:
+                            raw[st["court"]][item]["resp"].append(at)
+                        continue
+                    if at:
+                        raw[st["court"]][item][st["side"]].append(at)
+            commit()
     except Exception as e:
         print("  advocate extraction failed:", e)
     clean = {}
-    for c, its in out.items():
+    for c, its in raw.items():
         for it, rec in its.items():
-            pet = rec["pet"] if _valid_adv(rec["pet"]) else ""
-            resp = rec["resp"] if _valid_adv(rec["resp"]) else ""
-            if pet or resp:
-                d = {}
-                if pet:
-                    d["pet"] = pet
-                if resp:
-                    d["resp"] = resp
+            pe, re_ = _adv_entries(" ".join(rec["pet"])), _adv_entries(" ".join(rec["resp"]))
+            d = {}
+            first = lambda lst: next((e["n"] for e in lst if e.get("tag") not in ("amicus", "in-person")), "")
+            if first(pe): d["pet"] = first(pe)
+            if first(re_): d["resp"] = first(re_)
+            if pe: d["petAll"] = pe
+            if re_: d["respAll"] = re_
+            if d:
                 clean.setdefault(c, {})[it] = d
     return clean
 
@@ -525,6 +597,9 @@ def build_for_date(date_str, prev_day=None, prev_sizes=None):
                         cur["pet"] = ad["pet"]
                     if ad.get("resp") and not cur.get("resp"):
                         cur["resp"] = ad["resp"]
+                    for k in ("petAll", "respAll"):
+                        if ad.get(k) and not cur.get(k):
+                            cur[k] = ad[k]
                 if not ex.get("coram") and info.get("coram"):
                     ex["coram"] = info["coram"]
                 if not ex.get("fresh") and info.get("fresh"):

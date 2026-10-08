@@ -1337,6 +1337,13 @@ body.demo .topbar{top:34px}
 .word-tip .wt-sub{font-size:12.5px;color:var(--ink-3);margin:-2px 0 8px;line-height:1.45}
 .word-tip ol{margin:0 0 10px;padding-left:20px;font-size:13px;line-height:1.55}
 .word-tip ol li{margin-bottom:4px}
+
+.adv-pick{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.adv-pick:empty{display:none}
+.adv-h{width:100%;font-size:11.5px;color:var(--ink-3)}
+.adv-chip{display:inline-flex;flex-direction:column;align-items:flex-start;gap:0;background:var(--surface);border:1px solid var(--line-2);border-radius:8px;padding:5px 9px;font:600 12.5px/1.25 Inter,system-ui,sans-serif;color:var(--ink);cursor:pointer;text-align:left}
+.adv-chip small{font-weight:500;font-size:10.5px;color:var(--ink-3)}
+.adv-chip.on{border-color:var(--accent);background:var(--accent-soft);color:var(--accent-ink)}
 </style>
 </head>
 <body>
@@ -4123,6 +4130,7 @@ function dsForm(idx=null, preset=null){
       <select id="f_appear"><option value="">—</option>${["Petitioner","Respondent","Applicant","Appellant","Caveator","Intervenor"].map(x=>`<option ${e.appearingFor===x?'selected':''}>${x}</option>`).join("")}</select>
       <label>Briefing counsel <span class="muted" style="font-weight:400">(pick a firm or type any AoR / advocate)</span></label>
       <input id="f_counsel" list="lawfirms" value="${esc(e.counsel||'')}" placeholder="e.g. Karanjawala & Co.">
+      <div id="f_advpick" class="adv-pick"></div>
       <datalist id="lawfirms">${LAW_FIRMS.map(f=>`<option value="${esc(f)}"></option>`).join("")}</datalist>
       <label>Conference <span class="muted" style="font-weight:400">(optional — date then time; add now or later)</span></label>
       <div class="grid2"><div><input type="date" id="f_confdate" value="${esc(e.confDate||'')}"></div>
@@ -4196,16 +4204,35 @@ function dsForm(idx=null, preset=null){
   // AoR of each party for the looked-up item; fills Briefing counsel for the side
   // we appear for (petitioner-side vs respondent-side), always editable by staff.
   let lastAdv=null;
+  // The advocates the cause list names for one side: [{n, p: "R-1, R-2", tag}] (parser v10),
+  // or the older single name. A Caveator is the respondent side, its caveat advocate first.
+  function sideAdvs(ap){
+    if(!lastAdv||!ap) return [];
+    const resp=["Respondent","Caveator"].includes(ap);
+    let l=(resp?lastAdv.respAll:lastAdv.petAll)||[];
+    if(!l.length){ const one=resp?lastAdv.resp:lastAdv.pet; l=one?[{n:one,p:""}]:[]; }
+    if(ap==="Caveator") l=[...l].sort((a,b)=>(b.tag==="caveat")-(a.tag==="caveat"));
+    return l.filter(a=>a.tag!=="in-person"||l.length===1);
+  }
+  function showAdvPick(){
+    const box=$("f_advpick"); if(!box) return;
+    const l=sideAdvs($("f_appear").value);
+    if(l.length<2){ box.innerHTML=""; return; }
+    const cur=($("f_counsel").value||"").trim().toUpperCase();
+    box.innerHTML=`<span class="adv-h">On the list for this side — tap the one for your party:</span>`+l.map((a,i)=>`<button type="button" class="adv-chip${a.n.toUpperCase()===cur?" on":""}" data-advi="${i}">${esc(a.n)}${a.p?`<small>${esc(a.p)}</small>`:""}${a.tag==="amicus"?`<small>amicus</small>`:a.tag==="caveat"?`<small>caveat</small>`:""}</button>`).join("");
+    box.querySelectorAll("[data-advi]").forEach(x=>x.onclick=()=>{ const a=l[+x.dataset.advi]; $("f_counsel").value=a.n; auto.counsel=a.n; showAdvPick(); });
+  }
   function fillCounsel(){
-    const el=$("f_counsel"); if(!el || !lastAdv) return;
+    const el=$("f_counsel"); if(!el || !lastAdv){ showAdvPick(); return; }
     const ap=$("f_appear").value;
-    if(!ap) return;                                       // no side chosen yet -> don't guess
-    const resp=["Respondent","Caveator"].includes(ap);   // else petitioner-side
-    const name=(resp ? lastAdv.resp : lastAdv.pet) || "";
+    if(!ap){ showAdvPick(); return; }                     // no side chosen yet -> don't guess
+    const l=sideAdvs(ap), first=l.find(a=>a.tag!=="amicus"&&a.tag!=="in-person");
+    const name=(first?first.n:"") || "";
     // Reflect the CHOSEN party's AoR exactly — the respondent's when Respondent is
     // picked, empty if the list names none for that side (NEVER the other party's).
     // A value the staff typed (auto.counsel === "\0") is never touched.
     if(!el.value.trim() || el.value===auto.counsel){ el.value=name; auto.counsel=name; }
+    showAdvPick();
   }
   const setAuto=(id,key,val)=>{ const el=$(id); if(!el.value.trim()||el.value===auto[key]){ el.value=val; } auto[key]=val; };
   const clearAuto=(id,key)=>{ const el=$(id); if(el.value&&el.value===auto[key]){ el.value=""; } auto[key]=""; };
