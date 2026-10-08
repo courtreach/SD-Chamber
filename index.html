@@ -1927,7 +1927,7 @@ $("signOutBtn").onclick=()=>auth.signOut();
 // service worker is holding an old copy. Clears the shell cache, nudges the SW,
 // then reloads with a cache-buster.
 // Shown in the sidebar / More / Refresh tooltip so anyone can tell which version they have.
-const APP_VERSION="56 · 8 Oct 2026";
+const APP_VERSION="57 · 8 Oct 2026";
 if($("appVer")) $("appVer").textContent="App version "+APP_VERSION;
 if($("btnRefresh")) $("btnRefresh").title="Refresh — fetch the latest app (you have version "+APP_VERSION+")";
 async function hardRefresh(){
@@ -3973,66 +3973,77 @@ function ensurePdfLib(){ if(window.jspdf&&window.jspdf.jsPDF) return Promise.res
     .then(()=>loadScript("https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"));
   return _pdfLibP;
 }
-// The cause list as a PDF (owner, Oct 2026): hairline grey grid (lighter than the text), no
-// sequence column, and the text made as BIG as fits — the sizes step up until the table plus
-// the conferences no longer fit on one A4 page; a heavy day keeps the (already larger) base
-// sizes and runs on. Used for Share, Save to Dropbox and Print alike.
+// The cause list as a PDF (owner, Oct 2026): GARAMOND as on his printed list (EB Garamond,
+// embedded — the medium weight, since the regular printed too faint), NO shading or colour,
+// thin black lines, no sequence column, and the text made as BIG as fits: the sizes step up
+// until the table + conferences no longer fit one A4 page; a heavy day keeps the (already
+// larger) base sizes and runs on. Used for Share, Save to Dropbox and Print alike.
+const EBG_TTF={m:"https://fonts.gstatic.com/s/ebgaramond/v33/SlGDmQSNjdsmc35JDF1K5E55YMjF_7DPuGi-2fRUA4V4e60.ttf",
+  b:"https://fonts.gstatic.com/s/ebgaramond/v33/SlGDmQSNjdsmc35JDF1K5E55YMjF_7DPuGi-DPNUA4V4e60.ttf",
+  i:"https://fonts.gstatic.com/s/ebgaramond/v33/SlGFmQSNjdsmc35JDF1K5GRwUjcdlttVFm-rI7eOQI96Wa-XgA.ttf"};
+let _ebgP=null;
+function loadGaramond(){
+  if(!_ebgP) _ebgP=(async()=>{
+    const bin=async u=>{ const r=await fetch(u); if(!r.ok) throw new Error("font"); const a=new Uint8Array(await r.arrayBuffer()); let s=""; for(let k=0;k<a.length;k+=8192) s+=String.fromCharCode.apply(null,a.subarray(k,k+8192)); return s; };
+    const [m,b,i]=await Promise.all([bin(EBG_TTF.m),bin(EBG_TTF.b),bin(EBG_TTF.i)]); return {m,b,i};
+  })().catch(e=>{ _ebgP=null; return null; });   // no Garamond (offline) -> Times, never no PDF
+  return _ebgP;
+}
+function clBuildDoc(jsPDF, fonts, data, scale){
+  const doc=new jsPDF({unit:"pt",format:"a4"});
+  let F="times";
+  if(fonts){ doc.addFileToVFS("EBG-M.ttf",fonts.m); doc.addFont("EBG-M.ttf","EBGaramond","normal");
+             doc.addFileToVFS("EBG-B.ttf",fonts.b); doc.addFont("EBG-B.ttf","EBGaramond","bold");
+             doc.addFileToVFS("EBG-I.ttf",fonts.i); doc.addFont("EBG-I.ttf","EBGaramond","italic"); F="EBGaramond"; }
+  const W=doc.internal.pageSize.getWidth(), H=doc.internal.pageSize.getHeight(), M=18;
+  doc.setTextColor(0);
+  doc.setFont(F,"bold").setFontSize(21); doc.setCharSpace(1.5); doc.text(data.name,W/2,36,{align:"center"}); doc.setCharSpace(0);
+  doc.setFont(F,"italic").setFontSize(13); doc.text(data.role,W/2,51,{align:"center"});
+  doc.setFont(F,"bold").setFontSize(14); doc.text(data.courtLine,W/2,69,{align:"center"});
+  const cw=doc.getTextWidth(data.courtLine); doc.setDrawColor(0); doc.setLineWidth(0.6); doc.line((W-cw)/2,71.5,(W+cw)/2,71.5);
+  const f=x=>+(x*scale).toFixed(2), pad=+(3*Math.min(scale,1.4)).toFixed(2), cwid=(base,grow)=>Math.round(base*(1+(scale-1)*grow));
+  doc.autoTable({ startY:80,
+    head:[["Court /\nItem","Time","Case Name","Judges","Advocates"]],
+    body: data.rows.length?data.rows:[["","","No matters listed.","",""]],
+    theme:"grid",
+    // thin black lines, no shading anywhere
+    styles:{font:F,fontStyle:"normal",fontSize:f(12),cellPadding:{top:pad,bottom:pad,left:4,right:4},valign:"top",lineColor:[0,0,0],lineWidth:0.3,textColor:[0,0,0],fillColor:false,overflow:"linebreak"},
+    headStyles:{font:F,fontStyle:"bold",fontSize:11.5,fillColor:false,textColor:[0,0,0],valign:"middle",lineColor:[0,0,0],lineWidth:0.3},
+    alternateRowStyles:{fillColor:false},
+    columnStyles:{0:{cellWidth:cwid(72,.7),fontSize:f(13.5),fontStyle:"bold"},1:{cellWidth:cwid(36,1),fontSize:f(12)},2:{cellWidth:"auto",fontSize:f(14)},
+                  3:{cellWidth:cwid(104,.6),fontSize:f(12)},4:{cellWidth:cwid(128,.6),fontSize:f(12)}},
+    didDrawCell:c=>{ if(c.section!=="body"||c.column.index!==4) return;
+      const m=/^\((P|R)\)/.exec(c.cell.raw||""); if(!m) return; const fs=c.cell.styles.fontSize; doc.setFont(F,"bold"); doc.setFontSize(fs);
+      const x=c.cell.x+c.cell.padding("left"), y=c.cell.y+c.cell.padding("top")+fs*0.85; doc.setFillColor(255,255,255); doc.rect(x-0.5,y-fs*0.8,doc.getTextWidth(m[0])+1,fs*1.0,"F"); doc.text(m[0],x,y); },
+    margin:{left:M,right:M,top:24,bottom:20} });
+  let y=doc.lastAutoTable.finalY;
+  if(data.confs&&data.confs.length){ y+=f(18); const lh=f(14);
+    if(y>H-60){ doc.addPage(); y=40; }
+    doc.setFont(F,"bold").setFontSize(f(12.5)); doc.text("Conferences",M,y); doc.setLineWidth(0.5); doc.line(M,y+3,M+doc.getTextWidth("Conferences"),y+3); y+=lh+3;
+    data.confs.forEach(g=>{ doc.setFont(F,"bold").setFontSize(f(11.5)); doc.text(g.head,M,y); y+=lh; doc.setFont(F,"normal").setFontSize(f(11.5));
+      g.items.forEach(t=>{ if(y>H-24){ doc.addPage(); y=40; } doc.text(t,M+14,y); y+=lh; }); y+=4; }); }
+  return {doc,end:y,pages:doc.getNumberOfPages(),H};
+}
+function clBest(jsPDF,fonts,data){ for(let s=2.2;s>=1.0;s-=0.02){ const r=clBuildDoc(jsPDF,fonts,data,s); if(r.pages===1&&r.end<=r.H-22) return r; } return clBuildDoc(jsPDF,fonts,data,1.0); }
 async function buildCauselistPdf(iso){
   iso=(typeof iso==="string"&&iso)?iso:dsDate;
   await ensurePdfLib();
-  const {jsPDF}=window.jspdf;
+  const fonts=await loadGaramond();
   const d=new Date(iso+"T00:00");
   const day=d.toLocaleDateString("en-IN",{weekday:"long"}).toUpperCase();
   const dt=d.toLocaleDateString("en-IN",{day:"2-digit",month:"2-digit",year:"numeric"}).replace(/\//g,".");
   const entries=byCourt((iso===dsDate?(daysheet?.entries||[]):(dsAll[iso]?.entries||[])), iso);
-  const body=entries.map(e=>{
+  const rows=entries.map(e=>{
     const R=resolveEntry(e,iso);
     const judges=String(R.bench||"").split(/\s*,\s*/).filter(Boolean).map(shortJudge).join("\n");
     const side=R.appearingFor?(/resp/i.test(R.appearingFor)?"(R)":"(P)"):"";
     const adv=[side,e.counsel,...jrsOf(e).map(u=>nameOf(u))].filter(Boolean).join("\n");
-    // court totals, when known, sit quietly under the court/item number
-    let tot="";
+    let tot="";   // court totals, when known, sit quietly under the court/item number
     if(R.total){ tot=`\nTotal ${R.total}`; if(SUPP_TYPES.has(R.listType)){ const sp=suppFetched(iso,R.listType)?R.courtSupp:"—"; tot+=`\nMain ${R.courtMain} · Supp ${sp}`; } }
     return [`${e.courtNo||"?"} #${e.itemNo||"?"}${tot}`, e.time||"", R.title||"", judges, adv];
   });
-  const confGroups=conferenceList(iso);
-  const LINE=[150,150,150];
-  const build=scale=>{
-    const doc=new jsPDF({unit:"pt",format:"a4"});
-    const W=doc.internal.pageSize.getWidth(), H=doc.internal.pageSize.getHeight(), M=18;
-    doc.setFont("times","bold").setFontSize(19); doc.text(CHAMBER.seniorName.toUpperCase(),W/2,34,{align:"center"});
-    doc.setFont("times","italic").setFontSize(12); doc.text(CHAMBER.designation||"Senior Advocate",W/2,48,{align:"center"});
-    doc.setFont("times","bold").setFontSize(13.5); const ch=`SUPREME COURT (${day}) ${dt}`; doc.text(ch,W/2,66,{align:"center"});
-    const cw=doc.getTextWidth(ch); doc.setDrawColor(0); doc.setLineWidth(0.6); doc.line((W-cw)/2,69,(W+cw)/2,69);
-    const f=x=>+(x*scale).toFixed(2), pad=+(3*Math.min(scale,1.4)).toFixed(2), cwid=(base,grow)=>Math.round(base*(1+(scale-1)*grow));
-    doc.autoTable({ startY:78,
-      head:[["Court /\nItem","Time","Case Name","Judges","Advocates"]],
-      body: body.length?body:[["","","No matters listed.","",""]],
-      theme:"grid",
-      styles:{font:"times",fontSize:f(11.5),cellPadding:{top:pad,bottom:pad,left:4,right:4},valign:"top",lineColor:LINE,lineWidth:0.35,textColor:[0,0,0],overflow:"linebreak"},
-      headStyles:{fontStyle:"bold",fontSize:10.5,fillColor:[238,236,230],textColor:[0,0,0],valign:"middle",lineColor:LINE,lineWidth:0.35},
-      columnStyles:{0:{cellWidth:cwid(64,.6),fontSize:f(13),fontStyle:"bold"},1:{cellWidth:cwid(36,1),fontSize:f(11.5)},2:{cellWidth:"auto",fontSize:f(13.5)},
-                    3:{cellWidth:cwid(104,.6),fontSize:f(11.5)},4:{cellWidth:cwid(128,.6),fontSize:f(11.5)}},
-      didParseCell:c=>{ if(c.section==="body"&&c.column.index===0&&/\n/.test(c.cell.raw||"")) c.cell.styles.fontStyle="bold"; },
-      didDrawCell:c=>{ // the side mark (P)/(R) in bold over the advocates; totals under the item drawn smaller
-        if(c.section!=="body") return;
-        if(c.column.index===4){ const m=/^\((P|R)\)/.exec(c.cell.raw||""); if(m){ const fs=c.cell.styles.fontSize; doc.setFont("times","bold"); doc.setFontSize(fs);
-          const x=c.cell.x+c.cell.padding("left"), y=c.cell.y+c.cell.padding("top")+fs*0.85; doc.setFillColor(255,255,255); doc.rect(x-0.5,y-fs*0.8,doc.getTextWidth(m[0])+1,fs*1.0,"F"); doc.text(m[0],x,y); } }
-      },
-      margin:{left:M,right:M,top:24,bottom:20} });
-    let y=doc.lastAutoTable.finalY;
-    if(confGroups.length){ y+=f(18);
-      const lh=f(13.5);
-      if(y>H-60){ doc.addPage(); y=40; }
-      doc.setFont("times","bold").setFontSize(f(12)); doc.setTextColor(0); doc.text("Conferences",M,y); doc.setLineWidth(0.5); doc.line(M,y+3,M+doc.getTextWidth("Conferences"),y+3); y+=lh+3;
-      confGroups.forEach(g=>{ doc.setFont("times","bold").setFontSize(f(11)); doc.text(confDateHeading(g.iso),M,y); y+=lh;
-        doc.setFont("times","normal").setFontSize(f(11));
-        g.items.forEach(cf=>{ if(y>H-24){ doc.addPage(); y=40; } doc.text(`${fmtConfTime(cf.time)||"—"}    -    ${cf.label||""}`,M+14,y); y+=lh; }); y+=4; }); }
-    return {doc, end:y, pages:doc.getNumberOfPages(), H};
-  };
-  let best=null;
-  for(let sc=2.2; sc>=1.0; sc-=0.02){ const r=build(sc); if(r.pages===1&&r.end<=r.H-22){ best=r; break; } }
-  if(!best) best=build(1.0);
+  const confs=conferenceList(iso).map(g=>({head:confDateHeading(g.iso), items:g.items.map(c=>`${fmtConfTime(c.time)||"—"}    -    ${c.label||""}`)}));
+  const best=clBest(window.jspdf.jsPDF, fonts, {name:CHAMBER.seniorName.toUpperCase(), role:CHAMBER.designation||"Senior Advocate", courtLine:`SUPREME COURT (${day}) ${dt}`, rows, confs});
   return {doc:best.doc, dt};
 }
 async function shareCauselistPdf(iso){
