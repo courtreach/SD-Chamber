@@ -1330,6 +1330,12 @@ body.demo .topbar{top:34px}
 .ww-banner>.ti{font-size:20px;color:var(--accent-ink)}
 .ww-x{background:none;border:none;color:var(--ink-3);cursor:pointer;padding:4px}
 @media(min-width:861px){ .ww-banner{bottom:24px} }
+
+.word-tip{position:fixed;right:16px;top:calc(64px + env(safe-area-inset-top,0px));z-index:66;width:min(380px,calc(100% - 32px));background:var(--surface);border:1px solid var(--line-2);border-radius:14px;padding:14px 16px;box-shadow:0 16px 40px rgba(16,20,24,.22);color:var(--ink)}
+.word-tip .wt-h{display:flex;align-items:center;gap:9px;margin-bottom:8px;font-size:14px}
+.word-tip .wt-h .ww-x{margin-left:auto}
+.word-tip ol{margin:0 0 10px;padding-left:20px;font-size:13px;line-height:1.55}
+.word-tip ol li{margin-bottom:4px}
 </style>
 </head>
 <body>
@@ -5055,6 +5061,28 @@ const _kv={ db:null,
 function wordDownload(blob,name){
   const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=name; a.rel="noopener";
   document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); },4000);
+  setTimeout(wordOpenTip,900);
+}
+// A web page can't start Word on a downloaded file (Word for Mac ignores ms-word: links to
+// local files — tested Oct 2026). Chrome/Edge can, once told to: "Always open files of this
+// type". Shown until the person says it's done.
+function wordOpenTip(){
+  let done=false; try{ done=localStorage.getItem("sd-word-tip")==="done"; }catch(e){}
+  if(done||$("wordTip")) return;
+  const chromey=/Chrome|Edg\//.test(navigator.userAgent)&&!/iPhone|iPad|Android/.test(navigator.userAgent);
+  const mac=/Mac/.test(navigator.platform||navigator.userAgent);
+  const el=document.createElement("div"); el.id="wordTip"; el.className="word-tip";
+  el.innerHTML=chromey?`<div class="wt-h"><span class="word-ic">W</span><b>Make notes open in Word by themselves</b><button class="ww-x" id="wtX" aria-label="Close"><span class="ti ti-x"></span></button></div>
+    <ol><li>Click the <b>download icon</b> <span class="ti ti-download"></span> at the top right of this ${/Edg\//.test(navigator.userAgent)?"Edge":"Chrome"} window.</li>
+    <li>${mac?"Right-click (or Control-click)":"Right-click"} the note → <b>Always open files of this type</b>.</li>
+    <li>Click the note once to open it now. From the next one on, Word opens it straight away — ready to type.</li></ol>
+    <div class="row" style="gap:8px;justify-content:flex-end"><button class="btn sm" id="wtDone">Done</button></div>`
+   :`<div class="wt-h"><span class="word-ic">W</span><b>Open the note in Word</b><button class="ww-x" id="wtX" aria-label="Close"><span class="ti ti-x"></span></button></div>
+    <div style="font-size:13px;line-height:1.5">This browser downloads the note but can't open Word by itself. Open it from the downloads list (or the Downloads folder). In <b>Chrome</b> or <b>Edge</b> it can open in Word by itself, and your saves go back to Dropbox by themselves.</div>
+    <div class="row" style="gap:8px;justify-content:flex-end;margin-top:8px"><button class="btn sm" id="wtDone">Got it</button></div>`;
+  document.body.appendChild(el);
+  $("wtX").onclick=()=>el.remove();
+  $("wtDone").onclick=()=>{ try{ localStorage.setItem("sd-word-tip","done"); }catch(e){} el.remove(); };
 }
 // the notes being watched on THIS computer (kept a week)
 const _wwKey="sd-word-watch";

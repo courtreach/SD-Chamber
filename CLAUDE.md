@@ -58,7 +58,9 @@ showDirectoryPicker, not iOS/Android) the app watches the Downloads folder (hand
 via the "Allow" banner `wwBanner`, kept in IndexedDB "sd-word"; read permission only) and every
 Word save (stable size+time on two 4-s looks) is uploaded with X-Mode overwrite (`wordTick`).
 Watch list per device in localStorage "sd-word-watch" (7 days); "name (1).docx" re-downloads
-are found too. Safari / iPhone / iPad keep "Replace with edited version". Demo test hook:
+are found too. A web page can't start Word on a local file: Word for Mac 16.102 ignores
+`ms-word:ofe|u|file:///…` (tested). So Chrome/Edge's own "Always open files of this type" does it — a
+one-time tip (`wordOpenTip`, localStorage "sd-word-tip") shows where. Safari / iPhone / iPad keep "Replace with edited version". Demo test hook:
 `window.__setDlDir(handle)` (an OPFS folder stands in for Downloads).
 
 ## Conference note = the owner's own note format (Oct 2026)
