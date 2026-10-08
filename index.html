@@ -1927,7 +1927,7 @@ $("signOutBtn").onclick=()=>auth.signOut();
 // service worker is holding an old copy. Clears the shell cache, nudges the SW,
 // then reloads with a cache-buster.
 // Shown in the sidebar / More / Refresh tooltip so anyone can tell which version they have.
-const APP_VERSION="58 · 8 Oct 2026";
+const APP_VERSION="59 · 8 Oct 2026";
 if($("appVer")) $("appVer").textContent="App version "+APP_VERSION;
 if($("btnRefresh")) $("btnRefresh").title="Refresh — fetch the latest app (you have version "+APP_VERSION+")";
 async function hardRefresh(){
@@ -4010,7 +4010,7 @@ function clBuildDoc(jsPDF, fonts, data, scale){
     styles:{font:F,fontStyle:"normal",fontSize:f(12),cellPadding:{top:pad,bottom:pad,left:4,right:4},valign:"top",lineColor:[0,0,0],lineWidth:0.3,textColor:[0,0,0],fillColor:false,overflow:"linebreak"},
     headStyles:{font:F,fontStyle:"bold",fontSize:11.5,fillColor:false,textColor:[0,0,0],valign:"middle",lineColor:[0,0,0],lineWidth:0.3},
     alternateRowStyles:{fillColor:false},
-    columnStyles:{0:{cellWidth:cwid(72,.7),fontSize:f(13.5),fontStyle:"bold"},1:{cellWidth:cwid(36,1),fontSize:f(12)},2:{cellWidth:"auto",fontSize:f(14)},
+    columnStyles:{0:{cellWidth:cwid(84,.6),fontSize:f(16.5),fontStyle:"bold"},1:{cellWidth:cwid(36,1),fontSize:f(12)},2:{cellWidth:"auto",fontSize:f(14)},
                   3:{cellWidth:cwid(104,.6),fontSize:f(12)},4:{cellWidth:cwid(128,.6),fontSize:f(12)}},
     didDrawCell:c=>{ if(c.section!=="body"||c.column.index!==4) return;
       const fs=c.cell.styles.fontSize, x=c.cell.x+c.cell.padding("left");
@@ -4019,7 +4019,10 @@ function clBuildDoc(jsPDF, fonts, data, scale){
         const y=c.cell.y+c.cell.padding("top")+fs*0.85; doc.setFillColor(255,255,255); doc.rect(x-0.5,y-fs*0.8,doc.getTextWidth(m[0])+1,fs*1.0,"F"); doc.text(m[0],x,y); }
       const tot=(data.rows[c.row.index]||[])[5];
       if(tot&&tot.length){   // the court totals, smaller, at the foot of the advocates cell
-        const sf=+(fs*0.82).toFixed(2), lh=sf*1.2; doc.setFont(F,"normal"); doc.setFontSize(sf);
+        doc.setFont(F,"normal"); let sf=+(fs*0.82).toFixed(2); doc.setFontSize(sf);
+        const room=c.cell.width-c.cell.padding("left")-c.cell.padding("right"), wid=Math.max(...tot.map(t=>doc.getTextWidth(t)));
+        if(wid>room){ sf=+(sf*room/wid).toFixed(2); doc.setFontSize(sf); }
+        const lh=sf*1.2;
         let y=c.cell.y+c.cell.height-c.cell.padding("bottom")-(tot.length-1)*lh-sf*0.25;
         tot.forEach(t=>{ doc.text(t,x,y); y+=lh; }); } },
     margin:{left:M,right:M,top:24,bottom:20} });
@@ -4048,8 +4051,9 @@ async function buildCauselistPdf(iso){
     const side=R.appearingFor?(/resp/i.test(R.appearingFor)?"(R)":"(P)"):"";
     const adv=[side,e.counsel,...jrsOf(e).map(u=>nameOf(u))].filter(Boolean).join("\n");
     // court totals (owner: in the Advocates column, in a smaller size, below the names)
-    const tot=[];
-    if(R.total){ tot.push(`Total ${R.total}`); if(SUPP_TYPES.has(R.listType)){ const sp=suppFetched(iso,R.listType)?R.courtSupp:"—"; tot.push(`Main ${R.courtMain} · Supp ${sp}`); } }
+    const tot=[];   // one line, e.g. "Total (Main 32 + Supp. 12) = 44"
+    if(R.total){ if(SUPP_TYPES.has(R.listType)){ const sp=suppFetched(iso,R.listType)?R.courtSupp:"awaited"; tot.push(`Total (Main ${R.courtMain} + Supp. ${sp}) = ${R.total}`); }
+                 else tot.push(`Total ${R.total}`); }
     return [`${e.courtNo||"?"} #${e.itemNo||"?"}`, e.time||"", R.title||"", judges, adv, tot];
   });
   const confs=conferenceList(iso).map(g=>({head:confDateHeading(g.iso), items:g.items.map(c=>`${fmtConfTime(c.time)||"—"}    -    ${c.label||""}`)}));
