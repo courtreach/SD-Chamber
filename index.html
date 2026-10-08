@@ -1334,6 +1334,7 @@ body.demo .topbar{top:34px}
 .word-tip{position:fixed;right:16px;top:calc(64px + env(safe-area-inset-top,0px));z-index:66;width:min(380px,calc(100% - 32px));background:var(--surface);border:1px solid var(--line-2);border-radius:14px;padding:14px 16px;box-shadow:0 16px 40px rgba(16,20,24,.22);color:var(--ink)}
 .word-tip .wt-h{display:flex;align-items:center;gap:9px;margin-bottom:8px;font-size:14px}
 .word-tip .wt-h .ww-x{margin-left:auto}
+.word-tip .wt-sub{font-size:12.5px;color:var(--ink-3);margin:-2px 0 8px;line-height:1.45}
 .word-tip ol{margin:0 0 10px;padding-left:20px;font-size:13px;line-height:1.55}
 .word-tip ol li{margin-bottom:4px}
 </style>
@@ -4657,10 +4658,10 @@ async function editInWordForm(id,folder,sub,f){
   const b=briefs[id]||VIRTUAL_FOLDERS[id];
   openSheet(`<div class="sheet-head"><div><h3>Edit in Word</h3><div class="sub">${esc(f.name)}</div></div><button class="x-btn"><span class="ti ti-x"></span></button></div>
     <div class="sheet-body">
-      <div class="ew-step"><span class="ew-n">1</span><div><b>Open it in Word</b><div class="muted" style="font-size:12px;margin-top:2px">${_canWatch?"Opens as an ordinary, editable file. Every time you press Save in Word, it goes back to Dropbox by itself while the app is open.":"Opens as an ordinary, editable file."}</div>
-        <div class="row" style="gap:8px;margin-top:8px;flex-wrap:wrap"><button class="btn sm" id="ew_open"><span class="ic ti ti-file-type-doc"></span>Edit in Word</button></div></div></div>
+      <div class="ew-step"><span class="ew-n">1</span><div><b>Download a copy</b><div class="muted" style="font-size:12px;margin-top:2px">An ordinary, editable copy — open it in Word.</div>
+        <div class="row" style="gap:8px;margin-top:8px;flex-wrap:wrap"><button class="btn sm" id="ew_open"><span class="ic ti ti-download"></span>Download to edit</button></div></div></div>
       <div class="ew-step"><span class="ew-n">2</span><div><b>Edit and save</b> it in Word as usual.</div></div>
-      <div class="ew-step"${_canWatch?' style="opacity:.75"':''}><span class="ew-n">3</span><div><b>${_canWatch?"Only on an iPhone, iPad or Safari:":"Put the edited version back"}</b><div class="muted" style="font-size:12px;margin-top:2px">${_canWatch?"those can't send Word saves back by themselves — put the edited file back here.":"It replaces this paper under the same name and number. Dropbox keeps the earlier version."}</div>
+      <div class="ew-step"><span class="ew-n">3</span><div><b>Put the edited version back</b><div class="muted" style="font-size:12px;margin-top:2px">It replaces this paper under the same name and number. Dropbox keeps the earlier version.</div>
         <label class="btn sm" style="margin-top:8px;cursor:pointer"><span class="ic ti ti-upload"></span>Replace with edited version<input type="file" id="ew_file" accept=".docx,.doc,.rtf" hidden></label></div></div>
       <div id="ew_msg" class="muted" style="font-size:12.5px;min-height:18px;margin-top:6px"></div>
       <button class="btn ghost sm" id="ew_back" style="margin-top:8px"><span class="ic ti ti-arrow-left"></span>Back to the papers</button>
@@ -4668,8 +4669,8 @@ async function editInWordForm(id,folder,sub,f){
   $("ew_back").onclick=()=>openFiles(id,sub);
   $("ew_open").onclick=async()=>{ const btn=$("ew_open"); btn.disabled=true; if($("ew_msg")) $("ew_msg").textContent="Opening…";
     try{ const blob=await paperBlob(await paperSource(folder,sub,f.name));
-      wordDownload(new Blob([blob],{type:DOCX_TYPE}),f.name); wordWatch({folder,sub,name:f.name});
-      if($("ew_msg")) $("ew_msg").textContent=_canWatch?"Opened — edit and save in Word; each save goes back to Dropbox by itself.":"Opened — after editing, put the edited version back with step 3.";
+      wordDownload(new Blob([blob],{type:DOCX_TYPE}),f.name);
+      if($("ew_msg")) $("ew_msg").textContent="Downloaded — after editing, put the edited version back with step 3.";
     }catch(e){ if($("ew_msg")) $("ew_msg").textContent=e.message; }
     btn.disabled=false; };
   $("ew_file").onchange=e=>{ const nf=e.target.files[0]; if(!nf) return;
@@ -5061,7 +5062,6 @@ const _kv={ db:null,
 function wordDownload(blob,name){
   const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=name; a.rel="noopener";
   document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); },4000);
-  setTimeout(wordOpenTip,900);
 }
 // A web page can't start Word on a downloaded file (Word for Mac ignores ms-word: links to
 // local files — tested Oct 2026). Chrome/Edge can, once told to: "Always open files of this
@@ -5069,16 +5069,26 @@ function wordDownload(blob,name){
 function wordOpenTip(){
   let done=false; try{ done=localStorage.getItem("sd-word-tip")==="done"; }catch(e){}
   if(done||$("wordTip")) return;
-  const chromey=/Chrome|Edg\//.test(navigator.userAgent)&&!/iPhone|iPad|Android/.test(navigator.userAgent);
-  const mac=/Mac/.test(navigator.platform||navigator.userAgent);
+  const ua=navigator.userAgent, edge=/Edg\//.test(ua), chromey=/Chrome|Edg\//.test(ua)&&!/iPhone|iPad|Android/.test(ua), win=/Windows/.test(ua);
+  const B=edge?"Edge":"Chrome";
   const el=document.createElement("div"); el.id="wordTip"; el.className="word-tip";
-  el.innerHTML=chromey?`<div class="wt-h"><span class="word-ic">W</span><b>Make notes open in Word by themselves</b><button class="ww-x" id="wtX" aria-label="Close"><span class="ti ti-x"></span></button></div>
-    <ol><li>Click the <b>download icon</b> <span class="ti ti-download"></span> at the top right of this ${/Edg\//.test(navigator.userAgent)?"Edge":"Chrome"} window.</li>
-    <li>${mac?"Right-click (or Control-click)":"Right-click"} the note → <b>Always open files of this type</b>.</li>
-    <li>Click the note once to open it now. From the next one on, Word opens it straight away — ready to type.</li></ol>
+  // Written for the steno's Windows computer (owner, Oct 2026); a Mac gets the same idea, shorter.
+  el.innerHTML=(chromey&&win)?`<div class="wt-h"><span class="word-ic">W</span><b>One-time setup on this computer</b><button class="ww-x" id="wtX" aria-label="Close"><span class="ti ti-x"></span></button></div>
+    <div class="wt-sub">So that Dictation / Instructions open straight in Word, ready to type, and every Ctrl+S goes back to Dropbox.</div>
+    <ol>
+      <li><b>A folder for notes.</b> ${B} → <b>Settings → Downloads → Location → Change</b> → make a folder <b>Documents\\Chamber Notes</b> and choose it.</li>
+      <li><b>No "Enable Editing" bar.</b> Word → <b>File → Options → Trust Center → Trust Center Settings → Trusted Locations → Add new location</b> → choose <b>Chamber Notes</b>.</li>
+      <li><b>Open in Word by itself.</b> Click the download icon <span class="ti ti-download"></span> at the top right → <b>⋯</b> (or right-click) next to this note → <b>Always open files of this type</b>. Click the note to open it now.</li>
+      <li><b>Saves go to Dropbox.</b> When the bar at the bottom asks, click <b>Allow</b> and choose the same <b>Chamber Notes</b> folder.</li>
+    </ol>
+    <div class="row" style="gap:8px;justify-content:flex-end"><button class="btn sm" id="wtDone">All done</button></div>`
+   :chromey?`<div class="wt-h"><span class="word-ic">W</span><b>Make notes open in Word by themselves</b><button class="ww-x" id="wtX" aria-label="Close"><span class="ti ti-x"></span></button></div>
+    <ol><li>Click the <b>download icon</b> <span class="ti ti-download"></span> at the top right of this ${B} window.</li>
+    <li>Right-click the note → <b>Always open files of this type</b>.</li>
+    <li>Click the note once to open it now. From the next one on, Word opens it straight away.</li></ol>
     <div class="row" style="gap:8px;justify-content:flex-end"><button class="btn sm" id="wtDone">Done</button></div>`
    :`<div class="wt-h"><span class="word-ic">W</span><b>Open the note in Word</b><button class="ww-x" id="wtX" aria-label="Close"><span class="ti ti-x"></span></button></div>
-    <div style="font-size:13px;line-height:1.5">This browser downloads the note but can't open Word by itself. Open it from the downloads list (or the Downloads folder). In <b>Chrome</b> or <b>Edge</b> it can open in Word by itself, and your saves go back to Dropbox by themselves.</div>
+    <div style="font-size:13px;line-height:1.5">This browser downloads the note but can't open Word by itself — open it from the downloads list. On a Windows computer with <b>Chrome</b> or <b>Edge</b> it opens in Word by itself and saves go back to Dropbox by themselves.</div>
     <div class="row" style="gap:8px;justify-content:flex-end;margin-top:8px"><button class="btn sm" id="wtDone">Got it</button></div>`;
   document.body.appendChild(el);
   $("wtX").onclick=()=>el.remove();
@@ -5131,14 +5141,14 @@ function wwBanner(on){
   if(!on){ if(el) el.remove(); return; }
   if(el) return;
   el=document.createElement("div"); el.id="wwBanner"; el.className="ww-banner";
-  el.innerHTML=`<span class="ti ti-cloud-upload"></span><span>Let Word saves go back to Dropbox by themselves — allow it once on this computer.</span><button class="btn sm" id="wwAllow">Allow</button><button class="ww-x" id="wwLater" aria-label="Not now"><span class="ti ti-x"></span></button>`;
+  el.innerHTML=`<span class="ti ti-cloud-upload"></span><span>Let Word saves go back to Dropbox by themselves — click Allow and choose the folder notes download into${/Windows/.test(navigator.userAgent)?" (Chamber Notes)":""}.</span><button class="btn sm" id="wwAllow">Allow</button><button class="ww-x" id="wwLater" aria-label="Not now"><span class="ti ti-x"></span></button>`;
   document.body.appendChild(el);
   $("wwLater").onclick=()=>el.remove();
   $("wwAllow").onclick=async()=>{
     try{
       let h=await _kv.get("dl");
       if(h&&(await h.requestPermission({mode:"read"}))==="granted"){ _dlDir=h; el.remove(); wordTick(); return; }
-      toast("Choose your Downloads folder — the folder this browser saves downloads into","ti-folder");
+      toast("Choose the folder this browser saves downloads into"+(/Windows/.test(navigator.userAgent)?" — Chamber Notes":""),"ti-folder");
       h=await window.showDirectoryPicker({id:"sd-downloads",startIn:"downloads",mode:"read"});
       await _kv.set("dl",h); _dlDir=h; el.remove();
       const found=await Promise.all(wwList().map(w=>wwFind(h,w)));
@@ -5172,6 +5182,7 @@ async function newConferenceNote(confKeyStr, kind){
   // heading as in his own notes ("Note dated …" / "Instructions dated …"); every note starts blank
   const blob=makeNoteDocx({ b, heading:`${/^Instruction/.test(kind)?"Instructions":"Note"} dated ${ddmmyyyy()}`, paras:[], blanks:6 });
   wordDownload(blob,name);             // at once — Word opens the ordinary, editable file
+  setTimeout(wordOpenTip,900);
   toast(`${name.split(" ")[0]} — opening in Word`,"ti-file-type-doc");
   try{
     if(plan.rename) await filesApi("move",{folder,name:plan.rename.from,toName:plan.rename.to});

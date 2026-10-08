@@ -53,7 +53,10 @@ Opening Word from a web link (`ms-word:ofe|u|<Dropbox temp link>`) was slow and 
 Now: the docx is handed over as an ordinary download (`wordDownload`) — a new conference note
 is built on the device (`makeNoteDocx`), the case folder having been prepared when the W was
 tapped (`notePrep`), so it opens in ~30 ms; the copy is uploaded in the background (overwrite).
-Files → Edit in Word downloads the paper the same way. On Chrome/Edge desktop (`_canWatch`:
+Files → Edit in Word (owner, Oct 2026): a downloaded copy + MANUAL "Replace with edited
+version" — NOT watched. Only the conference W note is watched; its one-time tip (`wordOpenTip`)
+is written for the steno's Windows PC: Chamber Notes download folder, Word Trusted Location (no
+Protected View), "Always open files of this type", Allow → same folder. On Chrome/Edge desktop (`_canWatch`:
 showDirectoryPicker, not iOS/Android) the app watches the Downloads folder (handle chosen once
 via the "Allow" banner `wwBanner`, kept in IndexedDB "sd-word"; read permission only) and every
 Word save (stable size+time on two 4-s looks) is uploaded with X-Mode overwrite (`wordTick`).
