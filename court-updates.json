@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-08T19:45:39.185545Z",
+  "generated_at": "2026-10-08T22:23:00.447949Z",
   "parser_version": 10,
   "window": [
     "2026-10-09",
@@ -23,6 +23,7 @@
         "Chamber (main)",
         "Chamber (supp)",
         "Single Judge (main)",
+        "Single Judge (supp)",
         "Registrar (main)"
       ],
       "lists": {
@@ -19412,7 +19413,7 @@
         "Single Judge": {
           "8": {
             "coram": "HON'BLE MR. JUSTICE SANJEEV SACHDEVA",
-            "total": "23",
+            "total": "24",
             "fresh": "",
             "items": {
               "1601": "Diary No. 42105-2026 GITA MONDAL VERSUS RAHUL KUMAR",
@@ -19437,7 +19438,8 @@
               "1620": "Diary No. 51957-2026 SATISH TRAVELS PROPRIETOR VERSUS AU SMALL FINANCE BANK LIMITED",
               "1621": "T.P.(Crl.) No. 1108/2026 PRAMOD SHARMA VERSUS ARUN KUMAR RAI",
               "1622": "T.P.(C) No. 2526/2026 NIKKI HARSHRAJ CHOUDHARY VERSUS HARSHRAJ UDAYLAL CHOUDHARY",
-              "1623": "T.P.(C) No. 2773/2026 ASHUTOSH ALIAS KANHAIYA AWASTHI AND ANR. VERSUS SKANDBABU PANDEY"
+              "1623": "T.P.(C) No. 2773/2026 ASHUTOSH ALIAS KANHAIYA AWASTHI AND ANR. VERSUS SKANDBABU PANDEY",
+              "1624": "T.P.(C) No. 2329/2026 JAYDEV CHHAGGANBHAI ARDESHANA VERSUS POOJA JAYDEV ARDESHANA @ POOJABEN PATEL"
             },
             "advocates": {
               "1601": {
@@ -19646,10 +19648,19 @@
                     "p": ""
                   }
                 ]
+              },
+              "1624": {
+                "pet": "SANDEEP SINGH",
+                "petAll": [
+                  {
+                    "n": "SANDEEP SINGH",
+                    "p": ""
+                  }
+                ]
               }
             },
             "main": 23,
-            "supp": 0
+            "supp": 1
           },
           "12": {
             "coram": "HON'BLE MR. JUSTICE SHREE CHANDRASHEKHAR",
@@ -20373,18 +20384,19 @@
           },
           "1": {
             "coram": "",
-            "total": "5",
+            "total": "6",
             "fresh": "",
             "items": {
               "1601": "Diary No. 49286-2026 NUPUR SATIJA VERSUS MALAV UDAY GOKANI",
               "1602": "T.P.(C) No. 2817/2026 POONAM SACHDEVA VERSUS VIKAS KUMAR",
               "1603": "T.P.(C) No. 2970/2026 BHAGYA @ GAYATRI ASHOK KOLHAPURE VERSUS ASHOK ARUN KOLHAPURE",
               "1604": "T.P.(C) No. 2893/2026 GOGIREDDY LALITHA REDDY VERSUS RAM KUMAR M",
-              "1605": "T.P.(C) No. 3003/2026 SAMREEN SHAHZAD VERSUS MOHAMMAD SUHAIL"
+              "1605": "T.P.(C) No. 3003/2026 SAMREEN SHAHZAD VERSUS MOHAMMAD SUHAIL",
+              "1626": "T.P.(C) No. 3108/2026 LAKSHMI AGGARWAL VERSUS MANOJ KUMAR MEGOTIA"
             },
             "advocates": {},
             "main": 5,
-            "supp": 0
+            "supp": 1
           }
         },
         "Registrar": {
@@ -42306,6 +42318,7 @@
       "M_C_1": 558025,
       "M_C_2": 507769,
       "M_S_1": 532672,
+      "M_S_2": 506812,
       "M_R_1": 526669
     },
     "2026-10-12": {
