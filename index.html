@@ -1949,7 +1949,7 @@ $("signOutBtn").onclick=()=>auth.signOut();
 // service worker is holding an old copy. Clears the shell cache, nudges the SW,
 // then reloads with a cache-buster.
 // Shown in the sidebar / More / Refresh tooltip so anyone can tell which version they have.
-const APP_VERSION="69 · 8 Oct 2026";
+const APP_VERSION="70 · 8 Oct 2026";
 if($("appVer")) $("appVer").textContent="App version "+APP_VERSION;
 if($("btnRefresh")) $("btnRefresh").title="Refresh — fetch the latest app (you have version "+APP_VERSION+")";
 async function hardRefresh(){
@@ -3969,21 +3969,29 @@ function shareDaySheet(){
 async function printCauseList(iso){
   iso=(typeof iso==="string"&&iso)?iso:dsDate;
   const ios=/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
-  const standalone=window.matchMedia&&window.matchMedia("(display-mode: standalone)").matches;
-  if(ios||standalone){                          // the share sheet has Print; a pop-up tab doesn't work there
+  const android=/Android/i.test(navigator.userAgent);
+  // Phones only: the share sheet has Print there. A computer — browser or installed app,
+  // Windows or Mac — goes straight to the print dialog (owner, Oct 2026: on the Windows
+  // computer the installed app was opening the Windows share box instead).
+  if(ios||android){                             // the share sheet has Print; a pop-up tab doesn't work there
     toast("Preparing the cause list…","ti-printer");
     let out; try{ out=await buildCauselistPdf(iso); }catch(e){ toast("Couldn't build the cause list — check your connection and retry","ti-alert-triangle"); return; }
     const fname=`SD Causelist ${out.dt}.pdf`, file=new File([out.doc.output("blob")],fname,{type:"application/pdf"});
     if(navigator.canShare&&navigator.canShare({files:[file]})){ try{ await navigator.share({files:[file],title:fname}); return; }catch(e){ if(e&&e.name==="AbortError") return; } }
     out.doc.save(fname); return;
   }
-  const w=window.open("","_blank");            // opened at once so the pop-up isn't blocked
-  if(!w){ toast("Allow pop-ups to print the cause list","ti-alert-triangle"); return; }
-  try{ w.document.write('<p style="font:14px system-ui;padding:20px">Preparing the cause list…</p>'); }catch(e){}
-  let out; try{ out=await buildCauselistPdf(iso); }catch(e){ try{ w.close(); }catch(_){} toast("Couldn't build the cause list — check your connection and retry","ti-alert-triangle"); return; }
+  toast("Preparing the cause list…","ti-printer");
+  let out; try{ out=await buildCauselistPdf(iso); }catch(e){ toast("Couldn't build the cause list — check your connection and retry","ti-alert-triangle"); return; }
   const url=URL.createObjectURL(out.doc.output("blob"));
-  w.location.href=url;                          // the browser's PDF viewer — print from there (⌘P / Ctrl+P)
-  setTimeout(()=>URL.revokeObjectURL(url),120000);
+  // the PDF in an invisible frame, then the print dialog for it (Chrome / Edge)
+  const old=$("clPrintFrame"); if(old) old.remove();
+  const fr=document.createElement("iframe"); fr.id="clPrintFrame";
+  fr.style.cssText="position:fixed;right:0;bottom:0;width:0;height:0;border:0;visibility:hidden";
+  const viewer=()=>{                            // fallback: the PDF in its own tab — print from there (Ctrl+P / ⌘P)
+    const w=window.open(url,"_blank"); if(!w) out.doc.save(`SD Causelist ${out.dt}.pdf`); };
+  fr.onload=()=>setTimeout(()=>{ try{ fr.contentWindow.focus(); fr.contentWindow.print(); }catch(e){ viewer(); } },400);
+  fr.src=url; document.body.appendChild(fr);
+  setTimeout(()=>URL.revokeObjectURL(url),300000);
 }
 
 // ---- Share the cause list as a real PDF (WhatsApp / email via the native share
@@ -5217,7 +5225,7 @@ function wordWatch({folder,sub,name,pending}){
   wwSave({key:`${folder}|${sub||""}|${name}`, folder, sub:sub||"", name, at:Date.now(), seen:false, sent:0, pending:!!pending});
   ensureWordWatcher();
 }
-let _dlDir=null, _wwTimer=null, _wwBusy=false;
+let _dlDir=null, _wwTimer=null, _wwBusy=false, _wwErrShown=false;
 async function dlDir(){ if(_dlDir) return _dlDir;
   try{ const h=await _kv.get("dl"); if(h&&(await h.queryPermission({mode:"read"}))==="granted") return (_dlDir=h); }catch(e){}
   return null; }
@@ -5231,6 +5239,17 @@ async function wwFind(dir,w){
       const f=await h.getFile(); if(f.lastModified>=w.at-5000&&(!best||f.lastModified>best.lastModified)) best=f; } }catch(e){}
   return best;
 }
+// Once per app start for each note (and on first sight), the copy on this computer is
+// compared with the Dropbox one: a different size, saved after the Dropbox copy, means Word
+// saved typing that never went up — it is sent now. (Oct 2026: the steno typed and saved a
+// dictation before the folder was allowed; the first look took the typed file as "already
+// sent", and Dropbox kept the blank note.)
+const _wwChecked=new Set();
+async function wwDbx(w){
+  try{ const l=(await filesApi("list",w.sub?{folder:w.folder,sub:w.sub}:{folder:w.folder})).files||[];
+    const x=l.find(y=>y.name===w.name); return x?{size:x.size,mod:Date.parse(x.modified)||0}:{size:-1,mod:0}; }
+  catch(e){ return null; }
+}
 async function wordTick(){
   if(_wwBusy||!me) return;
   const list=wwList(); if(!list.length){ wwBanner(false); return; }
@@ -5238,15 +5257,22 @@ async function wordTick(){
   _wwBusy=true;
   try{ for(const w of list){
       const f=await wwFind(dir,w); if(!f) continue;
-      if(!w.seen){ w.seen=true; w.sent=w.pending?0:f.lastModified; w.lastMod=f.lastModified; w.lastSize=f.size; wwSave(w); continue; }
+      if(!_wwChecked.has(w.key)){
+        const d=await wwDbx(w); if(!d) continue;          // Dropbox not reachable — look again shortly
+        _wwChecked.add(w.key);
+        const newer=w.pending||d.size<0||(d.size!==f.size&&f.lastModified>d.mod);
+        w.seen=true; w.sent=newer?0:f.lastModified; w.lastMod=f.lastModified; w.lastSize=f.size; wwSave(w);
+        if(!newer) continue;
+      }
       if(f.lastModified>w.sent&&f.size>0){
         // wait until Word has finished writing (same size and time on two looks)
         if(w.lastMod!==f.lastModified||w.lastSize!==f.size){ w.lastMod=f.lastModified; w.lastSize=f.size; wwSave(w); continue; }
         await filesApi("upload",null,{folder:w.folder,sub:w.sub,name:w.name,file:new File([await f.arrayBuffer()],w.name,{type:f.type||DOCX_TYPE}),mode:"overwrite"});
-        w.sent=f.lastModified; w.pending=false; wwSave(w);
+        w.sent=f.lastModified; w.pending=false; w.err=""; wwSave(w);
         toast(`Saved to Dropbox — ${w.name.split(" ")[0]}`,"ti-cloud-check");
       } } }
-  catch(e){ /* tried again in a few seconds */ }
+  catch(e){ /* tried again in a few seconds — but say so once if Dropbox refuses it */
+    if(e&&e.status&&!_wwErrShown){ _wwErrShown=true; toast("Word save not sent to Dropbox yet — "+(e.message||e.status)+". Keep the app open; it keeps trying.","ti-alert-triangle"); } }
   finally{ _wwBusy=false; }
 }
 function wwBanner(on){

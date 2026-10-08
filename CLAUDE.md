@@ -135,6 +135,15 @@ are found too. A web page can't start Word on a local file: Word for Mac 16.102 
 `ms-word:ofe|u|file:///…` (tested). So Chrome/Edge's own "Always open files of this type" does it — a
 one-time tip (`wordOpenTip`, localStorage "sd-word-tip") shows where. Safari / iPhone / iPad keep "Replace with edited version". Demo test hook:
 `window.__setDlDir(handle)` (an OPFS folder stands in for Downloads).
+Reconcile (v70, after the steno's first dictation stayed blank in Dropbox): the first look at a
+note on each app start compares the local file with the Dropbox copy (`wwDbx`, list size +
+server_modified); different size AND saved after the Dropbox copy → uploaded. The old "first look =
+already sent" rule lost typing saved before the folder was Allowed. Uploads only happen while the
+app is open on that computer (and the folder is Allowed); a refused upload toasts once.
+
+Print (v70): phones (iOS/Android) → share sheet; every computer, browser OR installed app →
+the PDF in a hidden iframe + `contentWindow.print()` (installed app on Windows used to get the
+Windows share box); fallback opens the PDF in a tab, else downloads it.
 
 ## Conference note = the owner's own note format (Oct 2026)
 
