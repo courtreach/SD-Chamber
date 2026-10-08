@@ -54,7 +54,7 @@ embedded from fonts.gstatic.com (`EBG_TTF`, `loadGaramond`, Times if offline), t
 (0.3), no header fill; builder = `clBuildDoc`/`clBest`.
 P / R in its own narrow "For" column before Advocates (bold, centred; was "(P)" atop the names).
 Supp not out yet: "Total (Main 30 + Supp. ____) = ____" — the blanks drawn as real lines (no "awaited").
-Court/Item narrower (60 base, 15.5 bold; long items like 12 #116.1 wrap); case title 15.5 base.
+Court/Item narrower (60 base, 15.5 bold; long items like 12 #116.1 wrap); case title 13.6 base (owner: one point smaller — prints ~15pt for 10 cases).
 Court totals as ONE line "Total (Main 32 + Supp. 12) = 44" ("Total 44" for lists with no supp; "awaited"
 until the supp is fetched), shrunk only if wider than the cell; Court/Item 16.5 bold. Earlier: sit at the FOOT of the Advocates cell, 0.82× size (room
 reserved with blank lines, drawn in didDrawCell). Scale search may step down to 0.85 to keep one
