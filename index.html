@@ -1331,6 +1331,9 @@ body.demo .topbar{top:34px}
 .ww-x{background:none;border:none;color:var(--ink-3);cursor:pointer;padding:4px}
 @media(min-width:861px){ .ww-banner{bottom:24px} }
 
+/* file pickers: visually hidden, NOT display:none — Safari is fussier about hidden inputs (Oct 2026) */
+label:has(>.file-hid){position:relative}
+.file-hid{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden;clip:rect(0 0 0 0);pointer-events:none;left:0;top:0}
 .word-tip{position:fixed;right:16px;top:calc(64px + env(safe-area-inset-top,0px));z-index:66;width:min(380px,calc(100% - 32px));background:var(--surface);border:1px solid var(--line-2);border-radius:14px;padding:14px 16px;box-shadow:0 16px 40px rgba(16,20,24,.22);color:var(--ink)}
 .word-tip .wt-h{display:flex;align-items:center;gap:9px;margin-bottom:8px;font-size:14px}
 .word-tip .wt-h .ww-x{margin-left:auto}
@@ -1949,7 +1952,7 @@ $("signOutBtn").onclick=()=>auth.signOut();
 // service worker is holding an old copy. Clears the shell cache, nudges the SW,
 // then reloads with a cache-buster.
 // Shown in the sidebar / More / Refresh tooltip so anyone can tell which version they have.
-const APP_VERSION="70 · 8 Oct 2026";
+const APP_VERSION="71 · 8 Oct 2026";
 if($("appVer")) $("appVer").textContent="App version "+APP_VERSION;
 if($("btnRefresh")) $("btnRefresh").title="Refresh — fetch the latest app (you have version "+APP_VERSION+")";
 async function hardRefresh(){
@@ -4752,18 +4755,27 @@ async function editInWordForm(id,folder,sub,f){
         <div class="row" style="gap:8px;margin-top:8px;flex-wrap:wrap"><button class="btn sm" id="ew_open"><span class="ic ti ti-download"></span>Download to edit</button></div></div></div>
       <div class="ew-step"><span class="ew-n">2</span><div><b>Edit and save</b> it in Word as usual.</div></div>
       <div class="ew-step"><span class="ew-n">3</span><div><b>Put the edited version back</b><div class="muted" style="font-size:12px;margin-top:2px">It replaces this paper under the same name and number. Dropbox keeps the earlier version.</div>
-        <label class="btn sm" style="margin-top:8px;cursor:pointer"><span class="ic ti ti-upload"></span>Replace with edited version<input type="file" id="ew_file" accept=".docx,.doc,.rtf" hidden></label></div></div>
+        <label class="btn sm" style="margin-top:8px;cursor:pointer"><span class="ic ti ti-upload"></span>Replace with edited version<input type="file" id="ew_file" accept=".docx,.doc,.rtf" class="file-hid"></label></div></div>
       <div id="ew_msg" class="muted" style="font-size:12.5px;min-height:18px;margin-top:6px"></div>
       <button class="btn ghost sm" id="ew_back" style="margin-top:8px"><span class="ic ti ti-arrow-left"></span>Back to the papers</button>
     </div>`);
   $("ew_back").onclick=()=>openFiles(id,sub);
-  $("ew_open").onclick=async()=>{ const btn=$("ew_open"); btn.disabled=true; if($("ew_msg")) $("ew_msg").textContent="Opening…";
-    try{ const blob=await paperBlob(await paperSource(folder,sub,f.name));
-      wordDownload(new Blob([blob],{type:DOCX_TYPE}),f.name);
-      if($("ew_msg")) $("ew_msg").textContent="Downloaded — after editing, put the edited version back with step 3.";
-    }catch(e){ if($("ew_msg")) $("ew_msg").textContent=e.message; }
-    btn.disabled=false; };
-  $("ew_file").onchange=e=>{ const nf=e.target.files[0]; if(!nf) return;
+  // The copy is fetched as soon as this opens, so the button's click IS the download — Safari
+  // (owner's colleague, Oct 2026) drops a download started after a wait, and nothing appeared.
+  const msg=t=>{ if($("ew_msg")) $("ew_msg").innerHTML=t; };
+  const btn=$("ew_open"); btn.disabled=true; btn.innerHTML=`<span class="ic ti ti-loader-2"></span>Getting the copy…`;
+  let url=null;
+  paperSource(folder,sub,f.name).then(paperBlob).then(blob=>{
+    url=URL.createObjectURL(new Blob([blob],{type:/\.docx$/i.test(f.name)?DOCX_TYPE:(blob.type||"application/octet-stream")}));
+    setTimeout(()=>URL.revokeObjectURL(url),1800000);
+    if(!$("ew_open")) return;
+    btn.disabled=false; btn.innerHTML=`<span class="ic ti ti-download"></span>Download to edit`;
+  }).catch(e=>{ if($("ew_open")){ btn.innerHTML=`<span class="ic ti ti-alert-triangle"></span>Couldn't get the copy`; msg(esc(e.message)+" — close this and try again."); } });
+  btn.onclick=()=>{ if(!url) return;
+    const a=document.createElement("a"); a.href=url; a.download=f.name; a.rel="noopener"; document.body.appendChild(a); a.click(); setTimeout(()=>a.remove(),1000);
+    msg(`Saved in your <b>Downloads</b> folder as “${esc(f.name)}”. Open it from there in Word, edit, save — then step 3.
+      <div style="margin-top:6px">Nothing downloaded? <a href="${url}" download="${esc(f.name)}">Click here to save the copy</a>${/Safari/.test(navigator.userAgent)&&!/Chrome|Edg/.test(navigator.userAgent)?" — and if Safari asks “Allow downloads?”, click Allow":""}.</div>`); };
+  $("ew_file").onchange=e=>{ const nf=e.target.files[0]; e.target.value=""; if(!nf) return;
     confirmAsk({title:"Replace with the edited version?",confirmLabel:"Replace",
       body:`<b>${esc(f.name)}</b> will be replaced by <b>${esc(nf.name)}</b>, keeping the paper's name and number. Dropbox keeps the earlier version for 30 days.`,
       onYes:async()=>{ try{ await filesApi("upload",null,{folder,sub,name:f.name,file:nf,mode:"overwrite"}); toast("Edited version saved","ti-check"); }catch(err){ toast(err.message,"ti-alert-triangle"); } openFiles(id,sub); }}); };
@@ -5182,7 +5194,7 @@ const _kv={ db:null,
   async set(k,v){ try{ const d=await this.open(); return await new Promise(res=>{ const t=d.transaction("kv","readwrite").objectStore("kv").put(v,k); t.onsuccess=()=>res(true); t.onerror=()=>res(false); }); }catch(e){ return false; } } };
 function wordDownload(blob,name){
   const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=name; a.rel="noopener";
-  document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); },4000);
+  document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); },600000);
 }
 // A web page can't start Word on a downloaded file (Word for Mac ignores ms-word: links to
 // local files — tested Oct 2026). Chrome/Edge can, once told to: "Always open files of this
@@ -5975,7 +5987,7 @@ function renderFilesHome(){
   const row=(b,meta)=>{ const n=serialNum(b);
     return `<div class="fh-row">
       <button class="fh-main" data-files="${b.id}"><span class="fh-ser">${n!=null?pad3(n):"—"}</span><span class="fh-txt"><span class="fh-t">${esc(labelOf(b))}</span>${meta?`<span class="fh-m">${meta}</span>`:""}</span></button>
-      <div class="fh-acts"><label class="fh-add" title="Add papers from this phone"><span class="ti ti-upload"></span>Add<input type="file" multiple hidden data-fhadd="${b.id}"></label>
+      <div class="fh-acts"><label class="fh-add" title="Add papers from this phone"><span class="ti ti-upload"></span>Add<input type="file" multiple class="file-hid" data-fhadd="${b.id}"></label>
         <button class="fh-open" data-files="${b.id}" title="Open the folder — preview or share a paper"><span class="ti ti-share"></span>Share</button></div>
     </div>`; };
   const nums=b=>[b.caseNo, b.diaryNo?"Dy. "+b.diaryNo:""].filter(Boolean).map(esc).join(" · ");
@@ -6048,7 +6060,7 @@ function renderFilesSheet(){
         ${virt?sortSel("causelists",[["new","Newest first"],["old","Oldest first"]],"new"):sortSel("papers",[["number","By number"],["name","Name A–Z"],["new","Newest first"],["old","Oldest first"],["big","Largest first"]],"number")}
         ${_fv.sub?`<button class="btn ghost sm" id="fv_up"><span class="ic ti ti-arrow-up"></span>Up</button>`:""}
         <button class="btn ghost sm" id="fv_refresh" title="Refresh"><span class="ic ti ti-refresh"></span></button>
-        ${canAdd?`<label class="btn sm" style="cursor:pointer"><span class="ic ti ti-upload"></span>Add papers<input type="file" id="fv_add" multiple hidden></label>`:""}
+        ${canAdd?`<label class="btn sm" style="cursor:pointer"><span class="ic ti ti-upload"></span>Add papers<input type="file" id="fv_add" multiple class="file-hid"></label>`:""}
       </div>
       <div id="fvChips" class="fv-chips"></div>
       <div id="fvList">${_fv.loading?`<div class="fv-empty">Loading papers…</div>`:""}</div>

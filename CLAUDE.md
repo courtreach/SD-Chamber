@@ -141,6 +141,14 @@ server_modified); different size AND saved after the Dropbox copy → uploaded. 
 already sent" rule lost typing saved before the folder was Allowed. Uploads only happen while the
 app is open on that computer (and the folder is Allowed); a refused upload toasts once.
 
+Safari (v71, a colleague on Mac Safari 17.6: Add / Replace "not working"; gatekeeper logs showed
+only status/list/content from Safari — never an upload): Edit in Word now fetches the copy as the
+sheet opens, so the button's click itself downloads (a download started after an await can be
+dropped by Safari), plus a plain <a download> fallback link and an "Allow downloads" hint; blob
+URLs live 10–30 min, not 4 s. File inputs use `.file-hid` (visually hidden) instead of `hidden`.
+WebKit check: scratchpad wk/ — a Swift WKWebView harness (non-persistent store, so no stale
+service worker) runs a JS script against the demo; Add + Download + Replace all pass.
+
 Print (v70): phones (iOS/Android) → share sheet; every computer, browser OR installed app →
 the PDF in a hidden iframe + `contentWindow.print()` (installed app on Windows used to get the
 Windows share box); fallback opens the PDF in a tab, else downloads it.
