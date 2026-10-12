@@ -149,6 +149,13 @@ URLs live 10–30 min, not 4 s. File inputs use `.file-hid` (visually hidden) in
 WebKit check: scratchpad wk/ — a Swift WKWebView harness (non-persistent store, so no stale
 service worker) runs a JS script against the demo; Add + Download + Replace all pass.
 
+Case folder = two columns (v72, owner 12 Oct 2026): `fvRenderList` with type "all" (the default,
+search included) shows Word documents (docx/doc/rtf/odt) left and PDFs right (`.fv-cols`), each
+grouped by paper kind under "By number" or flat under the other sorts; photos/spreadsheets go
+full width below as "Other files", then older folders. The kind tiles (islands) are gone. A
+click on a paper previews; Edit (Word) / Open / Share / Rename / Remove are compact buttons.
+Under 860 px the columns stack (Word first).
+
 Print (v70): phones (iOS/Android) → share sheet; every computer, browser OR installed app →
 the PDF in a hidden iframe + `contentWindow.print()` (installed app on Windows used to get the
 Windows share box); fallback opens the PDF in a tab, else downloads it.

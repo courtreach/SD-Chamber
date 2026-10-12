@@ -571,6 +571,20 @@ label{display:block;font-size:11.5px;font-weight:500;color:var(--ink-2);letter-s
 .fv-acts button{border:1px solid var(--line-2);background:var(--surface-2);color:var(--accent-ink);border-radius:8px;padding:6px 10px;font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit}
 .fv-acts button:hover{background:var(--accent-soft);border-color:var(--accent)}
 .fv-acts button.del{color:var(--danger)}
+.fv-cols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:start}
+.fv-col{min-width:0;border:1px solid var(--line);border-radius:14px;background:var(--surface-2);padding:10px 10px 4px}
+.fv-colh{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;color:var(--ink);padding:2px 4px 8px}
+.fv-colh b{margin-left:auto;font-size:12px;font-weight:600;color:var(--ink-3)}
+.fv-colic{display:inline-flex;align-items:center;justify-content:center;min-width:26px;height:20px;padding:0 4px;border-radius:5px;color:#fff;font-size:10px;font-weight:800}
+.fv-colnone{padding:18px 6px 20px;text-align:center;color:var(--ink-3);font-size:13px}
+.fv-sub{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);font-weight:700;margin:8px 4px 5px}
+.fv-col .fv-row{gap:10px;padding:8px 10px}
+.fv-col .fv-ic{width:32px;height:38px;font-size:9.5px;padding-bottom:5px}
+.fv-col .fv-name{font-size:13.5px}
+.fv-col .fv-acts{gap:4px}
+.fv-col .fv-acts button{padding:5px 8px;font-size:12px}
+@media (max-width:860px){ .fv-cols{grid-template-columns:minmax(0,1fr)} }
+@media (max-width:600px){ .fv-col .fv-row{flex-wrap:wrap} .fv-col .fv-acts{width:100%;justify-content:flex-end} }
 .fv-empty{padding:26px 10px;text-align:center;color:var(--ink-3);font-size:14px}
 .fv-hit{background:#fff1b8;border-radius:2px}
 .fv-isls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
@@ -1952,7 +1966,7 @@ $("signOutBtn").onclick=()=>auth.signOut();
 // service worker is holding an old copy. Clears the shell cache, nudges the SW,
 // then reloads with a cache-buster.
 // Shown in the sidebar / More / Refresh tooltip so anyone can tell which version they have.
-const APP_VERSION="71 · 8 Oct 2026";
+const APP_VERSION="72 · 12 Oct 2026";
 if($("appVer")) $("appVer").textContent="App version "+APP_VERSION;
 if($("btnRefresh")) $("btnRefresh").title="Refresh — fetch the latest app (you have version "+APP_VERSION+")";
 async function hardRefresh(){
@@ -6125,22 +6139,34 @@ function fvRenderList(){
   if(virt){
     const fl=files.filter(x=>match(x)).sort((a,z)=>ps==="old"?dkey(a).localeCompare(dkey(z)):dkey(z).localeCompare(dkey(a)));
     h=fl.length?`<div class="fv-group">${esc(b.caseTitle)} · ${fl.length}</div>`+fl.map(x=>row(x,idx.get(x))).join(""):`<div class="fv-empty">${q?`Nothing matches “${esc(_fv.q)}”.`:"Nothing saved yet — use “Save to Dropbox” on the day sheet."}</div>`;
+  } else if(t==="all"){
+    // Two columns (owner, Oct 2026): Word documents on the left, PDFs on the right; anything
+    // else (photos, spreadsheets) and the older folders run full width underneath.
+    if(!files.length&&!dirs.length){
+      h=`<div class="fv-empty">${!b.dropboxFolder?"No papers yet — this brief's folder is created when the first paper is added.":"The folder is empty."}</div>`;
+    } else {
+      const crow=(x,i)=>{ const kind=fileKindOf(x.ext); const [lab,col]=FK[kind];
+        const word=kind==="word"&&edit, ren=edit&&serialNum(b)!=null;
+        return `<div class="fv-row"><div class="fv-ic" style="background:${col}" data-fvprev="${i}">${lab}</div>
+          <div class="fv-main" data-fvprev="${i}" title="Preview"><div class="fv-name">${_hl(x._label,q)}</div>
+            <div class="fv-meta">${x.num?`<span class="fv-num">${_hl(x.num,q)}</span>`:`<span class="fv-num none">no number</span>`}<span>${esc(dateOf(x))}</span><span>${esc(fmtSize(x.size))}</span></div></div>
+          <div class="fv-acts">${word?`<button data-fvedit="${i}" title="Edit in Word"><span class="ti ti-pencil"></span> Edit</button>`:""}<button data-fvopen="${i}" title="Open"><span class="ti ti-external-link"></span></button><button data-fvshare="${i}" title="Share"><span class="ti ti-share"></span></button>${ren?`<button data-fvren="${i}" title="${x.t==="X"?"Number it":"Rename"}"><span class="ti ti-forms"></span></button>`:""}${edit?`<button class="del" data-fvdel="${i}" title="Remove"><span class="ti ti-trash"></span></button>`:""}</div></div>`; };
+      const list=g=>{ if(ps!=="number") return g.sort(flatSort).map(x=>crow(x,idx.get(x))).join("");
+        let o=""; ["N","L","S","C","F","D","X"].forEach(k=>{ const gg=g.filter(x=>x.t===k).sort((a,z)=>(a.sub||0)-(z.sub||0)||String(a.name).localeCompare(String(z.name),undefined,{numeric:true}));
+          if(gg.length) o+=`<div class="fv-sub">${PAPER_GROUP[k]} · ${gg.length}</div>`+gg.map(x=>crow(x,idx.get(x))).join(""); });
+        return o; };
+      const fl=files.filter(match), kindOf=x=>fileKindOf(x.ext);
+      const W=fl.filter(x=>kindOf(x)==="word"), P=fl.filter(x=>kindOf(x)==="pdf"), O=fl.filter(x=>!/^(word|pdf)$/.test(kindOf(x)));
+      const dl=dirs.filter(d=>match({_label:d.name,name:d.name}));
+      const col=(cls,lab,ic,g,none)=>`<div class="fv-col ${cls}"><div class="fv-colh"><span class="fv-colic" style="background:${ic[1]}">${ic[0]}</span>${lab}<b>${g.length}</b></div>${g.length?list(g):`<div class="fv-colnone">${q?"Nothing matches.":none}</div>`}</div>`;
+      h=`<div class="fv-cols">${col("w","Word documents",FK.word,W,"No Word documents yet.")}${col("p","PDFs",FK.pdf,P,"No PDFs yet.")}</div>`
+        +(O.length?`<div class="fv-group">Other files · ${O.length}</div>`+O.sort(flatSort).map(x=>row(x,idx.get(x))).join(""):"")
+        +(dl.length?`<div class="fv-group">${PAPER_GROUP.dir} · ${dl.length}</div>`+dl.map(drow).join(""):"");
+    }
   } else if(ps!=="number"){
     const fl=files.filter(x=>inType(x)&&match(x)).sort(flatSort), dl=dirs.filter(d=>(t==="all"||t==="dir")&&match({_label:d.name,name:d.name}));
     h=fl.map(x=>row(x,idx.get(x))).join("")+(dl.length?`<div class="fv-group">${PAPER_GROUP.dir} · ${dl.length}</div>`+dl.map(drow).join(""):"");
     if(!h) h=`<div class="fv-empty">${q?`Nothing matches “${esc(_fv.q)}”.`:"No papers here yet."}</div>`;
-  } else if(t==="all"&&!q){
-    if(!files.length&&!dirs.length){
-      h=`<div class="fv-empty">${!b.dropboxFolder?"No papers yet — this brief's folder is created when the first paper is added.":"The folder is empty."}</div>`;
-    } else {
-      const kinds=[["N","ti-notes","Notes"],["F","ti-file-type-pdf","PDF files"],["LS","ti-list-details","Lists & Submissions"],["C","ti-books","Compilations"],["D","ti-pencil","Drafts"],["X","ti-file-unknown","Not yet numbered"],["dir","ti-folder","Older folders"]];
-      const tiles=kinds.map(([k,ic,lab])=>{ const n=cnt(k); if(!n) return "";
-        const g=k==="dir"?[]:files.filter(x=>k==="LS"?(x.t==="L"||x.t==="S"):x.t===k);
-        const last=g.map(x=>String(x.modified||"")).sort().pop();
-        return `<button class="fv-isl" data-fvtype="${k}"><span class="ti ${ic}"></span><span class="fv-isl-n">${n}</span><span class="fv-isl-l">${lab}</span><span class="fv-isl-d">${last?"latest "+esc(fmtDateY(last.slice(0,10))):(k==="dir"?"kept as they were":"")}</span></button>`; }).join("");
-      const latest=files.slice().sort((a,z)=>String(z.modified||"").localeCompare(String(a.modified||""))).slice(0,3);
-      h=`<div class="fv-isls">${tiles}</div>`+(latest.length?`<div class="fv-group" style="margin-top:18px">Latest papers</div>`+latest.map(x=>row(x,idx.get(x))).join(""):"");
-    }
   } else {
     const fl=files.filter(x=>inType(x)&&match(x)), dl=dirs.filter(d=>(t==="all"||t==="dir")&&match({_label:d.name,name:d.name}));
     ["N","L","S","C","F","D","X"].forEach(k=>{ const g=fl.filter(x=>x.t===k).sort((a,z)=>(a.sub||0)-(z.sub||0)||String(a.name).localeCompare(String(z.name),undefined,{numeric:true}));
