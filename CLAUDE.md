@@ -156,6 +156,13 @@ full width below as "Other files", then older folders. The kind tiles (islands) 
 click on a paper previews; Edit (Word) / Open / Share / Rename / Remove are compact buttons.
 Under 860 px the columns stack (Word first).
 
+Rename (v73, owner 13 Oct 2026 "option to rename files"): every paper a member can edit has a
+labelled "Rename" button (also on cases without a serial, and in older folders). The form
+(`renamePaperForm`) has two modes: "Chamber numbering" (kind + what it is → the numbered
+name; the default when the case has a serial) and "My own name" (typed in full, unsafe
+characters removed, extension always kept, a clash with another paper refused; shows as
+"no number"). Both go through the gatekeeper's never-overwriting `move`.
+
 Print (v70): phones (iOS/Android) → share sheet; every computer, browser OR installed app →
 the PDF in a hidden iframe + `contentWindow.print()` (installed app on Windows used to get the
 Windows share box); fallback opens the PDF in a tab, else downloads it.

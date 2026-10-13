@@ -1966,7 +1966,7 @@ $("signOutBtn").onclick=()=>auth.signOut();
 // service worker is holding an old copy. Clears the shell cache, nudges the SW,
 // then reloads with a cache-buster.
 // Shown in the sidebar / More / Refresh tooltip so anyone can tell which version they have.
-const APP_VERSION="72 · 12 Oct 2026";
+const APP_VERSION="73 · 13 Oct 2026";
 if($("appVer")) $("appVer").textContent="App version "+APP_VERSION;
 if($("btnRefresh")) $("btnRefresh").title="Refresh — fetch the latest app (you have version "+APP_VERSION+")";
 async function hardRefresh(){
@@ -4800,23 +4800,48 @@ async function editInWordForm(id,folder,sub,f){
    that kind, with the ASD .1/.2 rule. A paper dropped in straight from Dropbox ("Not yet
    numbered") is numbered the same way. */
 function renamePaperForm(id,folder,sub,f,files){
-  const b=briefs[id]; if(!b||serialNum(b)==null) return;
+  const b=briefs[id]; if(!b) return;
+  const numbered=serialNum(b)!=null;
   const p=paperInfo(f.name,b); let L=p.t==="X"?guessLetter(f.name):p.t, desc=p.t==="X"?cleanDesc(f.name):p.desc;
   const others=files.filter(x=>x.name!==f.name);
+  // Two ways (owner, Oct 2026: "option to rename files"): the chamber's numbered name (kind +
+  // what it is — the default) or a name typed in full; the extension is always kept.
+  let mode=numbered?"num":"own";
   const target=()=> (L===p.t&&p.serial===serialNum(b)) ? paperName(b,L,p.sub,desc||"Document",p.ext) : paperName(b,L,planNumber(b,others,L).sub,desc||"Document",p.ext);
-  openSheet(`<div class="sheet-head"><div><h3>${p.t==="X"?"Number this paper":"Rename this paper"}</h3><div class="sub">${esc(f.name)}</div></div><button class="x-btn"><span class="ti ti-x"></span></button></div>
+  const ownName=()=>{ const v=String($("rp_own")?.value||"").replace(/["*:<>?\/\\|\u0000-\u001f]+/g," ").replace(/\s+/g," ").trim().replace(/\.+$/,"");
+    if(!v) return ""; return v.toLowerCase().endsWith(p.ext.toLowerCase())?v:v+p.ext; };
+  openSheet(`<div class="sheet-head"><div><h3>Rename this paper</h3><div class="sub">${esc(f.name)}</div></div><button class="x-btn"><span class="ti ti-x"></span></button></div>
     <div class="sheet-body">
-      <label>Kind of paper</label><select id="rp_l">${PAPER_LETTERS.map(([k,v])=>`<option value="${k}" ${L===k?"selected":""}>${k} — ${esc(v)}</option>`).join("")}</select>
-      <label>What it is</label><input id="rp_d" value="${esc(desc)}">
-      <div class="ap-final" id="rp_final" style="margin-top:10px"></div>
-      <div class="row" style="gap:8px;margin-top:16px"><button class="btn" id="rp_go">Save</button><button class="btn ghost" id="rp_back">Cancel</button></div>
+      ${numbered?`<div class="seg" style="margin-bottom:6px"><button class="${mode==="num"?"active":""}" data-rpm="num">Chamber numbering</button><button class="${mode==="own"?"active":""}" data-rpm="own">My own name</button></div>`:""}
+      <div id="rp_num" ${mode==="num"?"":"hidden"}>
+        <label>Kind of paper</label><select id="rp_l">${PAPER_LETTERS.map(([k,v])=>`<option value="${k}" ${L===k?"selected":""}>${k} — ${esc(v)}</option>`).join("")}</select>
+        <label>What it is</label><input id="rp_d" value="${esc(desc)}">
+      </div>
+      <div id="rp_ownbox" ${mode==="own"?"":"hidden"}>
+        <label>New name <span class="muted" style="font-weight:400">(${esc(p.ext||"no extension")} is kept)</span></label>
+        <input id="rp_own" value="${esc(String(f.name).slice(0,f.name.length-p.ext.length))}" autocomplete="off">
+        ${numbered?`<div class="muted" style="font-size:12px;margin-top:6px">A name without the chamber number shows as “no number”.</div>`:""}
+      </div>
+      <label style="margin-top:12px">It will be called</label>
+      <div class="ap-final" id="rp_final"></div>
+      <div class="row" style="gap:8px;margin-top:16px"><button class="btn" id="rp_go"><span class="ic ti ti-check"></span>Rename</button><button class="btn ghost" id="rp_back">Cancel</button></div>
     </div>`);
-  const upd=()=>{ $("rp_final").textContent=target(); }; upd();
-  $("rp_l").onchange=e=>{ L=e.target.value; upd(); }; $("rp_d").oninput=e=>{ desc=cleanDesc(e.target.value+".x"); upd(); };
+  const upd=()=>{ $("rp_final").textContent=(mode==="num"?target():ownName())||"—"; }; upd();
+  document.querySelectorAll("[data-rpm]").forEach(x=>x.onclick=()=>{ mode=x.dataset.rpm;
+    document.querySelectorAll("[data-rpm]").forEach(y=>y.classList.toggle("active",y===x));
+    $("rp_num").hidden=mode!=="num"; $("rp_ownbox").hidden=mode!=="own"; upd(); if(mode==="own") $("rp_own").focus(); });
+  if($("rp_l")) $("rp_l").onchange=e=>{ L=e.target.value; upd(); };
+  if($("rp_d")) $("rp_d").oninput=e=>{ desc=cleanDesc(e.target.value+".x"); upd(); };
+  $("rp_own").oninput=upd;
   $("rp_back").onclick=()=>openFiles(id,sub);
-  $("rp_go").onclick=async()=>{ $("rp_go").disabled=true;
+  $("rp_go").onclick=async()=>{
+    if(mode==="own"){ const to=ownName(); if(!to){ toast("Type the new name","ti-alert-triangle"); return; }
+      if(to===f.name){ openFiles(id,sub); return; }
+      if(others.some(x=>x.name.toLowerCase()===to.toLowerCase())){ toast("A paper with that name is already in this folder","ti-alert-triangle"); return; } }
+    $("rp_go").disabled=true;
     try{
-      if(!(L===p.t&&p.serial===serialNum(b))){ const plan=planNumber(b,others,L);
+      if(mode==="own") await filesApi("move",{folder,sub,name:f.name,toName:ownName()});
+      else if(!(L===p.t&&p.serial===serialNum(b))){ const plan=planNumber(b,others,L);
         if(plan.rename) await filesApi("move",{folder,sub,name:plan.rename.from,toName:plan.rename.to});
         await filesApi("move",{folder,sub,name:f.name,toName:paperName(b,L,plan.sub,desc||"Document",p.ext)}); }
       else { const to=paperName(b,L,p.sub,desc||"Document",p.ext); if(to!==f.name) await filesApi("move",{folder,sub,name:f.name,toName:to}); }
@@ -6123,11 +6148,11 @@ function fvRenderList(){
   const cnt=k=>k==="dir"?dirs.length:files.filter(x=>k==="LS"?(x.t==="L"||x.t==="S"):x.t===k).length;
   if(chips) chips.innerHTML=t==="all"?"":`<button class="fv-chip" data-fvtype="all">‹ All kinds</button><span class="fv-chip on">${esc(KLAB[t]||"")}<b>${cnt(t)}</b></span>`;
   const row=(x,i)=>{ const kind=fileKindOf(x.ext); const [lab,col]=FK[kind];
-    const word=kind==="word"&&edit&&!virt, ren=edit&&!virt&&serialNum(b)!=null;
+    const word=kind==="word"&&edit&&!virt, ren=edit&&!virt;
     return `<div class="fv-row"><div class="fv-ic" style="background:${col}" data-fvprev="${i}">${lab}</div>
       <div class="fv-main" data-fvprev="${i}" title="Preview"><div class="fv-name">${_hl(x._label,q)}</div>
         <div class="fv-meta">${x.num?`<span class="fv-num">${_hl(x.num,q)}</span>`:(virt?"":`<span class="fv-num none">no number</span>`)}<span>${esc(dateOf(x))}</span><span>${esc(fmtSize(x.size))}</span></div></div>
-      <div class="fv-acts"><button data-fvprev="${i}">Preview</button><button data-fvopen="${i}">Open</button>${word?`<button data-fvedit="${i}">Edit</button>`:""}<button data-fvshare="${i}">Share</button>${ren?`<button data-fvren="${i}" title="${x.t==="X"?"Number it":"Rename"}"><span class="ti ti-forms"></span></button>`:""}${edit?`<button class="del" data-fvdel="${i}" title="Remove"><span class="ti ti-trash"></span></button>`:""}</div></div>`; };
+      <div class="fv-acts"><button data-fvprev="${i}">Preview</button><button data-fvopen="${i}">Open</button>${word?`<button data-fvedit="${i}">Edit</button>`:""}<button data-fvshare="${i}">Share</button>${ren?`<button data-fvren="${i}" title="Rename"><span class="ti ti-forms"></span> Rename</button>`:""}${edit?`<button class="del" data-fvdel="${i}" title="Remove"><span class="ti ti-trash"></span></button>`:""}</div></div>`; };
   const drow=d=>`<div class="fv-row"><div class="fv-ic dir"><span class="ti ti-folder"></span></div><div class="fv-main" data-fvdir="${esc(d.name)}"><div class="fv-name">${_hl(d.name,q)}</div><div class="fv-meta"><span>older folder, kept as it was</span></div></div><div class="fv-acts"><button data-fvdir="${esc(d.name)}">Open</button></div></div>`;
   const idx=new Map(files.map((x,i)=>[x,i]));
   let h="";
@@ -6146,11 +6171,11 @@ function fvRenderList(){
       h=`<div class="fv-empty">${!b.dropboxFolder?"No papers yet — this brief's folder is created when the first paper is added.":"The folder is empty."}</div>`;
     } else {
       const crow=(x,i)=>{ const kind=fileKindOf(x.ext); const [lab,col]=FK[kind];
-        const word=kind==="word"&&edit, ren=edit&&serialNum(b)!=null;
+        const word=kind==="word"&&edit, ren=edit;
         return `<div class="fv-row"><div class="fv-ic" style="background:${col}" data-fvprev="${i}">${lab}</div>
           <div class="fv-main" data-fvprev="${i}" title="Preview"><div class="fv-name">${_hl(x._label,q)}</div>
             <div class="fv-meta">${x.num?`<span class="fv-num">${_hl(x.num,q)}</span>`:`<span class="fv-num none">no number</span>`}<span>${esc(dateOf(x))}</span><span>${esc(fmtSize(x.size))}</span></div></div>
-          <div class="fv-acts">${word?`<button data-fvedit="${i}" title="Edit in Word"><span class="ti ti-pencil"></span> Edit</button>`:""}<button data-fvopen="${i}" title="Open"><span class="ti ti-external-link"></span></button><button data-fvshare="${i}" title="Share"><span class="ti ti-share"></span></button>${ren?`<button data-fvren="${i}" title="${x.t==="X"?"Number it":"Rename"}"><span class="ti ti-forms"></span></button>`:""}${edit?`<button class="del" data-fvdel="${i}" title="Remove"><span class="ti ti-trash"></span></button>`:""}</div></div>`; };
+          <div class="fv-acts">${word?`<button data-fvedit="${i}" title="Edit in Word"><span class="ti ti-pencil"></span> Edit</button>`:""}<button data-fvopen="${i}" title="Open"><span class="ti ti-external-link"></span></button><button data-fvshare="${i}" title="Share"><span class="ti ti-share"></span></button>${ren?`<button data-fvren="${i}" title="Rename"><span class="ti ti-forms"></span> Rename</button>`:""}${edit?`<button class="del" data-fvdel="${i}" title="Remove"><span class="ti ti-trash"></span></button>`:""}</div></div>`; };
       const list=g=>{ if(ps!=="number") return g.sort(flatSort).map(x=>crow(x,idx.get(x))).join("");
         let o=""; ["N","L","S","C","F","D","X"].forEach(k=>{ const gg=g.filter(x=>x.t===k).sort((a,z)=>(a.sub||0)-(z.sub||0)||String(a.name).localeCompare(String(z.name),undefined,{numeric:true}));
           if(gg.length) o+=`<div class="fv-sub">${PAPER_GROUP[k]} · ${gg.length}</div>`+gg.map(x=>crow(x,idx.get(x))).join(""); });
