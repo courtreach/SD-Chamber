@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-14T22:05:17.097147Z",
+  "generated_at": "2026-10-15T13:43:11.019289Z",
   "parser_version": 10,
   "window": [
     "2026-10-15",
@@ -39371,7 +39371,8 @@
         "Miscellaneous (main)",
         "Chamber (main)",
         "Single Judge (main)",
-        "Registrar (main)"
+        "Registrar (main)",
+        "Registrar (supp)"
       ],
       "lists": {
         "Miscellaneous": {
@@ -56440,7 +56441,7 @@
           },
           "2": {
             "coram": "MS. GRACY L. BAWITLUNG, REGISTRAR",
-            "total": "35",
+            "total": "36",
             "fresh": "",
             "items": {
               "1": "SLP(C) No. 313/2025 MANDOTH DINESAN VERSUS PRAKASAN AND ORS.",
@@ -56466,7 +56467,7 @@
               "8.11": "Connected SLP(C) No. 9796/2026 DR. PUNJABRAO DESHMUKH KRISHI VIDYAPEETH VERSUS GAJANAN MANSARAM BORKAR AND ORS. RAMESHWAR PRASAD",
               "8.12": "Connected SLP(C) No. 9794/2026 DR. PUNJABRAO DESHMUKH KRISHI VIDYAPEETH VERSUS MAHADEO AND ORS.",
               "9": "Crl.A. No. 3936/2026 AJAY SARKAR VERSUS STATE OF CHHATTISGARH",
-              "10": "SLP(C) No. 13487/2026 GOPINATH DAS VERSUS DAMODAR DAS AND ORS.",
+              "10": "SLP(C) No. Vs.",
               "10.1": "Connected SLP(C) No. 13908/2026 GOPINATH DAS VERSUS DAMODAR DAS AND ORS.",
               "11": "T.P.(C) No. 2769/2025 GEETA VERSUS SUMIT SAHU",
               "12": "SLP(Crl) No. 17027/2025 SHARANAPPA VERSUS THE STATE OF KARNATAKA",
@@ -56495,7 +56496,8 @@
               "32.1": "Connected SLP(C) No. 29665/2026 MAHARASHTRA WAQF BOARD, AURANGABAD VERSUS RAHIMUNISA AND ORS.",
               "33": "T.P.(C) No. 2142/2026 SHILPA VERSUS RAGUWINDER SINGH",
               "34": "T.P.(C) No. 2200/2026 NISHANTHINI PATHMANATHAN VERSUS SWARAJ PADHI",
-              "35": "T.P.(C) No. 2682/2026 PRACHI OJHA VERSUS NILABH PANDEY"
+              "35": "T.P.(C) No. 2682/2026 PRACHI OJHA VERSUS NILABH PANDEY",
+              "36": "Diary No. 41653-2026 THE GOVERNMENT OF KARNATAKA AND ORS. VERSUS SRI A. VENKATESHAPPA AND ORS."
             },
             "advocates": {
               "1": {
@@ -57239,10 +57241,19 @@
                     "p": ""
                   }
                 ]
+              },
+              "36": {
+                "pet": "RAJESH GULAB INAMDAR",
+                "petAll": [
+                  {
+                    "n": "RAJESH GULAB INAMDAR",
+                    "p": ""
+                  }
+                ]
               }
             },
             "main": 35,
-            "supp": 0
+            "supp": 1
           }
         }
       }
@@ -57263,7 +57274,8 @@
       "M_J_1": 853396,
       "M_C_1": 567240,
       "M_S_1": 532037,
-      "M_R_1": 530587
+      "M_R_1": 530587,
+      "M_R_2": 505956
     }
   },
   "note": "Per-court bench + per-item case line from the SC published lists. Drafting aid only — the court's published list is authoritative."
