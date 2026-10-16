@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-16T04:13:30.237402Z",
+  "generated_at": "2026-10-16T07:30:38.398179Z",
   "parser_version": 11,
   "window": [
     "2026-10-16",
@@ -4730,7 +4730,7 @@
               "42.2": "Connected SLP(Crl) No. 14291/2026 HARISH CHANDRA NAYAK VERSUS STATE OF ODISHA AND ANR.",
               "43": "SLP(Crl) No. 15214-15215/2026 NAND KISHOR BAIRWA VERSUS JEET SINGH AND ANR. ETC.",
               "44": "T.P.(C) No. 153/2026 ILA PANERI VERSUS MUDIT JOSHI",
-              "45": "No. [R-4], GURMEET SINGH MAKKER-",
+              "45": "No. 4185[R-3], [R-4], GURMEET SINGH",
               "45.1": "Connected Diary No. 39789-2026 KISHAN CHAND JAIN VERSUS V. UMASHANKAR",
               "45.2": "Connected Diary No. 40407-2026 S. RAJASEKARAN VERSUS UNION OF INDIA AND ORS.",
               "46": "SLP(Crl) No. 11050/2026 DARASINGH @ DHARASINGH @ SATWANTSINGH VERSUS STATE OF MAHARASHTRA",
@@ -4759,7 +4759,8 @@
               "301": "W.P.(C) No. 295/2012 S.RAJASEEKARAN VERSUS UNION OF INDIA AND ORS. AND ORS.",
               "301.1": "Connected Diary No. 39789-2026 KISHAN CHAND JAIN VERSUS V. UMASHANKAR",
               "301.2": "Connected Diary No. 40407-2026 S. RAJASEKARAN VERSUS UNION OF INDIA AND ORS.",
-              "302": "C.A. No. 583/2026 MS CORE HOTELS VENTURES PVT LTD VERSUS BANK OF BARODA AND ORS."
+              "302": "C.A. No. 583/2026 MS CORE HOTELS VENTURES PVT LTD VERSUS BANK OF BARODA AND ORS.",
+              "303.1": "Connected MA 3028/2026 in C.A. No. 13119/2026 R VERSUS FOR CLARIFICATION/DIRECTION ON IA"
             },
             "advocates": {
               "1": {
@@ -6213,6 +6214,26 @@
                   },
                   {
                     "n": "KRISHAN KUMAR",
+                    "p": "R-1"
+                  }
+                ]
+              },
+              "303.1": {
+                "pet": "DIVYA SWAMI",
+                "resp": "D. L. CHIDANANDA",
+                "petAll": [
+                  {
+                    "n": "DIVYA SWAMI",
+                    "p": "P-1"
+                  }
+                ],
+                "respAll": [
+                  {
+                    "n": "D. L. CHIDANANDA",
+                    "p": "R-1"
+                  },
+                  {
+                    "n": "A VELAN",
                     "p": "R-1"
                   }
                 ]
@@ -20639,7 +20660,7 @@
   "sources": {
     "2026-10-16": {
       "M_J_1": 853596,
-      "M_J_2": 623059,
+      "M_J_2": 626664,
       "M_C_1": 567240,
       "M_C_2": 508703,
       "M_S_1": 532037,
