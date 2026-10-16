@@ -51,12 +51,17 @@ OUTPUT_FILE = "court-updates.json"
 # based change-detection reuses a cached parse when the PDF is unchanged; without
 # this, a parser FIX never reaches already-cached dates (their PDFs don't change).
 # A version mismatch forces a full re-parse of every date in the window.
-PARSER_VERSION = 10  # bumped: advocates per side (wrapped names, several per side, caveat/amicus), wrapped serials (39.1+1 = 39.11)
+PARSER_VERSION = 11  # bumped: court headings must be a line of their own (a bench note naming "COURT NO. 5" moved Court 12 items to Court 5)
 HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; sd-chamber-causelist-bot/1.0)"}
 
-COURT_RE = re.compile(r"COURT\s*NO\.?\s*[:\-]?\s*([0-9]+)", re.I)
-CJ_RE    = re.compile(r"CHIEF\s+JUSTICE'?S\s+COURT", re.I)
-REG_RE   = re.compile(r"REGISTRAR\s+COURT\s*NO\.?\s*[:\-]?\s*([0-9]+)", re.I)
+# A court heading is a line of its own ("COURT NO. : 12", "CHIEF JUSTICE'S COURT",
+# "Registrar Court No. 2"). Anchored on purpose (16 Oct 2026): a bench note "[ THIS BENCH WILL
+# RE-ASSEMBLE AFTER ... LISTED IN COURT NO. 5 AT 2:00 P.M. ]" in Court 12's supplementary list
+# switched the parser to Court 5, filing Court 12's items 73-74 under Court 5. Notes and
+# advocate text ("…, Court No. 2 as …", "…WORK OF CHIEF JUSTICE'S COURT IS OVER ]") never count.
+COURT_RE = re.compile(r"^\s*COURT\s*NO\.?\s*[:\-]?\s*([0-9]+)\s*$", re.I)
+CJ_RE    = re.compile(r"^\s*CHIEF\s+JUSTICE'?S\s+COURT\s*$", re.I)
+REG_RE   = re.compile(r"^\s*REGISTRAR\s+COURT\s*NO\.?\s*[:\-]?\s*([0-9]+)\s*$", re.I)
 # coram lines are a judge ("HON'BLE ...") or a registrar officer ("..., REGISTRAR"
 # / "REGISTRAR (TIME..."). The registrar form is kept strict so a PARTY name that
 # merely contains "registrar" (e.g. "THE SUB REGISTRAR POOYAPPALLY AND ORS.") is
@@ -473,8 +478,9 @@ def parse_advocates(data, real_items):
                     at = " ".join(w["text"] for w in ws if w["x0"] >= ADV_COL_X).strip()
                     if HEADER_SKIP.search(lt):
                         continue                     # page header — the item carries on
-                    m = REG_RE.search(lt) or COURT_RE.search(lt)
-                    hdr = m.group(1) if m else ("1" if CJ_RE.search(lt) else None)
+                    row = " ".join(w["text"] for w in ws).strip()   # a heading is the whole row
+                    m = REG_RE.search(row) or COURT_RE.search(row)
+                    hdr = m.group(1) if m else ("1" if CJ_RE.search(row) else None)
                     if hdr is not None:
                         if hdr != st["court"]:       # a new court: start afresh
                             commit(); st["court"] = hdr; st["item"] = None
